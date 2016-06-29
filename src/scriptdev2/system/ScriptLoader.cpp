@@ -14,6 +14,7 @@ extern void AddSC_barber();
 extern void AddSC_MCGuard();
 extern void AddSC_BGTokenChanger();
 extern void AddSC_CasinoGames();
+extern void AddSC_Npc_Beastmaster();
 
 // examples
 extern void AddSC_example_creature();
@@ -353,6 +354,7 @@ void AddScripts()
     AddSC_MCGuard();
     AddSC_BGTokenChanger();
     AddSC_CasinoGames();
+    AddSC_Npc_Beastmaster();
 
     // examples
     AddSC_example_creature();
