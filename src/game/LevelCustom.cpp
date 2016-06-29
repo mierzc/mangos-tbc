@@ -2,6 +2,16 @@
 #include "Language.h"
 #include "World.h"
 #include "SpellMgr.h"
+#include "Player.h"
+#include "BattleGround/BattleGround.h"
+#include "BattleGround/BattleGroundMgr.h"
+#include "ObjectMgr.h"
+#include "ObjectGuid.h"
+#include "SpellAuras.h"
+#include "Spell.h"
+#include "WorldSession.h"
+#include "DBCStores.h"
+#include "SpellAuras.h"
 
 bool ChatHandler::HandleMCCommand(char* /*args*/)
 {
