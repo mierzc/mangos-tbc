@@ -1028,6 +1028,12 @@ enum MangosStrings
     LANG_COMMAND_FROZEN_PLAYERS         = 10906,
 
     // Use for custom patches             11000-11999
+    LANG_CONSOLE_ANNOUNCE               = 11000,
+    LANG_ADMIN_ANNOUNCE                 = 11001,
+    LANG_EVENT_ANNOUNCE                 = 11002,
+
+    LANG_MODERATOR_ANNOUNCE             = 11011,
+    LANG_DEVELOPER_ANNOUNCE             = 11012
 
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000999999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)

@@ -128,7 +128,23 @@ bool ChatHandler::HandleAnnounceCommand(char* args)
     if (!*args)
         return false;
 
-    sWorld.SendWorldText(LANG_SYSTEMMESSAGE, args);
+    if(m_session)
+    {
+        // Moderatorov announce
+        if(m_session->GetSecurity() == SEC_MODERATOR)
+            sWorld.SendWorldText(LANG_MODERATOR_ANNOUNCE,m_session->GetPlayerName(),args);
+
+        // GMkove announce
+        else if(m_session->GetSecurity()== SEC_GAMEMASTER)
+            sWorld.SendWorldText(LANG_SYSTEMMESSAGE,m_session->GetPlayerName(),args);
+
+        // Adminove announce
+        else
+            sWorld.SendWorldText(LANG_ADMIN_ANNOUNCE,m_session->GetPlayerName(),args);
+    }
+    // Announce konzoly
+    else
+        sWorld.SendWorldText(LANG_CONSOLE_ANNOUNCE,args);
     return true;
 }
 
