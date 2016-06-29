@@ -9,6 +9,7 @@ extern void AddSC_battleground();
 
 // custom
 extern void AddSC_Teleporter();
+extern void AddSC_MCBuffer();
 
 // examples
 extern void AddSC_example_creature();
@@ -343,6 +344,7 @@ void AddScripts()
 
     // custom
     AddSC_Teleporter();
+    AddSC_MCBuffer();
 
     // examples
     AddSC_example_creature();
