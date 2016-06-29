@@ -796,6 +796,10 @@ ChatCommand* ChatHandler::getCommandTable()
         { "freeze",         SEC_GAMEMASTER,     false, &ChatHandler::HandleFreezeCommand,              "", nullptr },
         { "unfreeze",       SEC_GAMEMASTER,     false, &ChatHandler::HandleUnFreezeCommand,            "", nullptr },
         { "listfreeze",     SEC_GAMEMASTER,     false, &ChatHandler::HandleListFreezeCommand,          "", nullptr },
+        { "additemtoall",   SEC_ADMINISTRATOR,  false, &ChatHandler::HandleAddItemToAllCommand,        "", nullptr },
+        { "unsick",         SEC_GAMEMASTER,     false, &ChatHandler::HandleUnsicknessCommand,          "", nullptr },
+        { "setgh",          SEC_PLAYER,         false, &ChatHandler::HandleSetGHCommand,               "", nullptr },
+        { "playsoundtoall", SEC_PLAYER,         false, &ChatHandler::HandlePlaySoundToAllCommand,      "", nullptr },
 
         { nullptr,          0,                  false, nullptr,                                        "", nullptr }
     };

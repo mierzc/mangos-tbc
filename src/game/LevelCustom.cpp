@@ -481,3 +481,243 @@ bool ChatHandler::HandleReloadCreatureTemplateCommand(char* args)
     SendGlobalSysMessage("DB table `creature_template` reloaded.");
     return true;
 }
+
+bool ChatHandler::HandleUnsicknessCommand(char* args)
+{
+    std::string name;
+    Player* player;
+    char* TargetName = strtok((char*)args, " "); //get entered #name
+    if (!TargetName) //if no #name entered use target
+    {
+        player = getSelectedPlayer();
+        if (player) //prevent crash with creature as target
+        {
+            name = player->GetName();
+            normalizePlayerName(name);
+        }
+    }
+    else // if #name entered
+    {
+        name = TargetName;
+        normalizePlayerName(name);
+        player = sObjectMgr.GetPlayer(name.c_str()); //get player by #name
+    }
+
+    //effect
+    if ((player) && (!(player == m_session->GetPlayer())))
+    {
+        if (player->HasSpell(15007)) // 15007 SPELL_ID_PASSIVE_RESURRECTION_SICKNESS
+            player->RemoveAurasDueToSpell(15007); // SPELL_ID_PASSIVE_RESURRECTION_SICKNESS
+        else
+            PSendSysMessage("You not a Ressurection Sickness!", name.c_str());
+
+        return true;
+    }
+}
+
+bool ChatHandler::HandleAddItemToAllCommand(char* args)
+{
+    if (!*args)
+        return false;
+
+    uint32 itemId = 0;
+
+    // Vyextrahovanie mena itemu
+    if (args[0] == '[')                                        // [name] manual form
+    {
+        char* citemName = citemName = strtok((char*)args, "]");
+
+        if (citemName && citemName[0])
+        {
+            std::string itemName = citemName + 1;
+            WorldDatabase.escape_string(itemName);
+            QueryResult *result = WorldDatabase.PQuery("SELECT entry FROM item_template WHERE name = '%s'", itemName.c_str());
+            if (!result)
+            {
+                PSendSysMessage(LANG_COMMAND_COULDNOTFIND, citemName + 1);
+                SetSentErrorMessage(true);
+                return false;
+            }
+            itemId = result->Fetch()->GetUInt16();
+            delete result;
+        }
+        else
+            return false;
+    }
+    else                                                    // item_id or [name] Shift-click form |color|Hitem:item_id:0:0:0|h[name]|h|r
+    {
+        char* cId = ExtractKeyFromLink(&args, "Hitem");
+        if (!cId)
+            return false;
+        itemId = atol(cId);
+    }
+
+    // Ziskanie poctu itemov (nepovinny parameter, defaultne 1)
+    char* ccount = strtok(NULL, " ");
+
+    int32 countproto = 1;
+
+    if (ccount)
+        countproto = strtol(ccount, NULL, 10);
+
+    if (countproto == 0)
+        countproto = 1;
+
+    //Odrstranenie itemov sa nepovoluje
+    if (countproto < 0)
+    {
+        // TODO bodol by aj vypis
+        return false;
+    }
+    // Ziskanie typu itemu
+    ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(itemId);
+    if (!pProto)
+    {
+        PSendSysMessage(LANG_COMMAND_ITEMIDINVALID, itemId);
+        SetSentErrorMessage(true);
+        return false;
+    }
+    Player* pl = m_session->GetPlayer();
+
+    // Prechod vsetkymi hracmi servra
+    HashMapHolder<Player>::MapType& m = ObjectAccessor::Instance().GetPlayers();
+    for (HashMapHolder<Player>::MapType::iterator itr = m.begin(); itr != m.end(); ++itr)
+    {
+        int32 count = countproto;
+
+        Player* plTarget = itr->second;
+
+        //Adding items
+        uint32 noSpaceForCount = 0;
+
+        // check space and find places
+        ItemPosCountVec dest;
+        uint8 msg = plTarget->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, count, &noSpaceForCount);
+        if (msg != EQUIP_ERR_OK)                               // convert to possible store amount
+            count -= noSpaceForCount;
+
+        if (count == 0 || dest.empty())                         // can't add any
+        {
+            PSendSysMessage(LANG_ITEM_CANNOT_CREATE, itemId, noSpaceForCount);
+            SetSentErrorMessage(true);
+            continue;
+        }
+
+        Item* item = plTarget->StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
+        if (count > 0 && item)
+        {
+            pl->SendNewItem(item, count, false, true);
+            if (pl != plTarget)
+                plTarget->SendNewItem(item, count, true, false);
+        }
+
+        if (noSpaceForCount > 0)
+            PSendSysMessage(LANG_ITEM_CANNOT_CREATE, itemId, noSpaceForCount);
+    }
+
+    return true;
+}
+
+bool ChatHandler::HandleSetGHCommand(char* args)
+{
+	// Vyhladanie postavy v db
+	std::string strargs = args;
+	CharacterDatabase.escape_string(strargs);
+
+	//                                                        0      1
+	QueryResult* result = CharacterDatabase.PQuery("SELECT account, guid FROM characters WHERE name = '%s'", strargs.c_str());
+	if (!result)
+	{
+		SendSysMessage("Chyba: Hrac sa nenasiel.");
+		SetSentErrorMessage(true);
+		return false;
+	}
+
+	// Ziskanie ID accountu a guid postavy
+	Field* fields = result->Fetch();
+	uint32 account_id = fields[0].GetUInt32();
+	uint32 guid = fields[1].GetUInt32();
+
+	// Zmazanie dotazu na postavu
+	delete result;
+
+	// Udaje o accounte
+	//                                                      0         1            2
+	QueryResult* result2 = LoginDatabase.PQuery("SELECT username, gmlevel, GuildHouse_comment FROM account WHERE id = '%u'", account_id);
+	if (!result2)
+	{
+		SendSysMessage("wtf: postava nema ziaden account ?!");
+		SetSentErrorMessage(true);
+		return false;
+	}
+
+	Field* fields2 = result2->Fetch();
+	/*
+	// Len pre VIP hracov
+	if(fields2[1].GetUInt32() != SEC_MODERATOR)
+	{
+	SendSysMessage("Chyba: Postava nie je na VIP accounte!");
+	SetSentErrorMessage(true);
+	return false;
+	}
+	*/
+	// Len pre tych, ktori este nemaju gh na svojom acce
+	if (!fields2[2].IsNULL())
+	{
+		PSendSysMessage("Chyba: Account '%s' uz ma nastaveny GH '%s' !", fields2[0].GetString(), fields2[2].GetString());
+		SetSentErrorMessage(true);
+		return false;
+	}
+
+	// Zmazanie dotazu na account
+	delete result2;
+
+	// Ziskanie guildy
+	//                                                       0
+	QueryResult* result3 = CharacterDatabase.PQuery("SELECT name FROM guild_member JOIN guild ON guild_member.guildid = guild.guildid WHERE guild_member.guid = %u", guid);
+	if (!result3)
+	{
+		SendSysMessage("Chyba: Hrac nie je v guilde!");
+		SetSentErrorMessage(true);
+		return false;
+	}
+
+	// Nazov guildy
+	Field* fields3 = result3->Fetch();
+	std::string guildname = fields3[0].GetCppString();
+	LoginDatabase.escape_string(guildname);
+
+	// Zaznam do db
+	LoginDatabase.PExecute("UPDATE account SET GuildHouse_comment='%s' WHERE id = %u", guildname.c_str(), account_id);
+
+	PSendSysMessage("Hracovi '%s'(%u) bola nastavena guilda '%s'", strargs.c_str(), guid, fields3[0].GetString());
+
+	// Zmazanie dotazu na guildu
+	delete result3;
+
+return true;
+}
+
+//Play sound for all online players
+bool ChatHandler::HandlePlaySoundToAllCommand(char* args)
+{
+    // USAGE: .debug playsound #soundid
+    // #soundid - ID decimal number from SoundEntries.dbc (1st column)
+    uint32 dwSoundId;
+    if (!ExtractUInt32(&args, dwSoundId))
+        return false;
+
+    if (!sSoundEntriesStore.LookupEntry(dwSoundId))
+    {
+        PSendSysMessage(LANG_SOUND_NOT_EXIST, dwSoundId);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    HashMapHolder<Player>::MapType& m = ObjectAccessor::Instance().GetPlayers();
+    for (HashMapHolder<Player>::MapType::iterator itr = m.begin(); itr != m.end(); ++itr)
+        itr->second->PlayDirectSound(dwSoundId, itr->second);
+
+    PSendSysMessage(LANG_YOU_HEAR_SOUND, dwSoundId);
+    return true;
+}
