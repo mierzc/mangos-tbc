@@ -785,6 +785,7 @@ ChatCommand* ChatHandler::getCommandTable()
 
         // Vlastne prikazy
         { "mc",             SEC_PLAYER,         false, &ChatHandler::HandleMCCommand,                  "", nullptr },
+        { "flymount",       SEC_PLAYER,         false, &ChatHandler::HandleFlyMountCommand,            "", nullptr },
 
         { nullptr,          0,                  false, nullptr,                                        "", nullptr }
     };

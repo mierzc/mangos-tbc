@@ -600,6 +600,7 @@ class MANGOS_DLL_SPEC ChatHandler
 
         // Vlastne prikazy
         bool HandleMCCommand(char* args);
+        bool HandleFlyMountCommand(char* args);
 
         //! Development Commands
         bool HandleSaveAllCommand(char* args);
