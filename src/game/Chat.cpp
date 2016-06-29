@@ -787,6 +787,13 @@ ChatCommand* ChatHandler::getCommandTable()
         { "mc",             SEC_PLAYER,         false, &ChatHandler::HandleMCCommand,                  "", nullptr },
         { "flymount",       SEC_PLAYER,         false, &ChatHandler::HandleFlyMountCommand,            "", nullptr },
         { "gh",             SEC_PLAYER,         false, &ChatHandler::HandleGuildHouseCommand,          "", nullptr },
+        { "wsg",            SEC_PLAYER,         false, &ChatHandler::HandleWSGCommand,                 "", nullptr },
+        { "ab",             SEC_PLAYER,         false, &ChatHandler::HandleABCommand,                  "", nullptr },
+        { "av",             SEC_PLAYER,         false, &ChatHandler::HandleAVCommand,                  "", nullptr },
+        { "eos",            SEC_PLAYER,         false, &ChatHandler::HandleEOSCommand,                 "", nullptr },
+        { "freeze",         SEC_GAMEMASTER,     false, &ChatHandler::HandleFreezeCommand,              "", nullptr },
+        { "unfreeze",       SEC_GAMEMASTER,     false, &ChatHandler::HandleUnFreezeCommand,            "", nullptr },
+        { "listfreeze",     SEC_GAMEMASTER,     false, &ChatHandler::HandleListFreezeCommand,          "", nullptr },
 
         { nullptr,          0,                  false, nullptr,                                        "", nullptr }
     };

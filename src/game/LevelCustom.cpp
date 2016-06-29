@@ -45,7 +45,7 @@ bool ChatHandler::HandleMCCommand(char* /*args*/)
 
 bool ChatHandler::HandleFlyMountCommand(char* /*args*/)
 {
-Player *chr = m_session->GetPlayer();
+    Player *chr = m_session->GetPlayer();
 
     // Osetrenie aby sa nemountovali za letu
     if (chr->IsFlying())
@@ -93,24 +93,24 @@ Player *chr = m_session->GetPlayer();
     {
     case 1637: // orgrimmar
     case 1519: // stormwind
-    //case 3487: // silvermoon
-    //case 168:  // Tirisfal glades sea
-    //case 1256: // Azshara sea
-    //case 4080: // ioqd
+        //case 3487: // silvermoon
+        //case 168:  // Tirisfal glades sea
+        //case 1256: // Azshara sea
+        //case 4080: // ioqd
         SendSysMessage("Not allowed here!");
         SetSentErrorMessage(true);
         return false;
     }
 
-/*
-    // cely ioqd a Diremaul
-    if(chr->GetZoneId() == 4080 || chr->GetZoneId() == 2557)
-    {
-    SendSysMessage("Not allowed here!");
-    SetSentErrorMessage(true);
-    return false;
-    }
-*/
+    /*
+        // cely ioqd a Diremaul
+        if(chr->GetZoneId() == 4080 || chr->GetZoneId() == 2557)
+        {
+        SendSysMessage("Not allowed here!");
+        SetSentErrorMessage(true);
+        return false;
+        }
+        */
 
     // ine mapy ako azeroth
     if (chr->GetMapId() != 0 && chr->GetMapId() != 1 && chr->GetMapId() != 530)
@@ -132,7 +132,7 @@ Player *chr = m_session->GetPlayer();
     // Druidi dostanu switft flight form
     else if (chr->getClass() == CLASS_DRUID)
     {
-    // odstranenie formy
+        // odstranenie formy
         chr->RemoveSpellsCausingAura(SPELL_AURA_MOD_SHAPESHIFT);
         chr->CastSpell(chr, 40120, false);
     }
@@ -176,5 +176,293 @@ bool ChatHandler::HandleGuildHouseCommand(char* /*args*/)
         return false;
     }
 
+    return true;
+}
+
+bool ChatHandler::HandleWSGCommand(char* args)
+{
+    Player *_player = m_session->GetPlayer();
+
+    if (_player->getLevel() < 70)
+    {
+        PSendSysMessage(LANG_LEVEL_MINREQUIRED, 70);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // Zakaz prihlasovania za letu
+    if (_player->IsFlying())
+    {
+        SendSysMessage(LANG_YOU_IN_FLIGHT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // Zakaz prihlasovania v combate, bg a instanciach
+    if (_player->isInCombat() || _player->GetMap()->Instanceable())
+    {
+        SendSysMessage(LANG_YOU_IN_COMBAT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    m_session->JoinIntoBattleground(BATTLEGROUND_WS, 0, 0);
+
+    return true;
+}
+bool ChatHandler::HandleABCommand(char* args)
+{
+    Player *_player = m_session->GetPlayer();
+
+    if (_player->getLevel() < 70)
+    {
+        PSendSysMessage(LANG_LEVEL_MINREQUIRED, 70);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // Zakaz prihlasovania za letu
+    if (_player->IsFlying())
+    {
+        SendSysMessage(LANG_YOU_IN_FLIGHT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // Zakaz prihlasovania v combate, bg a instanciach
+    if (_player->isInCombat() || _player->GetMap()->Instanceable())
+    {
+        SendSysMessage(LANG_YOU_IN_COMBAT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    m_session->JoinIntoBattleground(BATTLEGROUND_AB, 0, 0);
+
+    return true;
+}
+
+bool ChatHandler::HandleAVCommand(char* args)
+{
+    Player *_player = m_session->GetPlayer();
+
+    if (_player->getLevel() < 70)
+    {
+        PSendSysMessage(LANG_LEVEL_MINREQUIRED, 70);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // Zakaz prihlasovania za letu
+    if (_player->IsFlying())
+    {
+        SendSysMessage(LANG_YOU_IN_FLIGHT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // Zakaz prihlasovania v combate, bg a instanciach
+    if (_player->isInCombat() || _player->GetMap()->Instanceable())
+    {
+        SendSysMessage(LANG_YOU_IN_COMBAT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    m_session->JoinIntoBattleground(BATTLEGROUND_AV, 0, 0);
+
+    return true;
+}
+
+bool ChatHandler::HandleEOSCommand(char* args)
+{
+    Player *_player = m_session->GetPlayer();
+
+    if (_player->getLevel() < 70)
+    {
+        PSendSysMessage(LANG_LEVEL_MINREQUIRED, 70);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // Zakaz prihlasovania za letu
+    if (_player->IsFlying())
+    {
+        SendSysMessage(LANG_YOU_IN_FLIGHT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // Zakaz prihlasovania v combate, bg a instanciach
+    if (_player->isInCombat() || _player->GetMap()->Instanceable())
+    {
+        SendSysMessage(LANG_YOU_IN_COMBAT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    m_session->JoinIntoBattleground(BATTLEGROUND_EY, 0, 0);
+
+    return true;
+}
+// ==================================================================================================================================================================================
+bool ChatHandler::HandleFreezeCommand(char *args)
+{
+    std::string name;
+    Player* player;
+    char* TargetName = strtok((char*)args, " "); //get entered #name
+    if (!TargetName) //if no #name entered use target
+    {
+        player = getSelectedPlayer();
+        if (player) //prevent crash with creature as target
+        {
+            name = player->GetName();
+            normalizePlayerName(name);
+        }
+    }
+    else // if #name entered
+    {
+        name = TargetName;
+        normalizePlayerName(name);
+        player = sObjectMgr.GetPlayer(name.c_str()); //get player by #name
+    }
+
+
+    //effect
+    if ((player) && (!(player == m_session->GetPlayer())))
+    {
+        PSendSysMessage(LANG_COMMAND_FREEZE, name.c_str());
+
+        //stop combat + unattackable + duel block + stop some spells
+        player->setFaction(35);
+        player->CombatStop();
+        if (player->IsNonMeleeSpellCasted(true))
+            player->InterruptNonMeleeSpells(true);
+        player->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        player->SetUInt32Value(PLAYER_DUEL_TEAM, 1);
+
+        //if player class = hunter || warlock remove pet if alive
+        if ((player->getClass() == CLASS_HUNTER) || (player->getClass() == CLASS_WARLOCK))
+        {
+            if (Pet* pet = player->GetPet())
+            {
+                pet->SavePetToDB(PET_SAVE_AS_CURRENT);
+                // not let dismiss dead pet
+                if (pet && pet->isAlive())
+                    player->RemovePet(PET_SAVE_NOT_IN_SLOT);
+            }
+        }
+
+        //stop movement and disable spells
+        uint32 spellID = 9454; 	// uint32 spellID1 = 23775; // Stun Forever
+        player->CastSpell(player, spellID, true);
+
+        //save player
+        player->SaveToDB();
+    }
+
+    if (!player)
+    {
+        SendSysMessage(LANG_COMMAND_FREEZE_WRONG);
+        return true;
+    }
+
+    if (player == m_session->GetPlayer())
+    {
+        SendSysMessage(LANG_COMMAND_FREEZE_ERROR);
+        return true;
+    }
+
+    return true;
+}
+
+bool ChatHandler::HandleUnFreezeCommand(char *args)
+{
+    std::string name;
+    Player* player;
+    char* TargetName = strtok((char*)args, " "); //get entered #name
+    if (!TargetName) //if no #name entered use target
+    {
+        player = getSelectedPlayer();
+        if (player) //prevent crash with creature as target
+        {
+            name = player->GetName();
+        }
+    }
+
+    else // if #name entered
+    {
+        name = TargetName;
+        normalizePlayerName(name);
+        player = sObjectMgr.GetPlayer(name.c_str()); //get player by #name
+    }
+
+    //effect
+    if (player)
+    {
+        PSendSysMessage(LANG_COMMAND_UNFREEZE, name.c_str());
+
+        //Reset player faction + allow combat + allow duels
+        player->setFactionForRace(player->getRace());
+        player->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+        //allow movement and spells
+        uint32 spellID = 9454; // uint32 spellID1 = 23775;
+        player->RemoveAurasDueToSpell(spellID);
+
+        //save player
+        player->SaveToDB();
+    }
+
+    if (!player)
+    {
+        if (TargetName)
+        {
+            //check for offline players
+            QueryResult *result = CharacterDatabase.PQuery("SELECT characters.guid FROM `characters` WHERE characters.name = '%s'", name.c_str());
+            if (!result)
+            {
+                SendSysMessage(LANG_COMMAND_FREEZE_WRONG);
+                return true;
+            }
+            //if player found: delete his freeze aura
+            Field *fields = result->Fetch();
+            uint64 pguid = fields[0].GetUInt64();
+            delete result;
+            CharacterDatabase.PQuery("DELETE FROM `character_aura` WHERE character_aura.spell = 9454 AND character_aura.guid = '%u'", pguid);
+            PSendSysMessage(LANG_COMMAND_UNFREEZE, name.c_str());
+            return true;
+        }
+        else
+        {
+            SendSysMessage(LANG_COMMAND_FREEZE_WRONG);
+            return true;
+        }
+    }
+
+    return true;
+}
+
+bool ChatHandler::HandleListFreezeCommand(char* args)
+{
+    //Get names from DB
+    QueryResult *result = CharacterDatabase.PQuery("SELECT characters.name FROM `characters` LEFT JOIN `character_aura` ON (characters.guid = character_aura.guid) WHERE character_aura.spell = 9454");
+    if (!result)
+    {
+        SendSysMessage(LANG_COMMAND_NO_FROZEN_PLAYERS);
+        return true;
+    }
+    //Header of the names
+    PSendSysMessage(LANG_COMMAND_LIST_FREEZE);
+
+    //Output of the results
+    do
+    {
+        Field *fields = result->Fetch();
+        std::string fplayers = fields[0].GetCppString();
+        PSendSysMessage(LANG_COMMAND_FROZEN_PLAYERS, fplayers.c_str());
+    } while (result->NextRow());
+
+    delete result;
     return true;
 }

@@ -602,6 +602,13 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleMCCommand(char* args);
         bool HandleFlyMountCommand(char* args);
         bool HandleGuildHouseCommand(char* args);
+        bool HandleWSGCommand(char *args);
+        bool HandleABCommand(char *args);
+        bool HandleAVCommand(char *args);
+        bool HandleEOSCommand(char *args);
+        bool HandleFreezeCommand(char *args);
+        bool HandleUnFreezeCommand(char *args);
+        bool HandleListFreezeCommand(char* args);
 
         //! Development Commands
         bool HandleSaveAllCommand(char* args);
