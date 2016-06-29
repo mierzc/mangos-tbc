@@ -13,6 +13,7 @@ extern void AddSC_MCBuffer();
 extern void AddSC_barber();
 extern void AddSC_MCGuard();
 extern void AddSC_BGTokenChanger();
+extern void AddSC_CasinoGames();
 
 // examples
 extern void AddSC_example_creature();
@@ -351,6 +352,7 @@ void AddScripts()
     AddSC_barber();
     AddSC_MCGuard();
     AddSC_BGTokenChanger();
+    AddSC_CasinoGames();
 
     // examples
     AddSC_example_creature();
