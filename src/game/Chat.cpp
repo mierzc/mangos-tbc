@@ -555,6 +555,8 @@ ChatCommand* ChatHandler::getCommandTable()
         { "spell_script_target",         SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadSpellScriptTargetCommand,       "", nullptr },
         { "spell_target_position",       SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadSpellTargetPositionCommand,     "", nullptr },
         { "spell_threats",               SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadSpellThreatsCommand,            "", nullptr },
+        { "dbc",                         SEC_MODERATOR,     false, &ChatHandler::HandleReloadDBCCommand,                     "", nullptr },
+        { "creature_templatex",          SEC_MODERATOR,     false, &ChatHandler::HandleReloadCreatureTemplateCommand,        "", nullptr },
 
         { nullptr,                       0,                 false, nullptr,                                                  "", nullptr }
     };

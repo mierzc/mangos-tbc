@@ -466,3 +466,18 @@ bool ChatHandler::HandleListFreezeCommand(char* args)
     delete result;
     return true;
 }
+
+bool ChatHandler::HandleReloadDBCCommand(char* args)
+{
+    sWorld.CustomizeDBCData();
+    SendGlobalSysMessage("DB tables `DBC_*` reloaded.");
+    return true;
+}
+
+bool ChatHandler::HandleReloadCreatureTemplateCommand(char* args)
+{
+    sLog.outString("Re-Loading `creature_template` Table!");
+    sObjectMgr.LoadCreatureTemplates();
+    SendGlobalSysMessage("DB table `creature_template` reloaded.");
+    return true;
+}

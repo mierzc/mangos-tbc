@@ -30,6 +30,7 @@ class DBCStorage
         ~DBCStorage() { Clear(); }
 
         T const* LookupEntry(uint32 id) const { return (id >= nCount) ? nullptr : indexTable[id]; }
+        T * LookupEntryOnEdit(uint32 id) const { return (id >= nCount) ? nullptr : indexTable[id]; }
         uint32  GetNumRows() const { return nCount; }
         char const* GetFormat() const { return fmt; }
         uint32 GetFieldCount() const { return fieldCount; }

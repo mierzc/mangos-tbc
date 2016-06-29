@@ -18,7 +18,7 @@
 
 /** \file
     \ingroup world
-*/
+    */
 
 #include "World.h"
 #include "Database/DatabaseEnv.h"
@@ -78,18 +78,18 @@ uint8 World::m_ExitCode = SHUTDOWN_EXIT_CODE;
 volatile uint32 World::m_worldLoopCounter = 0;
 
 float World::m_MaxVisibleDistanceOnContinents = DEFAULT_VISIBILITY_DISTANCE;
-float World::m_MaxVisibleDistanceInInstances  = DEFAULT_VISIBILITY_INSTANCE;
-float World::m_MaxVisibleDistanceInBGArenas   = DEFAULT_VISIBILITY_BGARENAS;
+float World::m_MaxVisibleDistanceInInstances = DEFAULT_VISIBILITY_INSTANCE;
+float World::m_MaxVisibleDistanceInBGArenas = DEFAULT_VISIBILITY_BGARENAS;
 
-float World::m_MaxVisibleDistanceInFlight     = DEFAULT_VISIBILITY_DISTANCE;
-float World::m_VisibleUnitGreyDistance        = 0;
-float World::m_VisibleObjectGreyDistance      = 0;
+float World::m_MaxVisibleDistanceInFlight = DEFAULT_VISIBILITY_DISTANCE;
+float World::m_VisibleUnitGreyDistance = 0;
+float World::m_VisibleObjectGreyDistance = 0;
 
-float  World::m_relocation_lower_limit_sq     = 10.f * 10.f;
-uint32 World::m_relocation_ai_notify_delay    = 1000u;
+float  World::m_relocation_lower_limit_sq = 10.f * 10.f;
+uint32 World::m_relocation_ai_notify_delay = 1000u;
 
 /// World constructor
-World::World(): mail_timer(0), mail_timer_expires(0)
+World::World() : mail_timer(0), mail_timer_expires(0)
 {
     m_playerLimit = 0;
     m_allowMovement = true;
@@ -262,8 +262,8 @@ int32 World::GetQueuedSessionPos(WorldSession* sess)
     uint32 position = 1;
 
     for (Queue::const_iterator iter = m_QueuedSessions.begin(); iter != m_QueuedSessions.end(); ++iter, ++position)
-        if ((*iter) == sess)
-            return position;
+    if ((*iter) == sess)
+        return position;
 
     return 0;
 }
@@ -374,58 +374,58 @@ void World::LoadConfigSettings(bool reload)
     SetMotd(sConfig.GetStringDefault("Motd", "Welcome to the Massive Network Game Object Server."));
 
     ///- Read all rates from the config file
-    setConfigPos(CONFIG_FLOAT_RATE_HEALTH,                               "Rate.Health",                               1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_POWER_MANA,                           "Rate.Mana",                                 1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_POWER_RAGE_INCOME,                    "Rate.Rage.Income",                          1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_POWER_RAGE_LOSS,                      "Rate.Rage.Loss",                            1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_POWER_FOCUS,                          "Rate.Focus",                                1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_LOYALTY,                              "Rate.Loyalty",                              1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_POWER_ENERGY,                         "Rate.Energy",                               1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_SKILL_DISCOVERY,                      "Rate.Skill.Discovery",                      1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_POOR,                       "Rate.Drop.Item.Poor",                       1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_NORMAL,                     "Rate.Drop.Item.Normal",                     1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_UNCOMMON,                   "Rate.Drop.Item.Uncommon",                   1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_RARE,                       "Rate.Drop.Item.Rare",                       1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_EPIC,                       "Rate.Drop.Item.Epic",                       1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_LEGENDARY,                  "Rate.Drop.Item.Legendary",                  1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_ARTIFACT,                   "Rate.Drop.Item.Artifact",                   1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_REFERENCED,                 "Rate.Drop.Item.Referenced",                 1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_QUEST,                      "Rate.Drop.Item.Quest",                      1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DROP_MONEY,                           "Rate.Drop.Money",                           1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_PET_XP_KILL,                          "Rate.Pet.XP.Kill",                          1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_XP_KILL,                              "Rate.XP.Kill",                              1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_XP_QUEST,                             "Rate.XP.Quest",                             1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_XP_EXPLORE,                           "Rate.XP.Explore",                           1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_REPUTATION_GAIN,                      "Rate.Reputation.Gain",                      1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_REPUTATION_LOWLEVEL_KILL,             "Rate.Reputation.LowLevel.Kill",             1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_REPUTATION_LOWLEVEL_QUEST,            "Rate.Reputation.LowLevel.Quest",            1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_NORMAL_DAMAGE,               "Rate.Creature.Normal.Damage",               1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_ELITE_DAMAGE,          "Rate.Creature.Elite.Elite.Damage",          1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RAREELITE_DAMAGE,      "Rate.Creature.Elite.RAREELITE.Damage",      1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_WORLDBOSS_DAMAGE,      "Rate.Creature.Elite.WORLDBOSS.Damage",      1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RARE_DAMAGE,           "Rate.Creature.Elite.RARE.Damage",           1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_NORMAL_HP,                   "Rate.Creature.Normal.HP",                   1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_ELITE_HP,              "Rate.Creature.Elite.Elite.HP",              1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RAREELITE_HP,          "Rate.Creature.Elite.RAREELITE.HP",          1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_WORLDBOSS_HP,          "Rate.Creature.Elite.WORLDBOSS.HP",          1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RARE_HP,               "Rate.Creature.Elite.RARE.HP",               1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_NORMAL_SPELLDAMAGE,          "Rate.Creature.Normal.SpellDamage",          1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE,     "Rate.Creature.Elite.Elite.SpellDamage",     1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_HEALTH, "Rate.Health", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_POWER_MANA, "Rate.Mana", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_POWER_RAGE_INCOME, "Rate.Rage.Income", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_POWER_RAGE_LOSS, "Rate.Rage.Loss", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_POWER_FOCUS, "Rate.Focus", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_LOYALTY, "Rate.Loyalty", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_POWER_ENERGY, "Rate.Energy", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_SKILL_DISCOVERY, "Rate.Skill.Discovery", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_POOR, "Rate.Drop.Item.Poor", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_NORMAL, "Rate.Drop.Item.Normal", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_UNCOMMON, "Rate.Drop.Item.Uncommon", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_RARE, "Rate.Drop.Item.Rare", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_EPIC, "Rate.Drop.Item.Epic", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_LEGENDARY, "Rate.Drop.Item.Legendary", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_ARTIFACT, "Rate.Drop.Item.Artifact", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_REFERENCED, "Rate.Drop.Item.Referenced", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_ITEM_QUEST, "Rate.Drop.Item.Quest", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DROP_MONEY, "Rate.Drop.Money", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_PET_XP_KILL, "Rate.Pet.XP.Kill", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_XP_KILL, "Rate.XP.Kill", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_XP_QUEST, "Rate.XP.Quest", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_XP_EXPLORE, "Rate.XP.Explore", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_REPUTATION_GAIN, "Rate.Reputation.Gain", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_REPUTATION_LOWLEVEL_KILL, "Rate.Reputation.LowLevel.Kill", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_REPUTATION_LOWLEVEL_QUEST, "Rate.Reputation.LowLevel.Quest", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_NORMAL_DAMAGE, "Rate.Creature.Normal.Damage", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_ELITE_DAMAGE, "Rate.Creature.Elite.Elite.Damage", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RAREELITE_DAMAGE, "Rate.Creature.Elite.RAREELITE.Damage", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_WORLDBOSS_DAMAGE, "Rate.Creature.Elite.WORLDBOSS.Damage", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RARE_DAMAGE, "Rate.Creature.Elite.RARE.Damage", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_NORMAL_HP, "Rate.Creature.Normal.HP", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_ELITE_HP, "Rate.Creature.Elite.Elite.HP", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RAREELITE_HP, "Rate.Creature.Elite.RAREELITE.HP", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_WORLDBOSS_HP, "Rate.Creature.Elite.WORLDBOSS.HP", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RARE_HP, "Rate.Creature.Elite.RARE.HP", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_NORMAL_SPELLDAMAGE, "Rate.Creature.Normal.SpellDamage", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE, "Rate.Creature.Elite.Elite.SpellDamage", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RAREELITE_SPELLDAMAGE, "Rate.Creature.Elite.RAREELITE.SpellDamage", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_WORLDBOSS_SPELLDAMAGE, "Rate.Creature.Elite.WORLDBOSS.SpellDamage", 1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RARE_SPELLDAMAGE,      "Rate.Creature.Elite.RARE.SpellDamage", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_CREATURE_ELITE_RARE_SPELLDAMAGE, "Rate.Creature.Elite.RARE.SpellDamage", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_CREATURE_AGGRO, "Rate.Creature.Aggro", 1.0f);
-    setConfig(CONFIG_FLOAT_RATE_REST_INGAME,                    "Rate.Rest.InGame", 1.0f);
+    setConfig(CONFIG_FLOAT_RATE_REST_INGAME, "Rate.Rest.InGame", 1.0f);
     setConfig(CONFIG_FLOAT_RATE_REST_OFFLINE_IN_TAVERN_OR_CITY, "Rate.Rest.Offline.InTavernOrCity", 1.0f);
-    setConfig(CONFIG_FLOAT_RATE_REST_OFFLINE_IN_WILDERNESS,     "Rate.Rest.Offline.InWilderness", 1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_DAMAGE_FALL,  "Rate.Damage.Fall", 1.0f);
+    setConfig(CONFIG_FLOAT_RATE_REST_OFFLINE_IN_WILDERNESS, "Rate.Rest.Offline.InWilderness", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_DAMAGE_FALL, "Rate.Damage.Fall", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_AUCTION_TIME, "Rate.Auction.Time", 1.0f);
     setConfig(CONFIG_FLOAT_RATE_AUCTION_DEPOSIT, "Rate.Auction.Deposit", 1.0f);
-    setConfig(CONFIG_FLOAT_RATE_AUCTION_CUT,     "Rate.Auction.Cut", 1.0f);
+    setConfig(CONFIG_FLOAT_RATE_AUCTION_CUT, "Rate.Auction.Cut", 1.0f);
     setConfig(CONFIG_UINT32_AUCTION_DEPOSIT_MIN, "Auction.Deposit.Min", 0);
     setConfig(CONFIG_FLOAT_RATE_HONOR, "Rate.Honor", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_MINING_AMOUNT, "Rate.Mining.Amount", 1.0f);
-    setConfigPos(CONFIG_FLOAT_RATE_MINING_NEXT,   "Rate.Mining.Next", 1.0f);
+    setConfigPos(CONFIG_FLOAT_RATE_MINING_NEXT, "Rate.Mining.Next", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_INSTANCE_RESET_TIME, "Rate.InstanceResetTime", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_TALENT, "Rate.Talent", 1.0f);
     setConfigPos(CONFIG_FLOAT_RATE_CORPSE_DECAY_LOOTED, "Rate.Corpse.Decay.Looted", 0.0f);
@@ -434,18 +434,18 @@ void World::LoadConfigSettings(bool reload)
 
     setConfigPos(CONFIG_FLOAT_RATE_DURABILITY_LOSS_DAMAGE, "DurabilityLossChance.Damage", 0.5f);
     setConfigPos(CONFIG_FLOAT_RATE_DURABILITY_LOSS_ABSORB, "DurabilityLossChance.Absorb", 0.5f);
-    setConfigPos(CONFIG_FLOAT_RATE_DURABILITY_LOSS_PARRY,  "DurabilityLossChance.Parry",  0.05f);
-    setConfigPos(CONFIG_FLOAT_RATE_DURABILITY_LOSS_BLOCK,  "DurabilityLossChance.Block",  0.05f);
+    setConfigPos(CONFIG_FLOAT_RATE_DURABILITY_LOSS_PARRY, "DurabilityLossChance.Parry", 0.05f);
+    setConfigPos(CONFIG_FLOAT_RATE_DURABILITY_LOSS_BLOCK, "DurabilityLossChance.Block", 0.05f);
 
-    setConfigPos(CONFIG_FLOAT_LISTEN_RANGE_SAY,       "ListenRange.Say",       40.0f);
-    setConfigPos(CONFIG_FLOAT_LISTEN_RANGE_YELL,      "ListenRange.Yell",     300.0f);
+    setConfigPos(CONFIG_FLOAT_LISTEN_RANGE_SAY, "ListenRange.Say", 40.0f);
+    setConfigPos(CONFIG_FLOAT_LISTEN_RANGE_YELL, "ListenRange.Yell", 300.0f);
     setConfigPos(CONFIG_FLOAT_LISTEN_RANGE_TEXTEMOTE, "ListenRange.TextEmote", 40.0f);
 
     setConfigPos(CONFIG_FLOAT_GROUP_XP_DISTANCE, "MaxGroupXPDistance", 74.0f);
-    setConfigPos(CONFIG_FLOAT_SIGHT_GUARDER,     "GuarderSight",       50.0f);
-    setConfigPos(CONFIG_FLOAT_SIGHT_MONSTER,     "MonsterSight",       50.0f);
+    setConfigPos(CONFIG_FLOAT_SIGHT_GUARDER, "GuarderSight", 50.0f);
+    setConfigPos(CONFIG_FLOAT_SIGHT_MONSTER, "MonsterSight", 50.0f);
 
-    setConfigPos(CONFIG_FLOAT_CREATURE_FAMILY_ASSISTANCE_RADIUS,      "CreatureFamilyAssistanceRadius",     10.0f);
+    setConfigPos(CONFIG_FLOAT_CREATURE_FAMILY_ASSISTANCE_RADIUS, "CreatureFamilyAssistanceRadius", 10.0f);
     setConfigPos(CONFIG_FLOAT_CREATURE_FAMILY_FLEE_ASSISTANCE_RADIUS, "CreatureFamilyFleeAssistanceRadius", 30.0f);
 
     ///- Read other configuration items from the config file
@@ -488,23 +488,23 @@ void World::LoadConfigSettings(bool reload)
     if (configNoReload(reload, CONFIG_UINT32_REALM_ZONE, "RealmZone", REALM_ZONE_DEVELOPMENT))
         setConfig(CONFIG_UINT32_REALM_ZONE, "RealmZone", REALM_ZONE_DEVELOPMENT);
 
-    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_ACCOUNTS,            "AllowTwoSide.Accounts", false);
-    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_CHAT,    "AllowTwoSide.Interaction.Chat", false);
+    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_ACCOUNTS, "AllowTwoSide.Accounts", false);
+    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_CHAT, "AllowTwoSide.Interaction.Chat", false);
     setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_CHANNEL, "AllowTwoSide.Interaction.Channel", false);
-    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_GROUP,   "AllowTwoSide.Interaction.Group", false);
-    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_GUILD,   "AllowTwoSide.Interaction.Guild", false);
+    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_GROUP, "AllowTwoSide.Interaction.Group", false);
+    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_GUILD, "AllowTwoSide.Interaction.Guild", false);
     setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_AUCTION, "AllowTwoSide.Interaction.Auction", false);
-    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_MAIL,    "AllowTwoSide.Interaction.Mail", false);
-    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_WHO_LIST,            "AllowTwoSide.WhoList", false);
-    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_ADD_FRIEND,          "AllowTwoSide.AddFriend", false);
+    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_MAIL, "AllowTwoSide.Interaction.Mail", false);
+    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_WHO_LIST, "AllowTwoSide.WhoList", false);
+    setConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_ADD_FRIEND, "AllowTwoSide.AddFriend", false);
 
-    setConfig(CONFIG_UINT32_STRICT_PLAYER_NAMES,  "StrictPlayerNames",  0);
+    setConfig(CONFIG_UINT32_STRICT_PLAYER_NAMES, "StrictPlayerNames", 0);
     setConfig(CONFIG_UINT32_STRICT_CHARTER_NAMES, "StrictCharterNames", 0);
-    setConfig(CONFIG_UINT32_STRICT_PET_NAMES,     "StrictPetNames",     0);
+    setConfig(CONFIG_UINT32_STRICT_PET_NAMES, "StrictPetNames", 0);
 
-    setConfigMinMax(CONFIG_UINT32_MIN_PLAYER_NAME,  "MinPlayerName",  2, 1, MAX_PLAYER_NAME);
+    setConfigMinMax(CONFIG_UINT32_MIN_PLAYER_NAME, "MinPlayerName", 2, 1, MAX_PLAYER_NAME);
     setConfigMinMax(CONFIG_UINT32_MIN_CHARTER_NAME, "MinCharterName", 2, 1, MAX_CHARTER_NAME);
-    setConfigMinMax(CONFIG_UINT32_MIN_PET_NAME,     "MinPetName",     2, 1, MAX_PET_NAME);
+    setConfigMinMax(CONFIG_UINT32_MIN_PET_NAME, "MinPetName", 2, 1, MAX_PET_NAME);
 
     setConfig(CONFIG_UINT32_CHARACTERS_CREATING_DISABLED, "CharactersCreatingDisabled", 0);
 
@@ -533,14 +533,14 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_BOOL_ALL_TAXI_PATHS, "AllFlightPaths", false);
 
     setConfig(CONFIG_BOOL_INSTANCE_IGNORE_LEVEL, "Instance.IgnoreLevel", false);
-    setConfig(CONFIG_BOOL_INSTANCE_IGNORE_RAID,  "Instance.IgnoreRaid", false);
+    setConfig(CONFIG_BOOL_INSTANCE_IGNORE_RAID, "Instance.IgnoreRaid", false);
 
     setConfig(CONFIG_BOOL_CAST_UNSTUCK, "CastUnstuck", true);
     setConfig(CONFIG_UINT32_MAX_SPELL_CASTS_IN_CHAIN, "MaxSpellCastsInChain", 20);
     setConfig(CONFIG_UINT32_RABBIT_DAY, "RabbitDay", 0);
 
     setConfig(CONFIG_UINT32_INSTANCE_RESET_TIME_HOUR, "Instance.ResetTimeHour", 4);
-    setConfig(CONFIG_UINT32_INSTANCE_UNLOAD_DELAY,    "Instance.UnloadDelay", 30 * MINUTE * IN_MILLISECONDS);
+    setConfig(CONFIG_UINT32_INSTANCE_UNLOAD_DELAY, "Instance.UnloadDelay", 30 * MINUTE * IN_MILLISECONDS);
 
     setConfigMinMax(CONFIG_UINT32_MAX_PRIMARY_TRADE_SKILL, "MaxPrimaryTradeSkill", 2, 0, 10);
 
@@ -550,15 +550,15 @@ void World::LoadConfigSettings(bool reload)
 
     setConfigMinMax(CONFIG_UINT32_MIN_PETITION_SIGNS, "MinPetitionSigns", 9, 0, 9);
 
-    setConfig(CONFIG_UINT32_GM_LOGIN_STATE,    "GM.LoginState",    2);
-    setConfig(CONFIG_UINT32_GM_VISIBLE_STATE,  "GM.Visible",       2);
+    setConfig(CONFIG_UINT32_GM_LOGIN_STATE, "GM.LoginState", 2);
+    setConfig(CONFIG_UINT32_GM_VISIBLE_STATE, "GM.Visible", 2);
     setConfig(CONFIG_UINT32_GM_ACCEPT_TICKETS, "GM.AcceptTickets", 2);
-    setConfig(CONFIG_UINT32_GM_CHAT,           "GM.Chat",          2);
-    setConfig(CONFIG_UINT32_GM_WISPERING_TO,   "GM.WhisperingTo",  2);
+    setConfig(CONFIG_UINT32_GM_CHAT, "GM.Chat", 2);
+    setConfig(CONFIG_UINT32_GM_WISPERING_TO, "GM.WhisperingTo", 2);
 
-    setConfig(CONFIG_UINT32_GM_LEVEL_IN_GM_LIST,  "GM.InGMList.Level",  SEC_ADMINISTRATOR);
+    setConfig(CONFIG_UINT32_GM_LEVEL_IN_GM_LIST, "GM.InGMList.Level", SEC_ADMINISTRATOR);
     setConfig(CONFIG_UINT32_GM_LEVEL_IN_WHO_LIST, "GM.InWhoList.Level", SEC_ADMINISTRATOR);
-    setConfig(CONFIG_BOOL_GM_LOG_TRADE,           "GM.LogTrade", false);
+    setConfig(CONFIG_BOOL_GM_LOG_TRADE, "GM.LogTrade", false);
 
     setConfigMinMax(CONFIG_UINT32_START_GM_LEVEL, "GM.StartLevel", 1, getConfig(CONFIG_UINT32_START_PLAYER_LEVEL), MAX_LEVEL);
     setConfig(CONFIG_BOOL_GM_LOWER_SECURITY, "GM.LowerSecurity", false);
@@ -579,21 +579,21 @@ void World::LoadConfigSettings(bool reload)
 
     setConfig(CONFIG_UINT32_SKILL_CHANCE_ORANGE, "SkillChance.Orange", 100);
     setConfig(CONFIG_UINT32_SKILL_CHANCE_YELLOW, "SkillChance.Yellow", 75);
-    setConfig(CONFIG_UINT32_SKILL_CHANCE_GREEN,  "SkillChance.Green",  25);
-    setConfig(CONFIG_UINT32_SKILL_CHANCE_GREY,   "SkillChance.Grey",   0);
+    setConfig(CONFIG_UINT32_SKILL_CHANCE_GREEN, "SkillChance.Green", 25);
+    setConfig(CONFIG_UINT32_SKILL_CHANCE_GREY, "SkillChance.Grey", 0);
 
-    setConfig(CONFIG_UINT32_SKILL_CHANCE_MINING_STEPS,   "SkillChance.MiningSteps",   75);
+    setConfig(CONFIG_UINT32_SKILL_CHANCE_MINING_STEPS, "SkillChance.MiningSteps", 75);
     setConfig(CONFIG_UINT32_SKILL_CHANCE_SKINNING_STEPS, "SkillChance.SkinningSteps", 75);
 
     setConfig(CONFIG_BOOL_SKILL_PROSPECTING, "SkillChance.Prospecting", false);
 
-    setConfig(CONFIG_UINT32_SKILL_GAIN_CRAFTING,  "SkillGain.Crafting",  1);
-    setConfig(CONFIG_UINT32_SKILL_GAIN_DEFENSE,   "SkillGain.Defense",   1);
+    setConfig(CONFIG_UINT32_SKILL_GAIN_CRAFTING, "SkillGain.Crafting", 1);
+    setConfig(CONFIG_UINT32_SKILL_GAIN_DEFENSE, "SkillGain.Defense", 1);
     setConfig(CONFIG_UINT32_SKILL_GAIN_GATHERING, "SkillGain.Gathering", 1);
-    setConfig(CONFIG_UINT32_SKILL_GAIN_WEAPON,       "SkillGain.Weapon",    1);
+    setConfig(CONFIG_UINT32_SKILL_GAIN_WEAPON, "SkillGain.Weapon", 1);
 
-    setConfig(CONFIG_BOOL_SKILL_FAIL_LOOT_FISHING,         "SkillFail.Loot.Fishing", false);
-    setConfig(CONFIG_BOOL_SKILL_FAIL_GAIN_FISHING,         "SkillFail.Gain.Fishing", false);
+    setConfig(CONFIG_BOOL_SKILL_FAIL_LOOT_FISHING, "SkillFail.Loot.Fishing", false);
+    setConfig(CONFIG_BOOL_SKILL_FAIL_GAIN_FISHING, "SkillFail.Gain.Fishing", false);
     setConfig(CONFIG_BOOL_SKILL_FAIL_POSSIBLE_FISHINGPOOL, "SkillFail.Possible.FishingPool", true);
 
     setConfig(CONFIG_UINT32_MAX_OVERSPEED_PINGS, "MaxOverspeedPings", 2);
@@ -613,12 +613,12 @@ void World::LoadConfigSettings(bool reload)
 
     setConfig(CONFIG_UINT32_CHATFLOOD_MESSAGE_COUNT, "ChatFlood.MessageCount", 10);
     setConfig(CONFIG_UINT32_CHATFLOOD_MESSAGE_DELAY, "ChatFlood.MessageDelay", 1);
-    setConfig(CONFIG_UINT32_CHATFLOOD_MUTE_TIME,     "ChatFlood.MuteTime", 10);
+    setConfig(CONFIG_UINT32_CHATFLOOD_MUTE_TIME, "ChatFlood.MuteTime", 10);
 
     setConfig(CONFIG_BOOL_EVENT_ANNOUNCE, "Event.Announce", false);
 
     setConfig(CONFIG_UINT32_CREATURE_FAMILY_ASSISTANCE_DELAY, "CreatureFamilyAssistanceDelay", 1500);
-    setConfig(CONFIG_UINT32_CREATURE_FAMILY_FLEE_DELAY,       "CreatureFamilyFleeDelay",       7000);
+    setConfig(CONFIG_UINT32_CREATURE_FAMILY_FLEE_DELAY, "CreatureFamilyFleeDelay", 7000);
 
     setConfig(CONFIG_UINT32_WORLD_BOSS_LEVEL_DIFF, "WorldBossLevelDiff", 3);
 
@@ -631,19 +631,19 @@ void World::LoadConfigSettings(bool reload)
 
     setConfig(CONFIG_BOOL_DETECT_POS_COLLISION, "DetectPosCollision", true);
 
-    setConfig(CONFIG_BOOL_RESTRICTED_LFG_CHANNEL,      "Channel.RestrictedLfg", true);
+    setConfig(CONFIG_BOOL_RESTRICTED_LFG_CHANNEL, "Channel.RestrictedLfg", true);
     setConfig(CONFIG_BOOL_SILENTLY_GM_JOIN_TO_CHANNEL, "Channel.SilentlyGMJoin", false);
 
-    setConfig(CONFIG_BOOL_TALENTS_INSPECTING,           "TalentsInspecting", true);
+    setConfig(CONFIG_BOOL_TALENTS_INSPECTING, "TalentsInspecting", true);
     setConfig(CONFIG_BOOL_CHAT_FAKE_MESSAGE_PREVENTING, "ChatFakeMessagePreventing", false);
 
     setConfig(CONFIG_UINT32_CHAT_STRICT_LINK_CHECKING_SEVERITY, "ChatStrictLinkChecking.Severity", 0);
-    setConfig(CONFIG_UINT32_CHAT_STRICT_LINK_CHECKING_KICK,     "ChatStrictLinkChecking.Kick", 0);
+    setConfig(CONFIG_UINT32_CHAT_STRICT_LINK_CHECKING_KICK, "ChatStrictLinkChecking.Kick", 0);
 
-    setConfig(CONFIG_BOOL_CORPSE_EMPTY_LOOT_SHOW,      "Corpse.EmptyLootShow", true);
-    setConfig(CONFIG_UINT32_CORPSE_DECAY_NORMAL,    "Corpse.Decay.NORMAL",    300);
-    setConfig(CONFIG_UINT32_CORPSE_DECAY_RARE,      "Corpse.Decay.RARE",      900);
-    setConfig(CONFIG_UINT32_CORPSE_DECAY_ELITE,     "Corpse.Decay.ELITE",     600);
+    setConfig(CONFIG_BOOL_CORPSE_EMPTY_LOOT_SHOW, "Corpse.EmptyLootShow", true);
+    setConfig(CONFIG_UINT32_CORPSE_DECAY_NORMAL, "Corpse.Decay.NORMAL", 300);
+    setConfig(CONFIG_UINT32_CORPSE_DECAY_RARE, "Corpse.Decay.RARE", 900);
+    setConfig(CONFIG_UINT32_CORPSE_DECAY_ELITE, "Corpse.Decay.ELITE", 600);
     setConfig(CONFIG_UINT32_CORPSE_DECAY_RAREELITE, "Corpse.Decay.RAREELITE", 1200);
     setConfig(CONFIG_UINT32_CORPSE_DECAY_WORLDBOSS, "Corpse.Decay.WORLDBOSS", 3600);
 
@@ -651,10 +651,10 @@ void World::LoadConfigSettings(bool reload)
 
     setConfig(CONFIG_BOOL_DEATH_CORPSE_RECLAIM_DELAY_PVP, "Death.CorpseReclaimDelay.PvP", true);
     setConfig(CONFIG_BOOL_DEATH_CORPSE_RECLAIM_DELAY_PVE, "Death.CorpseReclaimDelay.PvE", true);
-    setConfig(CONFIG_BOOL_DEATH_BONES_WORLD,              "Death.Bones.World", true);
-    setConfig(CONFIG_BOOL_DEATH_BONES_BG_OR_ARENA,        "Death.Bones.BattlegroundOrArena", true);
-    setConfigMinMax(CONFIG_FLOAT_GHOST_RUN_SPEED_WORLD,   "Death.Ghost.RunSpeed.World", 1.0f, 0.1f, 10.0f);
-    setConfigMinMax(CONFIG_FLOAT_GHOST_RUN_SPEED_BG,      "Death.Ghost.RunSpeed.Battleground", 1.0f, 0.1f, 10.0f);
+    setConfig(CONFIG_BOOL_DEATH_BONES_WORLD, "Death.Bones.World", true);
+    setConfig(CONFIG_BOOL_DEATH_BONES_BG_OR_ARENA, "Death.Bones.BattlegroundOrArena", true);
+    setConfigMinMax(CONFIG_FLOAT_GHOST_RUN_SPEED_WORLD, "Death.Ghost.RunSpeed.World", 1.0f, 0.1f, 10.0f);
+    setConfigMinMax(CONFIG_FLOAT_GHOST_RUN_SPEED_BG, "Death.Ghost.RunSpeed.Battleground", 1.0f, 0.1f, 10.0f);
 
     setConfig(CONFIG_FLOAT_THREAT_RADIUS, "ThreatRadius", 100.0f);
     setConfigMin(CONFIG_UINT32_CREATURE_RESPAWN_AGGRO_DELAY, "CreatureRespawnAggroDelay", 5000, 0);
@@ -665,28 +665,28 @@ void World::LoadConfigSettings(bool reload)
     else
         setConfig(CONFIG_BOOL_DECLINED_NAMES_USED, "DeclinedNames", false);
 
-    setConfig(CONFIG_BOOL_BATTLEGROUND_CAST_DESERTER,                  "Battleground.CastDeserter", true);
-    setConfigMinMax(CONFIG_UINT32_BATTLEGROUND_QUEUE_ANNOUNCER_JOIN,   "Battleground.QueueAnnouncer.Join", 0, 0, 2);
-    setConfig(CONFIG_BOOL_BATTLEGROUND_QUEUE_ANNOUNCER_START,          "Battleground.QueueAnnouncer.Start", false);
-    setConfig(CONFIG_BOOL_BATTLEGROUND_SCORE_STATISTICS,               "Battleground.ScoreStatistics", false);
-    setConfig(CONFIG_UINT32_BATTLEGROUND_INVITATION_TYPE,              "Battleground.InvitationType", 0);
-    setConfig(CONFIG_UINT32_BATTLEGROUND_PREMATURE_FINISH_TIMER,       "BattleGround.PrematureFinishTimer", 5 * MINUTE * IN_MILLISECONDS);
+    setConfig(CONFIG_BOOL_BATTLEGROUND_CAST_DESERTER, "Battleground.CastDeserter", true);
+    setConfigMinMax(CONFIG_UINT32_BATTLEGROUND_QUEUE_ANNOUNCER_JOIN, "Battleground.QueueAnnouncer.Join", 0, 0, 2);
+    setConfig(CONFIG_BOOL_BATTLEGROUND_QUEUE_ANNOUNCER_START, "Battleground.QueueAnnouncer.Start", false);
+    setConfig(CONFIG_BOOL_BATTLEGROUND_SCORE_STATISTICS, "Battleground.ScoreStatistics", false);
+    setConfig(CONFIG_UINT32_BATTLEGROUND_INVITATION_TYPE, "Battleground.InvitationType", 0);
+    setConfig(CONFIG_UINT32_BATTLEGROUND_PREMATURE_FINISH_TIMER, "BattleGround.PrematureFinishTimer", 5 * MINUTE * IN_MILLISECONDS);
     setConfig(CONFIG_UINT32_BATTLEGROUND_PREMADE_GROUP_WAIT_FOR_MATCH, "BattleGround.PremadeGroupWaitForMatch", 30 * MINUTE * IN_MILLISECONDS);
-    setConfig(CONFIG_UINT32_ARENA_MAX_RATING_DIFFERENCE,               "Arena.MaxRatingDifference", 150);
-    setConfig(CONFIG_UINT32_ARENA_RATING_DISCARD_TIMER,                "Arena.RatingDiscardTimer", 10 * MINUTE * IN_MILLISECONDS);
-    setConfig(CONFIG_BOOL_ARENA_AUTO_DISTRIBUTE_POINTS,                "Arena.AutoDistributePoints", false);
-    setConfig(CONFIG_UINT32_ARENA_AUTO_DISTRIBUTE_INTERVAL_DAYS,       "Arena.AutoDistributeInterval", 7);
-    setConfig(CONFIG_BOOL_ARENA_QUEUE_ANNOUNCER_JOIN,                  "Arena.QueueAnnouncer.Join", false);
-    setConfig(CONFIG_BOOL_ARENA_QUEUE_ANNOUNCER_EXIT,                  "Arena.QueueAnnouncer.Exit", false);
-    setConfig(CONFIG_UINT32_ARENA_SEASON_ID,                           "Arena.ArenaSeason.ID", 1);
-    setConfigMin(CONFIG_INT32_ARENA_STARTRATING,                       "Arena.StartRating", -1, -1);
-    setConfigMin(CONFIG_INT32_ARENA_STARTPERSONALRATING,               "Arena.StartPersonalRating", -1, -1);
-    setConfig(CONFIG_BOOL_OUTDOORPVP_SI_ENABLED,                       "OutdoorPvp.SIEnabled", true);
-    setConfig(CONFIG_BOOL_OUTDOORPVP_EP_ENABLED,                       "OutdoorPvp.EPEnabled", true);
-    setConfig(CONFIG_BOOL_OUTDOORPVP_HP_ENABLED,                       "OutdoorPvp.HPEnabled", true);
-    setConfig(CONFIG_BOOL_OUTDOORPVP_ZM_ENABLED,                       "OutdoorPvp.ZMEnabled", true);
-    setConfig(CONFIG_BOOL_OUTDOORPVP_TF_ENABLED,                       "OutdoorPvp.TFEnabled", true);
-    setConfig(CONFIG_BOOL_OUTDOORPVP_NA_ENABLED,                       "OutdoorPvp.NAEnabled", true);
+    setConfig(CONFIG_UINT32_ARENA_MAX_RATING_DIFFERENCE, "Arena.MaxRatingDifference", 150);
+    setConfig(CONFIG_UINT32_ARENA_RATING_DISCARD_TIMER, "Arena.RatingDiscardTimer", 10 * MINUTE * IN_MILLISECONDS);
+    setConfig(CONFIG_BOOL_ARENA_AUTO_DISTRIBUTE_POINTS, "Arena.AutoDistributePoints", false);
+    setConfig(CONFIG_UINT32_ARENA_AUTO_DISTRIBUTE_INTERVAL_DAYS, "Arena.AutoDistributeInterval", 7);
+    setConfig(CONFIG_BOOL_ARENA_QUEUE_ANNOUNCER_JOIN, "Arena.QueueAnnouncer.Join", false);
+    setConfig(CONFIG_BOOL_ARENA_QUEUE_ANNOUNCER_EXIT, "Arena.QueueAnnouncer.Exit", false);
+    setConfig(CONFIG_UINT32_ARENA_SEASON_ID, "Arena.ArenaSeason.ID", 1);
+    setConfigMin(CONFIG_INT32_ARENA_STARTRATING, "Arena.StartRating", -1, -1);
+    setConfigMin(CONFIG_INT32_ARENA_STARTPERSONALRATING, "Arena.StartPersonalRating", -1, -1);
+    setConfig(CONFIG_BOOL_OUTDOORPVP_SI_ENABLED, "OutdoorPvp.SIEnabled", true);
+    setConfig(CONFIG_BOOL_OUTDOORPVP_EP_ENABLED, "OutdoorPvp.EPEnabled", true);
+    setConfig(CONFIG_BOOL_OUTDOORPVP_HP_ENABLED, "OutdoorPvp.HPEnabled", true);
+    setConfig(CONFIG_BOOL_OUTDOORPVP_ZM_ENABLED, "OutdoorPvp.ZMEnabled", true);
+    setConfig(CONFIG_BOOL_OUTDOORPVP_TF_ENABLED, "OutdoorPvp.TFEnabled", true);
+    setConfig(CONFIG_BOOL_OUTDOORPVP_NA_ENABLED, "OutdoorPvp.NAEnabled", true);
 
     setConfig(CONFIG_BOOL_OFFHAND_CHECK_AT_TALENTS_RESET, "OffhandCheckAtTalentsReset", false);
 
@@ -700,34 +700,34 @@ void World::LoadConfigSettings(bool reload)
     setConfigMin(CONFIG_UINT32_GUILD_BANK_EVENT_LOG_COUNT, "Guild.BankEventLogRecordsCount", GUILD_BANK_MAX_LOGS, GUILD_BANK_MAX_LOGS);
 
     setConfig(CONFIG_UINT32_TIMERBAR_FATIGUE_GMLEVEL, "TimerBar.Fatigue.GMLevel", SEC_CONSOLE);
-    setConfig(CONFIG_UINT32_TIMERBAR_FATIGUE_MAX,     "TimerBar.Fatigue.Max", 60);
-    setConfig(CONFIG_UINT32_TIMERBAR_BREATH_GMLEVEL,  "TimerBar.Breath.GMLevel", SEC_CONSOLE);
-    setConfig(CONFIG_UINT32_TIMERBAR_BREATH_MAX,      "TimerBar.Breath.Max", 60);
-    setConfig(CONFIG_UINT32_TIMERBAR_FIRE_GMLEVEL,    "TimerBar.Fire.GMLevel", SEC_CONSOLE);
-    setConfig(CONFIG_UINT32_TIMERBAR_FIRE_MAX,        "TimerBar.Fire.Max", 1);
+    setConfig(CONFIG_UINT32_TIMERBAR_FATIGUE_MAX, "TimerBar.Fatigue.Max", 60);
+    setConfig(CONFIG_UINT32_TIMERBAR_BREATH_GMLEVEL, "TimerBar.Breath.GMLevel", SEC_CONSOLE);
+    setConfig(CONFIG_UINT32_TIMERBAR_BREATH_MAX, "TimerBar.Breath.Max", 60);
+    setConfig(CONFIG_UINT32_TIMERBAR_FIRE_GMLEVEL, "TimerBar.Fire.GMLevel", SEC_CONSOLE);
+    setConfig(CONFIG_UINT32_TIMERBAR_FIRE_MAX, "TimerBar.Fire.Max", 1);
 
-    setConfig(CONFIG_BOOL_PET_UNSUMMON_AT_MOUNT,      "PetUnsummonAtMount", true);
+    setConfig(CONFIG_BOOL_PET_UNSUMMON_AT_MOUNT, "PetUnsummonAtMount", true);
 
     setConfigMinMax(CONFIG_UINT32_AZEROTH_GMLEVEL_FLY, "Azeroth.GMLevel.Fly", SEC_MODERATOR, SEC_PLAYER, SEC_ADMINISTRATOR);
 
     m_relocation_ai_notify_delay = sConfig.GetIntDefault("Visibility.AIRelocationNotifyDelay", 1000u);
-    m_relocation_lower_limit_sq  = pow(sConfig.GetFloatDefault("Visibility.RelocationLowerLimit", 10), 2);
+    m_relocation_lower_limit_sq = pow(sConfig.GetFloatDefault("Visibility.RelocationLowerLimit", 10), 2);
 
     m_VisibleUnitGreyDistance = sConfig.GetFloatDefault("Visibility.Distance.Grey.Unit", 1);
-    if (m_VisibleUnitGreyDistance >  MAX_VISIBILITY_DISTANCE)
+    if (m_VisibleUnitGreyDistance > MAX_VISIBILITY_DISTANCE)
     {
         sLog.outError("Visibility.Distance.Grey.Unit can't be greater %f", MAX_VISIBILITY_DISTANCE);
         m_VisibleUnitGreyDistance = MAX_VISIBILITY_DISTANCE;
     }
     m_VisibleObjectGreyDistance = sConfig.GetFloatDefault("Visibility.Distance.Grey.Object", 10);
-    if (m_VisibleObjectGreyDistance >  MAX_VISIBILITY_DISTANCE)
+    if (m_VisibleObjectGreyDistance > MAX_VISIBILITY_DISTANCE)
     {
         sLog.outError("Visibility.Distance.Grey.Object can't be greater %f", MAX_VISIBILITY_DISTANCE);
         m_VisibleObjectGreyDistance = MAX_VISIBILITY_DISTANCE;
     }
 
     // visibility on continents
-    m_MaxVisibleDistanceOnContinents      = sConfig.GetFloatDefault("Visibility.Distance.Continents",     DEFAULT_VISIBILITY_DISTANCE);
+    m_MaxVisibleDistanceOnContinents = sConfig.GetFloatDefault("Visibility.Distance.Continents", DEFAULT_VISIBILITY_DISTANCE);
     if (m_MaxVisibleDistanceOnContinents < 45 * getConfig(CONFIG_FLOAT_RATE_CREATURE_AGGRO))
     {
         sLog.outError("Visibility.Distance.Continents can't be less max aggro radius %f", 45 * getConfig(CONFIG_FLOAT_RATE_CREATURE_AGGRO));
@@ -740,7 +740,7 @@ void World::LoadConfigSettings(bool reload)
     }
 
     // visibility in instances
-    m_MaxVisibleDistanceInInstances        = sConfig.GetFloatDefault("Visibility.Distance.Instances",       DEFAULT_VISIBILITY_INSTANCE);
+    m_MaxVisibleDistanceInInstances = sConfig.GetFloatDefault("Visibility.Distance.Instances", DEFAULT_VISIBILITY_INSTANCE);
     if (m_MaxVisibleDistanceInInstances < 45 * getConfig(CONFIG_FLOAT_RATE_CREATURE_AGGRO))
     {
         sLog.outError("Visibility.Distance.Instances can't be less max aggro radius %f", 45 * getConfig(CONFIG_FLOAT_RATE_CREATURE_AGGRO));
@@ -753,7 +753,7 @@ void World::LoadConfigSettings(bool reload)
     }
 
     // visibility in BG/Arenas
-    m_MaxVisibleDistanceInBGArenas        = sConfig.GetFloatDefault("Visibility.Distance.BGArenas",       DEFAULT_VISIBILITY_BGARENAS);
+    m_MaxVisibleDistanceInBGArenas = sConfig.GetFloatDefault("Visibility.Distance.BGArenas", DEFAULT_VISIBILITY_BGARENAS);
     if (m_MaxVisibleDistanceInBGArenas < 45 * getConfig(CONFIG_FLOAT_RATE_CREATURE_AGGRO))
     {
         sLog.outError("Visibility.Distance.BGArenas can't be less max aggro radius %f", 45 * getConfig(CONFIG_FLOAT_RATE_CREATURE_AGGRO));
@@ -765,7 +765,7 @@ void World::LoadConfigSettings(bool reload)
         m_MaxVisibleDistanceInBGArenas = MAX_VISIBILITY_DISTANCE - m_VisibleUnitGreyDistance;
     }
 
-    m_MaxVisibleDistanceInFlight    = sConfig.GetFloatDefault("Visibility.Distance.InFlight",      DEFAULT_VISIBILITY_DISTANCE);
+    m_MaxVisibleDistanceInFlight = sConfig.GetFloatDefault("Visibility.Distance.InFlight", DEFAULT_VISIBILITY_DISTANCE);
     if (m_MaxVisibleDistanceInFlight + m_VisibleObjectGreyDistance > MAX_VISIBILITY_DISTANCE)
     {
         sLog.outError("Visibility.Distance.InFlight can't be greater %f", MAX_VISIBILITY_DISTANCE - m_VisibleObjectGreyDistance);
@@ -778,7 +778,7 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_UINT32_CHARDELETE_KEEP_DAYS, "CharDelete.KeepDays", 30);
 
     if (configNoReload(reload, CONFIG_UINT32_GUID_RESERVE_SIZE_CREATURE, "GuidReserveSize.Creature", 100))
-        setConfig(CONFIG_UINT32_GUID_RESERVE_SIZE_CREATURE,   "GuidReserveSize.Creature",   100);
+        setConfig(CONFIG_UINT32_GUID_RESERVE_SIZE_CREATURE, "GuidReserveSize.Creature", 100);
     if (configNoReload(reload, CONFIG_UINT32_GUID_RESERVE_SIZE_GAMEOBJECT, "GuidReserveSize.GameObject", 100))
         setConfig(CONFIG_UINT32_GUID_RESERVE_SIZE_GAMEOBJECT, "GuidReserveSize.GameObject", 100);
 
@@ -815,7 +815,7 @@ void World::LoadConfigSettings(bool reload)
     VMAP::VMapFactory::createOrGetVMapManager()->setEnableHeightCalc(enableHeight);
     VMAP::VMapFactory::preventSpellsFromBeingTestedForLoS(ignoreSpellIds.c_str());
     sLog.outString("WORLD: VMap support included. LineOfSight:%i, getHeight:%i, indoorCheck:%i",
-                   enableLOS, enableHeight, getConfig(CONFIG_BOOL_VMAP_INDOOR_CHECK) ? 1 : 0);
+        enableLOS, enableHeight, getConfig(CONFIG_BOOL_VMAP_INDOOR_CHECK) ? 1 : 0);
     sLog.outString("WORLD: VMap data directory is: %svmaps", m_dataPath.c_str());
 
     setConfig(CONFIG_BOOL_MMAP_ENABLED, "mmap.enabled", true);
@@ -843,14 +843,14 @@ void World::SetInitialWorldSettings()
 
     ///- Check the existence of the map files for all races start areas.
     if (!MapManager::ExistMapAndVMap(0, -6240.32f, 331.033f) ||                     // Dwarf/ Gnome
-            !MapManager::ExistMapAndVMap(0, -8949.95f, -132.493f) ||                // Human
-            !MapManager::ExistMapAndVMap(1, -618.518f, -4251.67f) ||                // Orc
-            !MapManager::ExistMapAndVMap(0, 1676.35f, 1677.45f) ||                  // Scourge
-            !MapManager::ExistMapAndVMap(1, 10311.3f, 832.463f) ||                  // NightElf
-            !MapManager::ExistMapAndVMap(1, -2917.58f, -257.98f) ||                 // Tauren
-            (m_configUint32Values[CONFIG_UINT32_EXPANSION] >= EXPANSION_TBC &&
-             (!MapManager::ExistMapAndVMap(530, 10349.6f, -6357.29f) ||             // BloodElf
-              !MapManager::ExistMapAndVMap(530, -3961.64f, -13931.2f))))             // Draenei
+        !MapManager::ExistMapAndVMap(0, -8949.95f, -132.493f) ||                // Human
+        !MapManager::ExistMapAndVMap(1, -618.518f, -4251.67f) ||                // Orc
+        !MapManager::ExistMapAndVMap(0, 1676.35f, 1677.45f) ||                  // Scourge
+        !MapManager::ExistMapAndVMap(1, 10311.3f, 832.463f) ||                  // NightElf
+        !MapManager::ExistMapAndVMap(1, -2917.58f, -257.98f) ||                 // Tauren
+        (m_configUint32Values[CONFIG_UINT32_EXPANSION] >= EXPANSION_TBC &&
+        (!MapManager::ExistMapAndVMap(530, 10349.6f, -6357.29f) ||             // BloodElf
+        !MapManager::ExistMapAndVMap(530, -3961.64f, -13931.2f))))             // Draenei
     {
         sLog.outError("Correct *.map files not found in path '%smaps' or *.vmtree/*.vmtile files in '%svmaps'. Please place *.map and vmap files in appropriate directories or correct the DataDir value in the mangosd.conf file.", m_dataPath.c_str(), m_dataPath.c_str());
         Log::WaitBeforeContinueIfNeed();
@@ -879,6 +879,7 @@ void World::SetInitialWorldSettings()
     ///- Load the DBC files
     sLog.outString("Initialize DBC data stores...");
     LoadDBCStores(m_dataPath);
+    CustomizeDBCData();
     DetectDBCLang();
     sObjectMgr.SetDBCLocaleIndex(GetDefaultDbcLocale());    // Get once for all the locale index of DBC language (console/broadcasts)
 
@@ -1217,18 +1218,18 @@ void World::SetInitialWorldSettings()
     sLog.outString("Initializing Scripting Library...");
     switch (sScriptMgr.LoadScriptLibrary(MANGOS_SCRIPT_NAME))
     {
-        case SCRIPT_LOAD_OK:
-            sLog.outString("Scripting library loaded.");
-            break;
-        case SCRIPT_LOAD_ERR_NOT_FOUND:
-            sLog.outError("Scripting library not found or not accessible.");
-            break;
-        case SCRIPT_LOAD_ERR_WRONG_API:
-            sLog.outError("Scripting library has wrong list functions (outdated?).");
-            break;
-        case SCRIPT_LOAD_ERR_OUTDATED:
-            sLog.outError("Scripting library build for old mangosd revision. You need rebuild it.");
-            break;
+    case SCRIPT_LOAD_OK:
+        sLog.outString("Scripting library loaded.");
+        break;
+    case SCRIPT_LOAD_ERR_NOT_FOUND:
+        sLog.outError("Scripting library not found or not accessible.");
+        break;
+    case SCRIPT_LOAD_ERR_WRONG_API:
+        sLog.outError("Scripting library has wrong list functions (outdated?).");
+        break;
+    case SCRIPT_LOAD_ERR_OUTDATED:
+        sLog.outError("Scripting library build for old mangosd revision. You need rebuild it.");
+        break;
     }
     sLog.outString();
 
@@ -1243,10 +1244,10 @@ void World::SetInitialWorldSettings()
     local = *(localtime(&curr));                            // dereference and assign
     char isoDate[128];
     sprintf(isoDate, "%04d-%02d-%02d %02d:%02d:%02d",
-            local.tm_year + 1900, local.tm_mon + 1, local.tm_mday, local.tm_hour, local.tm_min, local.tm_sec);
+        local.tm_year + 1900, local.tm_mon + 1, local.tm_mday, local.tm_hour, local.tm_min, local.tm_sec);
 
     LoginDatabase.PExecute("INSERT INTO uptime (realmid, starttime, startstring, uptime) VALUES('%u', " UI64FMTD ", '%s', 0)",
-                           realmID, uint64(m_startTime), isoDate);
+        realmID, uint64(m_startTime), isoDate);
 
     m_timers[WUPDATE_AUCTIONS].SetInterval(MINUTE * IN_MILLISECONDS);
     m_timers[WUPDATE_UPTIME].SetInterval(getConfig(CONFIG_UINT32_UPTIME_UPDATE)*MINUTE * IN_MILLISECONDS);
@@ -1349,7 +1350,7 @@ void World::DetectDBCLang()
     }
 
     if (default_locale != m_lang_confid && m_lang_confid < MAX_LOCALE &&
-            (m_availableDbcLocaleMask & (1 << m_lang_confid)))
+        (m_availableDbcLocaleMask & (1 << m_lang_confid)))
     {
         default_locale = m_lang_confid;
     }
@@ -1477,44 +1478,44 @@ namespace MaNGOS
 {
     class WorldWorldTextBuilder
     {
-        public:
-            typedef std::vector<WorldPacket*> WorldPacketList;
-            explicit WorldWorldTextBuilder(int32 textId, va_list* args = nullptr) : i_textId(textId), i_args(args) {}
-            void operator()(WorldPacketList& data_list, int32 loc_idx)
+    public:
+        typedef std::vector<WorldPacket*> WorldPacketList;
+        explicit WorldWorldTextBuilder(int32 textId, va_list* args = nullptr) : i_textId(textId), i_args(args) {}
+        void operator()(WorldPacketList& data_list, int32 loc_idx)
+        {
+            char const* text = sObjectMgr.GetMangosString(i_textId, loc_idx);
+
+            if (i_args)
             {
-                char const* text = sObjectMgr.GetMangosString(i_textId, loc_idx);
+                // we need copy va_list before use or original va_list will corrupted
+                va_list ap;
+                va_copy(ap, *i_args);
 
-                if (i_args)
-                {
-                    // we need copy va_list before use or original va_list will corrupted
-                    va_list ap;
-                    va_copy(ap, *i_args);
+                char str[2048];
+                vsnprintf(str, 2048, text, ap);
+                va_end(ap);
 
-                    char str [2048];
-                    vsnprintf(str, 2048, text, ap);
-                    va_end(ap);
-
-                    do_helper(data_list, &str[0]);
-                }
-                else
-                    do_helper(data_list, (char*)text);
+                do_helper(data_list, &str[0]);
             }
-        private:
-            char* lineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = nullptr; return start; }
-            void do_helper(WorldPacketList& data_list, char* text)
+            else
+                do_helper(data_list, (char*)text);
+        }
+    private:
+        char* lineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = nullptr; return start; }
+        void do_helper(WorldPacketList& data_list, char* text)
+        {
+            char* pos = text;
+
+            while (char* line = lineFromMessage(pos))
             {
-                char* pos = text;
-
-                while (char* line = lineFromMessage(pos))
-                {
-                    WorldPacket* data = new WorldPacket();
-                    ChatHandler::BuildChatPacket(*data, CHAT_MSG_SYSTEM, line);
-                    data_list.push_back(data);
-                }
+                WorldPacket* data = new WorldPacket();
+                ChatHandler::BuildChatPacket(*data, CHAT_MSG_SYSTEM, line);
+                data_list.push_back(data);
             }
+        }
 
-            int32 i_textId;
-            va_list* i_args;
+        int32 i_textId;
+        va_list* i_args;
     };
 }                                                           // namespace MaNGOS
 
@@ -1621,9 +1622,9 @@ void World::KickAllLess(AccountTypes sec)
 {
     // session not removed at kick and will removed in next update tick
     for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
-        if (WorldSession* session = itr->second)
-            if (session->GetSecurity() < sec)
-                session->KickPlayer();
+    if (WorldSession* session = itr->second)
+    if (session->GetSecurity() < sec)
+        session->KickPlayer();
 }
 
 /// Ban an account or ban an IP address, duration_secs if it is positive used, otherwise permban
@@ -1639,21 +1640,21 @@ BanReturn World::BanAccount(BanMode mode, std::string nameOrIP, uint32 duration_
     ///- Update the database with ban information
     switch (mode)
     {
-        case BAN_IP:
-            // No SQL injection as strings are escaped
-            resultAccounts = LoginDatabase.PQuery("SELECT id FROM account WHERE last_ip = '%s'", nameOrIP.c_str());
-            LoginDatabase.PExecute("INSERT INTO ip_banned VALUES ('%s',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()+%u,'%s','%s')", nameOrIP.c_str(), duration_secs, safe_author.c_str(), reason.c_str());
-            break;
-        case BAN_ACCOUNT:
-            // No SQL injection as string is escaped
-            resultAccounts = LoginDatabase.PQuery("SELECT id FROM account WHERE username = '%s'", nameOrIP.c_str());
-            break;
-        case BAN_CHARACTER:
-            // No SQL injection as string is escaped
-            resultAccounts = CharacterDatabase.PQuery("SELECT account FROM characters WHERE name = '%s'", nameOrIP.c_str());
-            break;
-        default:
-            return BAN_SYNTAX_ERROR;
+    case BAN_IP:
+        // No SQL injection as strings are escaped
+        resultAccounts = LoginDatabase.PQuery("SELECT id FROM account WHERE last_ip = '%s'", nameOrIP.c_str());
+        LoginDatabase.PExecute("INSERT INTO ip_banned VALUES ('%s',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()+%u,'%s','%s')", nameOrIP.c_str(), duration_secs, safe_author.c_str(), reason.c_str());
+        break;
+    case BAN_ACCOUNT:
+        // No SQL injection as string is escaped
+        resultAccounts = LoginDatabase.PQuery("SELECT id FROM account WHERE username = '%s'", nameOrIP.c_str());
+        break;
+    case BAN_CHARACTER:
+        // No SQL injection as string is escaped
+        resultAccounts = CharacterDatabase.PQuery("SELECT account FROM characters WHERE name = '%s'", nameOrIP.c_str());
+        break;
+    default:
+        return BAN_SYNTAX_ERROR;
     }
 
     if (!resultAccounts)
@@ -1674,14 +1675,13 @@ BanReturn World::BanAccount(BanMode mode, std::string nameOrIP, uint32 duration_
         {
             // No SQL injection as strings are escaped
             LoginDatabase.PExecute("INSERT INTO account_banned VALUES ('%u', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()+%u, '%s', '%s', '1')",
-                                   account, duration_secs, safe_author.c_str(), reason.c_str());
+                account, duration_secs, safe_author.c_str(), reason.c_str());
         }
 
         if (WorldSession* sess = FindSession(account))
-            if (std::string(sess->GetPlayerName()) != author)
-                sess->KickPlayer();
-    }
-    while (resultAccounts->NextRow());
+        if (std::string(sess->GetPlayerName()) != author)
+            sess->KickPlayer();
+    } while (resultAccounts->NextRow());
 
     delete resultAccounts;
     return BAN_SUCCESS;
@@ -1776,11 +1776,11 @@ void World::ShutdownMsg(bool show /*= false*/, Player* player /*= nullptr*/)
 
     ///- Display a message every 12 hours, 1 hour, 5 minutes, 1 minute and 15 seconds
     if (show ||
-            (m_ShutdownTimer < 5 * MINUTE && (m_ShutdownTimer % 15) == 0) ||            // < 5 min; every 15 sec
-            (m_ShutdownTimer < 15 * MINUTE && (m_ShutdownTimer % MINUTE) == 0) ||       // < 15 min; every 1 min
-            (m_ShutdownTimer < 30 * MINUTE && (m_ShutdownTimer % (5 * MINUTE)) == 0) || // < 30 min; every 5 min
-            (m_ShutdownTimer < 12 * HOUR && (m_ShutdownTimer % HOUR) == 0) ||           // < 12 h; every 1 h
-            (m_ShutdownTimer >= 12 * HOUR && (m_ShutdownTimer % (12 * HOUR)) == 0))     // >= 12 h; every 12 h
+        (m_ShutdownTimer < 5 * MINUTE && (m_ShutdownTimer % 15) == 0) ||            // < 5 min; every 15 sec
+        (m_ShutdownTimer < 15 * MINUTE && (m_ShutdownTimer % MINUTE) == 0) ||       // < 15 min; every 1 min
+        (m_ShutdownTimer < 30 * MINUTE && (m_ShutdownTimer % (5 * MINUTE)) == 0) || // < 30 min; every 5 min
+        (m_ShutdownTimer < 12 * HOUR && (m_ShutdownTimer % HOUR) == 0) ||           // < 12 h; every 1 h
+        (m_ShutdownTimer >= 12 * HOUR && (m_ShutdownTimer % (12 * HOUR)) == 0))     // >= 12 h; every 12 h
     {
         std::string str = secsToTimeString(m_ShutdownTimer);
 
@@ -1875,7 +1875,7 @@ void World::UpdateResultQueue()
 void World::UpdateRealmCharCount(uint32 accountId)
 {
     CharacterDatabase.AsyncPQuery(this, &World::_UpdateRealmCharCount, accountId,
-                                  "SELECT COUNT(guid) FROM characters WHERE account = '%u'", accountId);
+        "SELECT COUNT(guid) FROM characters WHERE account = '%u'", accountId);
 }
 
 void World::_UpdateRealmCharCount(QueryResult* resultCharCount, uint32 accountId)
@@ -1905,8 +1905,8 @@ void World::InitDailyQuestResetTime()
     time_t curTime = time(nullptr);
     tm localTm = *localtime(&curTime);
     localTm.tm_hour = getConfig(CONFIG_UINT32_QUEST_DAILY_RESET_HOUR);
-    localTm.tm_min  = 0;
-    localTm.tm_sec  = 0;
+    localTm.tm_min = 0;
+    localTm.tm_sec = 0;
 
     // current day reset time
     time_t nextDayResetTime = mktime(&localTm);
@@ -1929,8 +1929,8 @@ void World::ResetDailyQuests()
     DETAIL_LOG("Daily quests reset for all characters.");
     CharacterDatabase.Execute("DELETE FROM character_queststatus_daily");
     for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
-        if (itr->second->GetPlayer())
-            itr->second->GetPlayer()->ResetDailyQuestStatus();
+    if (itr->second->GetPlayer())
+        itr->second->GetPlayer()->ResetDailyQuestStatus();
 
     m_NextDailyQuestReset = time_t(m_NextDailyQuestReset + DAY);
     CharacterDatabase.PExecute("UPDATE saved_variables SET NextDailyQuestResetTime = '" UI64FMTD "'", uint64(m_NextDailyQuestReset));
@@ -1948,7 +1948,7 @@ void World::SetPlayerLimit(int32 limit, bool needUpdate)
 
     if (db_update_need)
         LoginDatabase.PExecute("UPDATE realmlist SET allowedSecurityLevel = '%u' WHERE id = '%u'",
-                               uint32(GetPlayerSecurityLimit()), realmID);
+        uint32(GetPlayerSecurityLimit()), realmID);
 }
 
 void World::UpdateMaxSessionCounters()
@@ -1964,7 +1964,7 @@ void World::LoadDBVersion()
     {
         Field* fields = result->Fetch();
 
-        m_DBVersion              = fields[0].GetCppString();
+        m_DBVersion = fields[0].GetCppString();
         m_CreatureEventAIVersion = fields[1].GetCppString();
 
         delete result;
@@ -2140,4 +2140,77 @@ void World::InvalidatePlayerDataToAllClient(ObjectGuid guid)
     WorldPacket data(SMSG_INVALIDATE_PLAYER, 8);
     data << guid;
     SendGlobalMessage(&data);
+}
+
+void World::CustomizeDBCData(void)
+{
+    // Spell.DBC                                       0        1                 2              3                  4                  5                  6           7             8              9              10             11             12             13
+    QueryResult* result = WorldDatabase.PQuery("SELECT SpellID, CastingTimeIndex, DurationIndex, EffectBasePoints0, EffectBasePoints1, EffectBasePoints2, Attributes, AttributesEx, AttributesEx2, AttributesEx3, AttributesEx4, AttributesEx5, AttributesEx6, Dispel FROM dbc_spell");
+    if (result)
+    {
+        do
+        {
+            Field* fields = result->Fetch();
+
+            uint32 spellid = fields[0].GetUInt32();
+            SpellEntry *spellEntry = sSpellStore.LookupEntryOnEdit(spellid);
+
+            // Uprava dat z dbc
+            if (!fields[1].IsNULL())
+                spellEntry->CastingTimeIndex = fields[1].GetUInt32();
+            if (!fields[2].IsNULL())
+                spellEntry->DurationIndex = fields[2].GetUInt32();
+            if (!fields[3].IsNULL())
+                spellEntry->EffectBasePoints[0] = fields[3].GetInt32();
+            if (!fields[4].IsNULL())
+                spellEntry->EffectBasePoints[1] = fields[4].GetInt32();
+            if (!fields[5].IsNULL())
+                spellEntry->EffectBasePoints[2] = fields[5].GetInt32();
+            if (!fields[6].IsNULL())
+                spellEntry->Attributes = fields[6].GetInt32();
+            if (!fields[7].IsNULL())
+                spellEntry->AttributesEx = fields[7].GetInt32();
+            if (!fields[8].IsNULL())
+                spellEntry->AttributesEx2 = fields[8].GetInt32();
+            if (!fields[9].IsNULL())
+                spellEntry->AttributesEx3 = fields[9].GetInt32();
+            if (!fields[10].IsNULL())
+                spellEntry->AttributesEx4 = fields[10].GetInt32();
+            if (!fields[11].IsNULL())
+                spellEntry->AttributesEx5 = fields[11].GetInt32();
+            if (!fields[12].IsNULL())
+                spellEntry->AttributesEx6 = fields[12].GetInt32(); 
+            if (!fields[13].IsNULL())
+                spellEntry->Dispel = fields[13].GetInt32();
+        } while (result->NextRow());
+
+        delete result;
+    }
+
+    // SummonProperty.DBC                              0   1               2        3     4     5
+    result = WorldDatabase.PQuery("SELECT id, group_property, faction, type, slot, flags FROM dbc_summonproperties");
+    if (result)
+    {
+        do
+        {
+            Field* fields = result->Fetch();
+
+            uint32 summonid = fields[0].GetUInt32();
+            SummonPropertiesEntry *summonProperty = sSummonPropertiesStore.LookupEntryOnEdit(summonid);
+
+            // Uprava dat
+            if (!fields[1].IsNULL())
+                summonProperty->Group = fields[1].GetUInt32();
+            if (!fields[2].IsNULL())
+                summonProperty->FactionId = fields[2].GetUInt32();
+            if (!fields[3].IsNULL())
+                summonProperty->Title = fields[3].GetUInt32();
+            if (!fields[4].IsNULL())
+                summonProperty->Slot = fields[4].GetUInt32();
+            if (!fields[5].IsNULL())
+                summonProperty->Flags = fields[5].GetUInt32();
+        } while (result->NextRow());
+
+        delete result;
+    }
 }

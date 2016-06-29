@@ -584,6 +584,7 @@ class World
         * Access: public
         **/
         void InvalidatePlayerDataToAllClient(ObjectGuid guid);
+        void CustomizeDBCData(void);
 
     protected:
         void _UpdateGameTime();
