@@ -783,6 +783,9 @@ ChatCommand* ChatHandler::getCommandTable()
         { "quit",           SEC_CONSOLE,        true,  &ChatHandler::HandleQuitCommand,                "", nullptr },
         { "mmap",           SEC_GAMEMASTER,     false, nullptr,                                        "", mmapCommandTable },
 
+        // Vlastne prikazy
+        { "mc",             SEC_PLAYER,         false, &ChatHandler::HandleMCCommand,                  "", nullptr },
+
         { nullptr,          0,                  false, nullptr,                                        "", nullptr }
     };
 
