@@ -56,6 +56,7 @@
 #include <map>
 #include <typeinfo>
 #include "Guild.h"
+#include "GuildMgr.h"
 
 static uint32 ReputationRankStrIndex[MAX_REPUTATION_RANK] =
 {
