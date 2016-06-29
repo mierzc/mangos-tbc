@@ -4200,7 +4200,7 @@ void Player::SetHover(bool enable)
 */
 void Player::BuildPlayerRepop()
 {
-    if (getRace() == RACE_NIGHTELF)
+//    if (getRace() == RACE_NIGHTELF)
         CastSpell(this, 20584, true);                       // auras SPELL_AURA_INCREASE_SPEED(+speed in wisp form), SPELL_AURA_INCREASE_SWIM_SPEED(+swim speed in wisp form), SPELL_AURA_TRANSFORM (to wisp form)
     CastSpell(this, 8326, true);                            // auras SPELL_AURA_GHOST, SPELL_AURA_INCREASE_SPEED(why?), SPELL_AURA_INCREASE_SWIM_SPEED(why?)
 
@@ -4230,6 +4230,16 @@ void Player::BuildPlayerRepop()
     SetWaterWalk(true);
     if (!GetSession()->isLogingOut())
         SetRoot(false);
+
+    // Ghost Flying Mount
+    #define GhostMount_DisplayID 31154 // Icebound Frostbrood Vanquisher
+    #define Flying_Speed 4.10f     // 310% Flying Speed. You can edit to 3.80f = 280% flying speed. Or 2.50f = 150%
+    #define Ground_Speed 2.0f  // 100% Ground Speed
+
+    //SetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID, GhostMount_DisplayID);
+    SetSpeedRate(MOVE_RUN, Ground_Speed, true); // Ground mount Speed
+    SetCanFly(true);
+    SetSpeedRate(MOVE_FLIGHT, Flying_Speed, true); // Flying mount Speed
 
     // BG - remove insignia related
     RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
@@ -4261,12 +4271,17 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
 
     SetDeathState(ALIVE);
 
-    if (getRace() == RACE_NIGHTELF)
+    //if (getRace() == RACE_NIGHTELF)
         RemoveAurasDueToSpell(20584);                       // speed bonuses
     RemoveAurasDueToSpell(8326);                            // SPELL_AURA_GHOST
 
     SetWaterWalk(false);
     SetRoot(false);
+
+    //dismount upon resurrection
+    SetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID, 0);
+    //disable flight
+    SetCanFly(false);
 
     m_deathTimer = 0;
 
@@ -20388,4 +20403,35 @@ void Player::DoInteraction(ObjectGuid const& interactObjGuid)
         RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_USE);
     }
     SendForcedObjectUpdate();
+}
+
+bool Player::TeleportToGuildHouse()
+{
+    // query na polohu GH
+    QueryResult *result = CharacterDatabase.PQuery("SELECT x, y, z, o, mapid FROM guildhouse_position WHERE guildid = %d",GetGuildId());
+
+    // je nejaky vysledok?
+    if(!result)
+        return false;
+
+    float x,y,z,o;
+    uint16 mapid;
+
+    // ziskanie jedneho riadku (a vlastne aj jedineho)
+    Field *fields = result->Fetch();
+
+    // ziskanie hodnot z db
+    x= fields[0].GetFloat();
+    y= fields[1].GetFloat();
+    z= fields[2].GetFloat();
+    o= fields[3].GetFloat();
+    mapid= fields[4].GetUInt16();
+
+    // teleport
+    TeleportTo(mapid,x,y,z,o);
+
+    // Uvolnenie pamate
+    delete result;
+
+    return true;
 }

@@ -145,3 +145,36 @@ Player *chr = m_session->GetPlayer();
 
     return true;
 }
+
+bool ChatHandler::HandleGuildHouseCommand(char* /*args*/)
+{
+    Player *chr = m_session->GetPlayer();
+
+    // Osetrenie aby sa neportovali za letu
+    if (chr->IsFlying())
+    {
+        SendSysMessage(LANG_YOU_IN_FLIGHT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    //Zakaz portovania
+    if (chr->isInCombat()		// Pocas combatu
+        || chr->InBattleGround()   // V BattleGrounde (aj arene)
+        || chr->HasStealthAura()   // Pocas stealth-u
+        || chr->HasFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_FEIGN_DEATH)) // S Feign Death (hunter)
+    {
+        SendSysMessage(LANG_YOU_IN_COMBAT);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    if (!chr->TeleportToGuildHouse())
+    {
+        SendSysMessage("You have no guild, or your guild have no guildhouse!");
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    return true;
+}
