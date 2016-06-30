@@ -3431,7 +3431,7 @@ void Aura::HandleModPossessPet(bool apply, bool Real)
 
     if (apply)
     {
-        if (caster->GetTypeId() == TYPEID_PLAYER)
+        if (caster->GetTypeId() == TYPEID_CORPSE)
         {
             //remove any existing charm just in case
             caster->Uncharm();
