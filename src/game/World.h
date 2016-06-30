@@ -626,8 +626,8 @@ class World
         uint32 mail_timer;
         uint32 mail_timer_expires;
 
-//        typedef std::unordered_map<uint32, WorldSession*> SessionMap;
-//        SessionMap m_sessions;
+        typedef std::unordered_map<uint32, WorldSession*> SessionMap;
+        SessionMap m_sessions;
         uint32 m_maxActiveSessionCount;
         uint32 m_maxQueuedSessionCount;
 
