@@ -30,6 +30,7 @@
 #include "Object.h"
 #include "Player.h"
 #include "Corpse.h"
+#include "World.h"
 
 #include <mutex>
 
