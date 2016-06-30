@@ -810,6 +810,11 @@ enum MangosStrings
     LANG_FAIL_ENTER_SPECTRAL_REALM      = 816,
     //                                    817 used in master branch
     LANG_TELEREQ_QUEST_BLACK_MORASS     = 818,
+    LANG_TELEREQ_QUEST_SSC              = 819,
+    LANG_TELEREQ_QUEST_BLACK_TEMPLE     = 820,
+    LANG_TELEREQ_ITEM_THE_EYE           = 821,
+    LANG_TELEREQ_QUEST_HYJAL            = 822,
+
     // Room for in-game strings           819-999 not used
 
     // Level 4 (CLI only commands)

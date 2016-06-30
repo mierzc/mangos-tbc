@@ -18419,6 +18419,16 @@ void Player::SendTransferAbortedByLockStatus(MapEntry const* mapEntry, AreaLockS
             GetSession()->SendAreaTriggerMessage("%s", GetSession()->GetMangosString(LANG_TELEREQ_QUEST_BLACK_MORASS));
             break;
         }
+        else if (mapEntry->MapID == 548)                     // Exception for SSC
+        {
+            GetSession()->SendAreaTriggerMessage("%s", GetSession()->GetMangosString(LANG_TELEREQ_QUEST_SSC));
+            break;
+        }
+        else if (mapEntry->MapID == 564)                     // Exception for Black Temple
+        {
+            GetSession()->SendAreaTriggerMessage("%s", GetSession()->GetMangosString(LANG_TELEREQ_QUEST_BLACK_TEMPLE));
+            break;
+        }
         else if (mapEntry->IsContinent())               // do not report anything for quest areatrigge
         {
             DEBUG_LOG("SendTransferAbortedByLockStatus: LockAreaStatus %u, do not teleport, no message sent (mapId %u)", lockStatus, mapEntry->MapID);
@@ -18426,6 +18436,12 @@ void Player::SendTransferAbortedByLockStatus(MapEntry const* mapEntry, AreaLockS
         }
         // No break here!
     case AREA_LOCKSTATUS_MISSING_ITEM:
+        if (mapEntry->MapID == 550)                     // Exception for Tempest Keep
+        {
+            GetSession()->SendAreaTriggerMessage("%s", GetSession()->GetMangosString(LANG_TELEREQ_ITEM_THE_EYE));
+            break;
+        }
+        else
         GetSession()->SendTransferAborted(mapEntry->MapID, TRANSFER_ABORT_DIFFICULTY, GetDifficulty());
         break;
     case AREA_LOCKSTATUS_MISSING_DIFFICULTY:
@@ -18438,9 +18454,14 @@ void Player::SendTransferAbortedByLockStatus(MapEntry const* mapEntry, AreaLockS
         GetSession()->SendTransferAborted(mapEntry->MapID, TRANSFER_ABORT_INSUF_EXPAN_LVL, miscRequirement);
         break;
     case AREA_LOCKSTATUS_NOT_ALLOWED:
+        GetSession()->SendAreaTriggerMessage("Not allowed here!");
+        break;
     case AREA_LOCKSTATUS_RAID_LOCKED:
+        GetSession()->SendAreaTriggerMessage("You must be in a raid group!");
+        break;
     case AREA_LOCKSTATUS_UNKNOWN_ERROR:
         // ToDo: SendAreaTriggerMessage or Transfer Abort for these cases!
+        GetSession()->SendAreaTriggerMessage("Unknown error!");
         break;
     case AREA_LOCKSTATUS_OK:
         sLog.outError("SendTransferAbortedByLockStatus: LockAreaStatus AREA_LOCKSTATUS_OK received for %s (mapId %u)", GetGuidStr().c_str(), mapEntry->MapID);
