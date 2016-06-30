@@ -98,13 +98,11 @@ void
 ObjectAccessor::SaveAllPlayers()
 {
     HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType& m = sObjectAccessor.GetPlayers();
-    for (HashMapHolder<Player>::MapType::iterator itr = m.begin(); itr != m.end(); ++itr)
-    if (Player* player = itr->second ->GetGUIDLow){
-            if (player->IsInWorld()){
-                player->SaveToDB();
-            }
-        }
+    //HashMapHolder<Player>::MapType& m = sObjectAccessor.GetPlayers();
+    HashMapHolder<Player>::MapType& m = HashMapHolder<Player>::GetContainer();
+    HashMapHolder<Player>::MapType::iterator itr = m.begin();
+    for (; itr != m.end(); ++itr)
+        itr->second->SaveToDB();
 }
 
 void ObjectAccessor::KickPlayer(ObjectGuid guid)
