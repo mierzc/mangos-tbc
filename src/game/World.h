@@ -33,6 +33,7 @@
 #include <mutex>
 #include <functional>
 #include <vector>
+#include <stdexcept>
 
 class Object;
 class ObjectGuid;

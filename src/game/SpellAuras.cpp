@@ -46,6 +46,7 @@
 #include "Language.h"
 #include "MapManager.h"
 #include "LootMgr.h"
+#include <stdexcept>
 
 #define NULL_AURA_SLOT 0xFF
 
