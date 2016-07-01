@@ -376,7 +376,7 @@ struct boss_lady_vashjAI : public ScriptedAI
             }
 
             // If we are within range melee the target
-            if (m_creature && m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
+            if (m_creature && m_creature->CanReachWithMeleeAttack(m_creature->getVictim(), 4.0f))
                 DoMeleeAttackIfReady();
             else
             {

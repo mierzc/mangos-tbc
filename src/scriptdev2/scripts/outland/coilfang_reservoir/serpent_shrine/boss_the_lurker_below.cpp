@@ -246,7 +246,7 @@ struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
                         m_uiGeyserTimer -= uiDiff;
 
                     // If we are within range melee the target
-                    if (m_creature && m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
+                    if (m_creature && m_creature->CanReachWithMeleeAttack(m_creature->getVictim(), 4.0f))
                         DoMeleeAttackIfReady();
                     // Spam Waterbolt spell when not tanked
                     else
