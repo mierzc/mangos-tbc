@@ -464,7 +464,8 @@ float Unit::GetCombatDistance(Unit const* target, bool forMeleeRange) const
 
 bool Unit::CanReachWithMeleeAttack(Unit const* pVictim, float flat_mod /*= 0.0f*/) const
 {
-    MANGOS_ASSERT(pVictim);
+    if (!pVictim)
+        return false;
 
     float reach = GetCombatReach(pVictim, true, flat_mod);
 
