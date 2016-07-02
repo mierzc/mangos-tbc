@@ -406,7 +406,7 @@ struct boss_lady_vashjAI : public ScriptedAI
 
             if (m_uiEnchantedElementalTimer < uiDiff)
             {
-                uint8 uiPos = urand(0, 7);
+                uint8 uiPos = urand(0, 3);
                 m_creature->SummonCreature(NPC_ENCHANTED_ELEMENTAL, afElementPos[uiPos][0], afElementPos[uiPos][1], afElementPos[uiPos][2], afElementPos[uiPos][3], TEMPSUMMON_DEAD_DESPAWN, 0);
 
                 m_uiEnchantedElementalTimer = urand(5000, 10000);
@@ -418,7 +418,7 @@ struct boss_lady_vashjAI : public ScriptedAI
             {
                 if (m_uiTaintedElementalTimer <= uiDiff)
                 {
-                    uint8 uiPos = urand(0, 7);
+                    uint8 uiPos = urand(0, 3);
 
                     m_creature->SummonCreature(NPC_TAINTED_ELEMENTAL, afElementPos[uiPos][0], afElementPos[uiPos][1], afElementPos[uiPos][2], afElementPos[uiPos][3], TEMPSUMMON_DEAD_DESPAWN, 0);
                     m_uiTaintedElementalTimer = 0;
