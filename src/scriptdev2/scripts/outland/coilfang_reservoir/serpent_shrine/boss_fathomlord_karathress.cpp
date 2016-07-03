@@ -68,7 +68,7 @@ enum
 
     SPELL_CYCLONE                   = 29538,
 
-    MAX_ADVISORS                    = 3,
+    MAX_ADVISORS                    = 2,
 
     NPC_CYCLONE                     = 22104,
     NPC_SEER_OLUM                   = 22820
@@ -77,7 +77,7 @@ enum
 // position for Seer Olum
 static const float afCoordsOlum[4] = {446.78f, -542.76f, -7.547f, 0.401f};
 
-static const uint32 aAdvisors[MAX_ADVISORS] = {NPC_SHARKKIS, NPC_TIDALVESS, NPC_CARIBDIS};
+static const uint32 aAdvisors[MAX_ADVISORS] = {NPC_TIDALVESS, NPC_CARIBDIS};
 
 /*######
 ## boss_fathomlord_karathress
