@@ -131,11 +131,11 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
         if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
 
-        switch (urand(0, 2))
+        switch (urand(0, 1))
         {
             case 0: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY1 : SAY_NIGHTELF_SLAY1, m_creature); break;
             case 1: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY2 : SAY_NIGHTELF_SLAY2, m_creature); break;
-            case 2: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY3 : SAY_NIGHTELF_SLAY3, m_creature); break;
+//            case 2: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY3 : SAY_NIGHTELF_SLAY3, m_creature); break;
         }
     }
 
@@ -144,7 +144,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
         if (pSummoned->GetEntry() == NPC_SHADOW_LEO)
         {
             pSummoned->AI()->AttackStart(m_creature->getVictim());
-            pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0, 0);
+            pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0.0f, 0.0f);
         }
     }
 
@@ -254,7 +254,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
             if (m_uiChaosBlastTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_CHAOS_BLAST) == CAST_OK)
-                    m_uiChaosBlastTimer = urand(2000, 3000);
+                    m_uiChaosBlastTimer = urand(5000, 6000);
             }
             else
                 m_uiChaosBlastTimer -= uiDiff;
