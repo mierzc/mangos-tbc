@@ -208,7 +208,7 @@ struct boss_lady_vashjAI : public ScriptedAI
                     pSummoned->AI()->AttackStart(pTarget);
                 break;
             case NPC_ENCHANTED_ELEMENTAL:
-                pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0, 0);
+                pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0.0f, 0.0f);
                 break;
         }
     }
@@ -409,7 +409,7 @@ struct boss_lady_vashjAI : public ScriptedAI
                 uint8 uiPos = urand(0, 3);
                 m_creature->SummonCreature(NPC_ENCHANTED_ELEMENTAL, afElementPos[uiPos][0], afElementPos[uiPos][1], afElementPos[uiPos][2], afElementPos[uiPos][3], TEMPSUMMON_DEAD_DESPAWN, 0);
 
-                m_uiEnchantedElementalTimer = urand(5000, 10000);
+                m_uiEnchantedElementalTimer = urand(10000, 15000);
             }
             else
                 m_uiEnchantedElementalTimer -= uiDiff;

@@ -225,7 +225,7 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
                     DoScriptText(EMOTE_WATERY_GLOBULES, m_creature);
                     DoScriptText(urand(0, 1) ? SAY_SUMMON_BUBL1 : SAY_SUMMON_BUBL2, m_creature);
 
-                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_2, CAST_TRIGGERED);
+//                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_2, CAST_TRIGGERED);
 //                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_3, CAST_TRIGGERED);
 //                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_4, CAST_TRIGGERED);
 
