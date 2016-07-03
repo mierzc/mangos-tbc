@@ -64,8 +64,6 @@ Pet::Pet(PetType type) :
 
     if (type == MINI_PET)                                   // always passive
         charmInfo->SetReactState(REACT_PASSIVE);
-    else if (type == GUARDIAN_PET)                          // always aggressive
-        charmInfo->SetReactState(REACT_AGGRESSIVE);
 }
 
 Pet::~Pet()
@@ -1067,7 +1065,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
     return true;
 }
 
-bool Pet::InitStatsForLevel(uint32 petlevel)
+void Pet::InitStatsForLevel(uint32 petlevel)
 {
     Unit* owner = GetOwner();
     CreatureInfo const* cInfo = GetCreatureInfo();
@@ -1288,7 +1286,7 @@ bool Pet::InitStatsForLevel(uint32 petlevel)
     // Remove rage bar from pets
     SetMaxPower(POWER_RAGE, 0);
 
-    return true;
+    return;
 }
 
 bool Pet::HaveInDiet(ItemPrototype const* item) const
