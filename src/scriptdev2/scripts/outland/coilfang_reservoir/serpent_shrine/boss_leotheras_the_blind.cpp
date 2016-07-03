@@ -204,6 +204,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
             {
                 if (DoCastSpellIfCan(m_creature, SPELL_WHIRLWIND) == CAST_OK)
                     m_uiWhirlwindTimer = 32000;
+                ScriptedAI::AttackStart(m_creature->getVictim());
             }
             else
                 m_uiWhirlwindTimer -= uiDiff;
