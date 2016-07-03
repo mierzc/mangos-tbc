@@ -77,7 +77,7 @@ enum
 // position for Seer Olum
 static const float afCoordsOlum[4] = {446.78f, -542.76f, -7.547f, 0.401f};
 
-static const uint32 aAdvisors[MAX_ADVISORS] = {NPC_TIDALVESS, NPC_CARIBDIS};
+static const uint32 aAdvisors[MAX_ADVISORS] = { NPC_SHARKKIS, NPC_CARIBDIS };
 
 /*######
 ## boss_fathomlord_karathress
