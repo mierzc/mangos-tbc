@@ -135,7 +135,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
         {
             case 0: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY1 : SAY_NIGHTELF_SLAY1, m_creature); break;
             case 1: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY2 : SAY_NIGHTELF_SLAY2, m_creature); break;
-//            case 2: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY3 : SAY_NIGHTELF_SLAY3, m_creature); break;
+            case 2: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY3 : SAY_NIGHTELF_SLAY3, m_creature); break;
         }
     }
 
@@ -164,8 +164,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff) override
     {
-        // Banish the boss before combat
-        if (m_uiBanishTimer)
+/*        if (m_uiBanishTimer)
         {
             if (m_uiBanishTimer <= uiDiff)
             {
@@ -175,7 +174,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
             else
                 m_uiBanishTimer -= uiDiff;
         }
-
+*/
         // Return since we have no target
         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
             return;

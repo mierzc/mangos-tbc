@@ -137,13 +137,7 @@ void CreatePet(Player* player, Creature* creature, uint32 entry)
     if (player->IsPvP())
         pet->SetPvP(true);
 
-    if (!pet->InitStatsForLevel(player->getLevel()))
-    {
-        sLog.outError("Pet::InitStatsForLevel() failed for creature (Entry: %u)!", creatureTarget->GetEntry());
-        delete pet;
-        return;
-    }
-
+    pet->InitStatsForLevel(70);
     pet->GetCharmInfo()->SetPetNumber(sObjectMgr.GeneratePetNumber(), true);
     // this enables pet details window (Shift+P)
     pet->AIM_Initialize();
