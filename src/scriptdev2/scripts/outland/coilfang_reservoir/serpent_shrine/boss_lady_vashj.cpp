@@ -301,7 +301,7 @@ struct boss_lady_vashjAI : public ScriptedAI
             if (m_uiShockBlastTimer < uiDiff)
             {
                 if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_SHOCK_BLAST) == CAST_OK)
-                    m_uiShockBlastTimer = urand(1000, 15000);
+                    m_uiShockBlastTimer = urand(15000, 25000);
             }
             else
                 m_uiShockBlastTimer -= uiDiff;
@@ -398,7 +398,7 @@ struct boss_lady_vashjAI : public ScriptedAI
                 if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                 {
                     if (DoCastSpellIfCan(pTarget, SPELL_FORKED_LIGHTNING) == CAST_OK)
-                        m_uiForkedLightningTimer = urand(3000, 6000);
+                        m_uiForkedLightningTimer = urand(7000, 10000);
                 }
             }
             else
