@@ -46,6 +46,7 @@ enum spells
 
 bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 {
+    player->PlayerTalkClass->ClearMenus();
     ////////////////// MAIN MENU ///////////////////////////
     player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cffff0000 Choose from menu: |r", GOSSIP_SENDER_MAIN, 9999);
     // kontrola kombatu
@@ -370,7 +371,6 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
 
     default: // Something wrong?!
         player->CLOSE_GOSSIP_MENU();
-        break;
     }
 }
 
