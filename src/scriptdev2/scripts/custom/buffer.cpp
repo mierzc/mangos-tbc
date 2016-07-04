@@ -100,6 +100,7 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 
 void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action)
 {
+    player->PlayerTalkClass->ClearMenus();
     switch (action)  // switch(player->getClass())
     {
         /*	AGILITY = 33077,	ARCANE_INTELECT = 27126,	BLESSING_OF_KINGS = 25898,	BLESSING_OF_MIGHT = 27141,	BLESSING_OF_SALVATION = 25895,	BLESSING_OF_WISDOM = 27143,	DIVINE_SPIRIT = 25312,	INTELLECT = 33078,	MARK_OF_THE_WILD = 26990,
@@ -390,7 +391,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
 
     default: // Something wrong?!
         player->CLOSE_GOSSIP_MENU();
-
+        break;
     }
 }
 
