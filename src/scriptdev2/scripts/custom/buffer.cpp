@@ -25,25 +25,25 @@ EndScriptData */
 
 enum spells
 {
-    AGILITY = 33077,
+    THORNS = 26992,
     ARCANE_INTELECT = 27126,
-    BLESSING_OF_KINGS = 20217, //25898,
-    BLESSING_OF_MIGHT = 27141,
-    BLESSING_OF_SALVATION = 25895,
-    BLESSING_OF_WISDOM = 27143,
+    BLESSING_OF_KINGS = 20217,
+    BLESSING_OF_MIGHT = 27140, // 10 min
+    BLESSING_OF_SALVATION = 1038, // 10 min
+    BLESSING_OF_WISDOM = 27142, // 10 min
+    SHADOW_PROTECTION = 25433, // 10 min
+    WATER_WALKING = 11319, // 10 min
     DIVINE_SPIRIT = 25312,
-    INTELLECT = 33078,
     MARK_OF_THE_WILD = 26990,
     POWER_WORD_FORTITUDE = 25389,
-    SHADOW_PROTECTION = 25433,
     SPIRIT = 33080,
     STAMINA = 33081,
     STRENGHT = 33082,
-    THORNS = 26992,
-    WATER_WALKING = 11319,
-    SONGFLOWER_SERENADE = 15366
+    INTELLECT = 33078,
+    AGILITY = 33077,
+    SONGFLOWER_SERENADE = 15366 // 1 hour
 };
-// 26990, 27126, 20217, 25433, 25312, 25389
+
 bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 {
     ////////////////// MAIN MENU ///////////////////////////
@@ -76,7 +76,7 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
             }
             if (player->GetMoney() >= CLASS_COST)
             {
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, " |TInterface/ICONS/Spell_holy_prayerofhealing:30:30:-18:0|t  --[Buffs for Specialization]--", GOSSIP_SENDER_MAIN, 1000);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, " |TInterface/ICONS/Spell_holy_prayerofhealing:30:30:-18:0|t  --[Buffs for Specialization]--", GOSSIP_SENDER_MAIN, 2000);
             }
             else {
                 player->GetSession()->SendAreaTriggerMessage("%s ,You haven't enough money to buy Buffs for Specialization!", player->GetName());
@@ -101,126 +101,106 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action)
 {
     player->PlayerTalkClass->ClearMenus();
-    switch (action)  // switch(player->getClass())
+    // switch(player->getClass())
+    switch (action)
     {
-        /*	AGILITY = 33077,	ARCANE_INTELECT = 27126,	BLESSING_OF_KINGS = 25898,	BLESSING_OF_MIGHT = 27141,	BLESSING_OF_SALVATION = 25895,	BLESSING_OF_WISDOM = 27143,	DIVINE_SPIRIT = 25312,	INTELLECT = 33078,	MARK_OF_THE_WILD = 26990,
-        POWER_WORD_FORTITUDE = 25389,	SHADOW_PROTECTION = 25433,	SPIRIT = 33080,	STAMINA = 33081,	STRENGHT = 33082,	THORNS = 26992,		WATER_WALKING = 11319 */
         ////////////////// BUFFS SUBMENU ///////////////////////////
     case 100: // Buffs
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cff0000ff Buff cost: 1 golds |r", GOSSIP_SENDER_MAIN, 9999); // 0
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_wordfortitude:30:30:-18:0|t POWER WORD: FORTITUDE", GOSSIP_SENDER_MAIN, 101);  // 1
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_divinespirit:30:30:-18:0|t DIVINE SPIRIT", GOSSIP_SENDER_MAIN, 102);  // 2
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_shadow_antishadow:30:30:-18:0|t SHADOW PROTECTION", GOSSIP_SENDER_MAIN, 103);  // 3		
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_fistofjustice:30:30:-18:0|t BLESSING OF MIGHT", GOSSIP_SENDER_MAIN, 107);  // 6
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_magic_magearmor:30:30:-18:0|t BLESSING OF KINGS", GOSSIP_SENDER_MAIN, 108);  // 7
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_sealofwisdom:30:30:-18:0|t BLESSING OF WISDOM", GOSSIP_SENDER_MAIN, 109);  // 8
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_greaterblessingofsalvation:30:30:-18:0|t BLESSING OF SALVATION", GOSSIP_SENDER_MAIN, 110);  // 9
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, MORE, GOSSIP_SENDER_MAIN, 120);  // 10
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, LESS, GOSSIP_SENDER_MAIN, 9999); // 11
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cff0000ff Buff cost: 1 gold |r", GOSSIP_SENDER_MAIN, 9999);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_wordfortitude:30:30:-18:0|t POWER WORD: FORTITUDE", GOSSIP_SENDER_MAIN, 101);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_divinespirit:30:30:-18:0|t DIVINE SPIRIT", GOSSIP_SENDER_MAIN, 102);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_shadow_antishadow:30:30:-18:0|t SHADOW PROTECTION", GOSSIP_SENDER_MAIN, 103);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_fistofjustice:30:30:-18:0|t BLESSING OF MIGHT", GOSSIP_SENDER_MAIN, 107);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_magic_magearmor:30:30:-18:0|t BLESSING OF KINGS", GOSSIP_SENDER_MAIN, 108);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_sealofwisdom:30:30:-18:0|t BLESSING OF WISDOM", GOSSIP_SENDER_MAIN, 109);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_greaterblessingofsalvation:30:30:-18:0|t BLESSING OF SALVATION", GOSSIP_SENDER_MAIN, 110);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, MORE, GOSSIP_SENDER_MAIN, 120);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, LESS, GOSSIP_SENDER_MAIN, 9999);
         player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         break;
     case 120: // Buffs Next Page 1
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cff0000ff Buff cost: 1 golds |r", GOSSIP_SENDER_MAIN, 9999); // 0
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_regeneration:30:30:-18:0|t MARK OF THE WILD", GOSSIP_SENDER_MAIN, 104);  // 4
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_thorns:30:30:-18:0|t THORNS", GOSSIP_SENDER_MAIN, 105);  // 5
-        //player->ADD_GOSSIP_ITEM( GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_strength:30:30:-18:0|t STRENGHT",		GOSSIP_SENDER_MAIN, 121); // 1
-        //player->ADD_GOSSIP_ITEM( GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_unyeildingstamina.:30:30:-18:0|t STAMINA",		GOSSIP_SENDER_MAIN, 122); // 2
-        //player->ADD_GOSSIP_ITEM( GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_blessingofagility:30:30:-18:0|t AGILITY",		GOSSIP_SENDER_MAIN, 123); // 3
-        //player->ADD_GOSSIP_ITEM( GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_divinespirit:30:30:-18:0|t SPIRIT",			GOSSIP_SENDER_MAIN, 124); // 4
-        //player->ADD_GOSSIP_ITEM( GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_magicalsentry:30:30:-18:0|t INTELLECT",		GOSSIP_SENDER_MAIN, 125); // 5		
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_magicalsentry:30:30:-18:0|t ARCANE INTELECT", GOSSIP_SENDER_MAIN, 106);  // 6
-        // player->ADD_GOSSIP_ITEM( GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_frost_windwalkon:30:30:-18:0|t WATER WALKING",	GOSSIP_SENDER_MAIN, 126); // 7
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_mindvision:30:30:-18:0|t SONGFLOWER SERENADE", GOSSIP_SENDER_MAIN, 127); // 7
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, MAINMENU, GOSSIP_SENDER_MAIN, 9999); // 8
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, LESS, GOSSIP_SENDER_MAIN, 100); // 9
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, TEXT_BYE, GOSSIP_SENDER_MAIN, 9998); // 10
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cff0000ff Buff cost: 1 gold |r", GOSSIP_SENDER_MAIN, 9999);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_regeneration:30:30:-18:0|t MARK OF THE WILD", GOSSIP_SENDER_MAIN, 104);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_thorns:30:30:-18:0|t THORNS", GOSSIP_SENDER_MAIN, 105);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_magicalsentry:30:30:-18:0|t ARCANE INTELECT", GOSSIP_SENDER_MAIN, 106);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_mindvision:30:30:-18:0|t SONGFLOWER SERENADE", GOSSIP_SENDER_MAIN, 127);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, MAINMENU, GOSSIP_SENDER_MAIN, 9999);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, LESS, GOSSIP_SENDER_MAIN, 100);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, TEXT_BYE, GOSSIP_SENDER_MAIN, 9998);
         player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         break;
 
         ////////////////// BUFFS for Specialization SUBMENU ///////////////////////////
-    case 1000: // Buff for Specialization
+    case 2000: // Buff for Specialization
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cff0000ff Buffs cost: 5 golds |r", GOSSIP_SENDER_MAIN, 9999);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Ability_warrior_defensivestance:30:30:-18:0|t TANK", GOSSIP_SENDER_MAIN, 1001); // Spell_holy_devotionaura.
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Spell_holy_circleofrenewal:30:30:-18:0|t HEAL", GOSSIP_SENDER_MAIN, 1002);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Spell_fire_flamebolt:30:30:-18:0|t SPELL DMG", GOSSIP_SENDER_MAIN, 1003);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Spell_holy_fistofjustice:30:30:-18:0|t MELLE DMG", GOSSIP_SENDER_MAIN, 1004);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Inv_ammo_arrow_02:30:30:-18:0|t RANGED DMG", GOSSIP_SENDER_MAIN, 1005);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Ability_warrior_defensivestance:30:30:-18:0|t TANK", GOSSIP_SENDER_MAIN, 2001);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Spell_holy_circleofrenewal:30:30:-18:0|t HEAL", GOSSIP_SENDER_MAIN, 2002);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Spell_fire_flamebolt:30:30:-18:0|t SPELL DMG", GOSSIP_SENDER_MAIN, 2003);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Spell_holy_fistofjustice:30:30:-18:0|t MELLE DMG", GOSSIP_SENDER_MAIN, 2004);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Inv_ammo_arrow_02:30:30:-18:0|t RANGED DMG", GOSSIP_SENDER_MAIN, 2005);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, LESS, GOSSIP_SENDER_MAIN, 9999);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, TEXT_BYE, GOSSIP_SENDER_MAIN, 9998);
         player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         break;
 
-    case 1001: // TANK		
-        player->CLOSE_GOSSIP_MENU();
+    case 2001: // TANK
         _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true);
         _Creature->CastSpell(player, ARCANE_INTELECT, true);
-        //_Creature->CastSpell(player, AGILITY, true);
-        //_Creature->CastSpell(player, STRENGHT, true);
         _Creature->CastSpell(player, THORNS, true);
         _Creature->CastSpell(player, MARK_OF_THE_WILD, true);
         _Creature->CastSpell(player, BLESSING_OF_KINGS, true);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
-        player->PlayDirectSound(3337); //
+        player->PlayDirectSound(3337); 
         player->ModifyMoney(-CLASS_COST);
-        break;
-    case 1002: // HEAL		
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, MARK_OF_THE_WILD, true);
-        _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true);
-        //_Creature->CastSpell(player, STAMINA, true);
-        _Creature->CastSpell(player, ARCANE_INTELECT, true);
-        _Creature->CastSpell(player, BLESSING_OF_SALVATION, true);
-        //_Creature->CastSpell(player, SPIRIT, true);
-        _Creature->CastSpell(player, DIVINE_SPIRIT, true);
-        player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
-        player->PlayDirectSound(3337); //
-        player->ModifyMoney(-CLASS_COST);
         break;
-    case 1003: // SPELL DMG			
-        player->CLOSE_GOSSIP_MENU();
+    case 2002: // HEAL
         _Creature->CastSpell(player, MARK_OF_THE_WILD, true);
         _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true);
         _Creature->CastSpell(player, ARCANE_INTELECT, true);
         _Creature->CastSpell(player, BLESSING_OF_SALVATION, true);
         _Creature->CastSpell(player, DIVINE_SPIRIT, true);
-        //_Creature->CastSpell(player, SPIRIT, true);
-        //_Creature->CastSpell(player, STAMINA, true);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
-        player->PlayDirectSound(3337); //
+        player->PlayDirectSound(3337);
         player->ModifyMoney(-CLASS_COST);
-        break;
-    case 1004: // MELE DMG		
         player->CLOSE_GOSSIP_MENU();
+        break;
+    case 2003: // SPELL DMG
+        _Creature->CastSpell(player, MARK_OF_THE_WILD, true);
         _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true);
-        //_Creature->CastSpell(player, AGILITY, true);
-        //_Creature->CastSpell(player, STRENGHT, true);
+        _Creature->CastSpell(player, ARCANE_INTELECT, true);
+        _Creature->CastSpell(player, BLESSING_OF_SALVATION, true);
+        _Creature->CastSpell(player, DIVINE_SPIRIT, true);
+        player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
+        player->PlayDirectSound(3337);
+        player->ModifyMoney(-CLASS_COST);
+        player->CLOSE_GOSSIP_MENU();
+        break;
+    case 2004: // MELE DMG
+        _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true);
         _Creature->CastSpell(player, ARCANE_INTELECT, true);
         _Creature->CastSpell(player, BLESSING_OF_MIGHT, true);
         _Creature->CastSpell(player, MARK_OF_THE_WILD, true);
         _Creature->CastSpell(player, DIVINE_SPIRIT, true);
-        //_Creature->CastSpell(player, STAMINA, true);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
-        player->PlayDirectSound(3337); //
+        player->PlayDirectSound(3337);
         player->ModifyMoney(-CLASS_COST);
-        break;
-    case 1005: // RANGED DMG		
         player->CLOSE_GOSSIP_MENU();
+        break;
+    case 2005: // RANGED DMG
         _Creature->CastSpell(player, MARK_OF_THE_WILD, true);
         _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true);
-        //_Creature->CastSpell(player, AGILITY, true);
-        //_Creature->CastSpell(player, STRENGHT, true);
-        //_Creature->CastSpell(player, STAMINA, true);
         _Creature->CastSpell(player, BLESSING_OF_SALVATION, true);
         _Creature->CastSpell(player, ARCANE_INTELECT, true);
         _Creature->CastSpell(player, DIVINE_SPIRIT, true);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
-        player->PlayDirectSound(3337); //
+        player->PlayDirectSound(3337);
         player->ModifyMoney(-CLASS_COST);
+        player->CLOSE_GOSSIP_MENU();
         break;
 
         /////////////////////////////////////////// BUFFS ///////////////////////////////////////////////
-        /*	AGILITY = 33077,	ARCANE_INTELECT = 27126,	BLESSING_OF_KINGS = 25898,	BLESSING_OF_MIGHT = 27141,	BLESSING_OF_SALVATION = 25895,	BLESSING_OF_WISDOM = 27143,	DIVINE_SPIRIT = 25312,	INTELLECT = 33078,	MARK_OF_THE_WILD = 26990,
-        POWER_WORD_FORTITUDE = 25389,	SHADOW_PROTECTION = 25433,	SPIRIT = 33080,	STAMINA = 33081,	STRENGHT = 33082,	THORNS = 26992,		WATER_WALKING = 11319 */
+
     case 101: // POWER_WORD_FORTITUDE		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true);
@@ -301,8 +281,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-        /*	AGILITY = 33077,	ARCANE_INTELECT = 27126,	BLESSING_OF_KINGS = 25898,	BLESSING_OF_MIGHT = 27141,	BLESSING_OF_SALVATION = 25895,	BLESSING_OF_WISDOM = 27143,	DIVINE_SPIRIT = 25312,	INTELLECT = 33078,	MARK_OF_THE_WILD = 26990,
-        POWER_WORD_FORTITUDE = 25389,	SHADOW_PROTECTION = 25433,	SPIRIT = 33080,	STAMINA = 33081,	STRENGHT = 33082,	THORNS = 26992,		WATER_WALKING = 11319 */
+
     case 121: // STRENGHT		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, STRENGHT, true);
