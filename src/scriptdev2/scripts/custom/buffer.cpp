@@ -54,9 +54,9 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
         player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Combat Check|r|cffffffff]:|r |cffffffffYou're in combat %s ! |r", player->GetName());
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, "|cff0000ffYou are in combat!!! |r", GOSSIP_SENDER_MAIN, 9999);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, TEXT_BYE, GOSSIP_SENDER_MAIN, 9998);
-        player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         //player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         //player->PlayerTalkClass->SendCloseGossip();
+        player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         return true;
     }
     else {
@@ -71,6 +71,7 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
             else {
                 player->GetSession()->SendAreaTriggerMessage("%s , You haven't enough money to buy Buffs!", player->GetName());
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, "|cff0000ff>>> You haven't enough money! <<< |r", GOSSIP_SENDER_MAIN, 9999);
+                return false;
             }
             if (player->GetMoney() >= CLASS_COST)
             {
@@ -79,12 +80,14 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
             else {
                 player->GetSession()->SendAreaTriggerMessage("%s ,You haven't enough money to buy Buffs for Specialization!", player->GetName());
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, "|cff0000ff>>> You haven't enough money! <<< |r", GOSSIP_SENDER_MAIN, 9999);
+                return false;
             }
         }
         else {
             //player->GetSession()->SendAreaTriggerMessage("Enough level!");
             player->GetSession()->SendNotification("|cffffffffYou must be at least level 70+ %s ! |r", player->GetName());
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, "|cff12300ff>>> You must be at least level 70+! <<<", GOSSIP_SENDER_MAIN, 9999);
+            return false;
         }
     }
     if (player->isGameMaster())
@@ -290,7 +293,6 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         break;
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     case 8000: // Heal me			
-        player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, 38588, false);  //  38588 Flash Heal efect, 31782 Rejuvenation
         if (player->GetPowerType() == POWER_MANA){
             player->SetPower(POWER_MANA, player->GetMaxPower(POWER_MANA));
@@ -308,6 +310,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(2676); //
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->ModifyMoney(-SINGLE_COST);
+        player->CLOSE_GOSSIP_MENU();
         break;
 
     case 9998: // Bye
@@ -318,7 +321,9 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         GossipHello_MCBuffer(player, _Creature);
         break;
 
+    default: // Something wrong?!
         player->CLOSE_GOSSIP_MENU();
+
     }
 }
 
