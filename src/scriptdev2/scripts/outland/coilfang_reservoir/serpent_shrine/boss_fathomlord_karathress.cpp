@@ -289,7 +289,7 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0, SPELL_HURL_TRIDENT, 0))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT) == CAST_OK)
-                    m_uiHurlTridentTimer = 5000;
+                    m_uiHurlTridentTimer = 15000;
             }
         }
         else
@@ -316,7 +316,7 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT) == CAST_OK)
-                    m_uiMultiTossTimer = urand(7000, 12000);
+                    m_uiMultiTossTimer = urand(15000, 20000);
             }
         }
         else
