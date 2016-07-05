@@ -46,7 +46,6 @@ enum spells
 
 bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 {
-    player->PlayerTalkClass->ClearMenus();
     ////////////////// MAIN MENU ///////////////////////////
     player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cffff0000 Choose from menu: |r", GOSSIP_SENDER_MAIN, 9999);
     // kontrola kombatu
@@ -104,36 +103,33 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
     switch (action)
     {
         ////////////////// BUFFS SUBMENU ///////////////////////////
-    case 100: // Buffs
-        player->PlayerTalkClass->ClearMenus();
+    case 1000: // Buffs
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cff0000ff Buff cost: 1 gold |r", GOSSIP_SENDER_MAIN, 9999);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_wordfortitude:30:30:-18:0|t POWER WORD: FORTITUDE", GOSSIP_SENDER_MAIN, 101);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_divinespirit:30:30:-18:0|t DIVINE SPIRIT", GOSSIP_SENDER_MAIN, 102);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_shadow_antishadow:30:30:-18:0|t SHADOW PROTECTION", GOSSIP_SENDER_MAIN, 103);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_fistofjustice:30:30:-18:0|t BLESSING OF MIGHT", GOSSIP_SENDER_MAIN, 107);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_magic_magearmor:30:30:-18:0|t BLESSING OF KINGS", GOSSIP_SENDER_MAIN, 108);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_sealofwisdom:30:30:-18:0|t BLESSING OF WISDOM", GOSSIP_SENDER_MAIN, 109);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_greaterblessingofsalvation:30:30:-18:0|t BLESSING OF SALVATION", GOSSIP_SENDER_MAIN, 110);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, MORE, GOSSIP_SENDER_MAIN, 120);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_wordfortitude:30:30:-18:0|t POWER WORD: FORTITUDE", GOSSIP_SENDER_MAIN, 1010);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_divinespirit:30:30:-18:0|t DIVINE SPIRIT", GOSSIP_SENDER_MAIN, 1020);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_shadow_antishadow:30:30:-18:0|t SHADOW PROTECTION", GOSSIP_SENDER_MAIN, 1030);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_fistofjustice:30:30:-18:0|t BLESSING OF MIGHT", GOSSIP_SENDER_MAIN, 1070);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_magic_magearmor:30:30:-18:0|t BLESSING OF KINGS", GOSSIP_SENDER_MAIN, 1080);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_sealofwisdom:30:30:-18:0|t BLESSING OF WISDOM", GOSSIP_SENDER_MAIN, 1090);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_greaterblessingofsalvation:30:30:-18:0|t BLESSING OF SALVATION", GOSSIP_SENDER_MAIN, 1100);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, MORE, GOSSIP_SENDER_MAIN, 1200);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, LESS, GOSSIP_SENDER_MAIN, 9999);
         player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         break;
-    case 120: // Buffs Next Page 1
-        player->PlayerTalkClass->ClearMenus();
+    case 1200: // Buffs Next Page 1
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cff0000ff Buff cost: 1 gold |r", GOSSIP_SENDER_MAIN, 9999);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_regeneration:30:30:-18:0|t MARK OF THE WILD", GOSSIP_SENDER_MAIN, 104);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_thorns:30:30:-18:0|t THORNS", GOSSIP_SENDER_MAIN, 105);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_magicalsentry:30:30:-18:0|t ARCANE INTELECT", GOSSIP_SENDER_MAIN, 106);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_mindvision:30:30:-18:0|t SONGFLOWER SERENADE", GOSSIP_SENDER_MAIN, 127);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_regeneration:30:30:-18:0|t MARK OF THE WILD", GOSSIP_SENDER_MAIN, 1040);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_nature_thorns:30:30:-18:0|t THORNS", GOSSIP_SENDER_MAIN, 1050);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_magicalsentry:30:30:-18:0|t ARCANE INTELECT", GOSSIP_SENDER_MAIN, 1060);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, "|TInterface/ICONS/Spell_holy_mindvision:30:30:-18:0|t SONGFLOWER SERENADE", GOSSIP_SENDER_MAIN, 1270);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, MAINMENU, GOSSIP_SENDER_MAIN, 9999);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, LESS, GOSSIP_SENDER_MAIN, 100);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, LESS, GOSSIP_SENDER_MAIN, 1000);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, TEXT_BYE, GOSSIP_SENDER_MAIN, 9998);
         player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         break;
 
         ////////////////// BUFFS for Specialization SUBMENU ///////////////////////////
     case 2000: // Buff for Specialization
-        player->PlayerTalkClass->ClearMenus();
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_MONEY_BAG, " |cff0000ff Buffs cost: 5 golds |r", GOSSIP_SENDER_MAIN, 9999);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Ability_warrior_defensivestance:30:30:-18:0|t TANK", GOSSIP_SENDER_MAIN, 2001);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TABARD, "|TInterface/ICONS/Spell_holy_circleofrenewal:30:30:-18:0|t HEAL", GOSSIP_SENDER_MAIN, 2002);
@@ -203,7 +199,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
 
         /////////////////////////////////////////// BUFFS ///////////////////////////////////////////////
 
-    case 101: // POWER_WORD_FORTITUDE		
+    case 1010: // POWER_WORD_FORTITUDE		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, POWER_WORD_FORTITUDE, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -211,7 +207,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 102: // DIVINE_SPIRIT		
+    case 1020: // DIVINE_SPIRIT		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, DIVINE_SPIRIT, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -219,7 +215,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 103: // SHADOW_PROTECTION		
+    case 1030: // SHADOW_PROTECTION		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, SHADOW_PROTECTION, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -227,7 +223,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 104: // MARK_OF_THE_WILD 		
+    case 1040: // MARK_OF_THE_WILD 		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, MARK_OF_THE_WILD, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -235,7 +231,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 105: // THORNS		
+    case 1050: // THORNS		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, THORNS, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -243,7 +239,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 106: // ARCANE_INTELECT		
+    case 1060: // ARCANE_INTELECT		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, ARCANE_INTELECT, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -251,7 +247,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 107: // BLESSING_OF_MIGHT	
+    case 1070: // BLESSING_OF_MIGHT	
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, BLESSING_OF_MIGHT, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -259,7 +255,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 108: // BLESSING_OF_KINGS		
+    case 1080: // BLESSING_OF_KINGS		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, BLESSING_OF_KINGS, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -267,7 +263,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 109: // BLESSING_OF_WISDOM	
+    case 1090: // BLESSING_OF_WISDOM	
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, BLESSING_OF_WISDOM, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -275,7 +271,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->PlayDirectSound(3337); //
         player->ModifyMoney(-SINGLE_COST);
         break;
-    case 110: // BLESSING_OF_SALVATION		
+    case 1100: // BLESSING_OF_SALVATION		
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, BLESSING_OF_SALVATION, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -284,55 +280,7 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->ModifyMoney(-SINGLE_COST);
         break;
 
-    case 121: // STRENGHT		
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, STRENGHT, false);
-        _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
-        player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
-        player->PlayDirectSound(3337); //
-        player->ModifyMoney(-SINGLE_COST);
-        break;
-    case 122: // STAMINA		
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, STAMINA, false);
-        _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
-        player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
-        player->PlayDirectSound(3337); //
-        player->ModifyMoney(-SINGLE_COST);
-        break;
-    case 123: // AGILITY		
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, AGILITY, false);
-        _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
-        player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
-        player->PlayDirectSound(3337); //
-        player->ModifyMoney(-SINGLE_COST);
-        break;
-    case 124: // SPIRIT		
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, SPIRIT, false);
-        _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
-        player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
-        player->PlayDirectSound(3337); //
-        player->ModifyMoney(-SINGLE_COST);
-        break;
-    case 125: // INTELLECT 		
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, INTELLECT, false);
-        _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
-        player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
-        player->PlayDirectSound(3337); //
-        player->ModifyMoney(-SINGLE_COST);
-        break;
-    case 126: // WATER_WALKING		
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, WATER_WALKING, false);
-        _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
-        player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
-        player->PlayDirectSound(3337); //
-        player->ModifyMoney(-SINGLE_COST);
-        break;
-    case 127: // SONGFLOWER SERENADE	
+    case 1270: // SONGFLOWER SERENADE	
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, SONGFLOWER_SERENADE, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
@@ -370,7 +318,6 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         GossipHello_MCBuffer(player, _Creature);
         break;
 
-    default: // Something wrong?!
         player->CLOSE_GOSSIP_MENU();
     }
 }
