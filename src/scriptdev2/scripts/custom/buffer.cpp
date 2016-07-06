@@ -57,7 +57,7 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
         //player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
         //player->PlayerTalkClass->SendCloseGossip();
         player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, _Creature->GetObjectGuid());
-        return true;
+        return false;
     }
     else {
         if (player->getLevel() >= 70)
@@ -99,7 +99,7 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
     return true;
 }
 
-void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action)
+bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
     player->PlayerTalkClass->ClearMenus();
     // switch(player->getClass())
@@ -325,13 +325,6 @@ void SendDefaultMenu_MCBuffer(Player *player, Creature *_Creature, uint32 action
         player->CLOSE_GOSSIP_MENU();
 
     }
-}
-
-bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
-{
-    // Main menu
-    if (sender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_MCBuffer(player, _Creature, action);
     return true;
 }
 
@@ -342,5 +335,5 @@ void AddSC_MCBuffer()
     newscript->Name = "npc_buffer";
     newscript->pGossipHello = &GossipHello_MCBuffer;
     newscript->pGossipSelect = &GossipSelect_MCBuffer;
-    newscript->RegisterSelf();
+    newscript->RegisterSelf(false);
 }
