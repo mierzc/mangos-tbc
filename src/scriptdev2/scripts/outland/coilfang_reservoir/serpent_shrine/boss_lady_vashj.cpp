@@ -23,6 +23,8 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "serpent_shrine.h"
+#include "Item.h"
+#include "Spell.h"
 
 enum
 {
@@ -63,7 +65,7 @@ enum
     NPC_TOXIC_SPOREBAT          = 22140,
 
     // other
-    POINT_MOVE_CENTER           = 1,
+    POINT_MOVE_CENTER           = 0,
 
     PHASE_1                     = 1,
     PHASE_2                     = 2,
@@ -109,15 +111,26 @@ const float afCoilfangStriderPos[1][4] =
     { -12.843f, -907.798f, 41.239620f, 6.087f}
 };
 
+const float afShieldGeneratorChannelPos[4][4] =
+{
+    { 49.626f, -902.181f, 41.54f, 3.956f },
+    { 10.988f, -901.616f, 41.54f, 5.437f },
+    { 10.385f, -944.036f, 41.54f, 0.779f },
+    { 49.312f, -943.398f, 41.54f, 2.401f }
+};
+
 struct boss_lady_vashjAI : public ScriptedAI
 {
     boss_lady_vashjAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = (instance_serpentshrine_cavern*)pCreature->GetInstanceData();
+        memset(&m_auiShieldGeneratorChannel, 0, sizeof(m_auiShieldGeneratorChannel));
         Reset();
     }
 
     instance_serpentshrine_cavern* m_pInstance;
+
+    ObjectGuid  m_auiShieldGeneratorChannel[MAX_SHIELD_GEN];
 
     uint32 m_uiShockBlastTimer;
     uint32 m_uiEntangleTimer;
@@ -143,7 +156,7 @@ struct boss_lady_vashjAI : public ScriptedAI
         m_uiPhase                     = PHASE_1;
         m_uiGeneratorsUsed            = 0;
 
-        m_uiShockBlastTimer           = urand(1000, 60000);
+        m_uiShockBlastTimer           = urand(10000, 60000);
         m_uiEntangleTimer             = 30000;
         m_uiStaticChargeTimer         = urand(10000, 25000);
         m_uiRangedCheckTimer          = 2000;
@@ -157,6 +170,27 @@ struct boss_lady_vashjAI : public ScriptedAI
 
         m_uiSummonSporebatTimer       = 10000;
         m_uiSummonSporebatStaticTimer = 30000;
+
+        m_bEntangle = false;
+
+        RemoveAllShieldGenerators();
+
+        if (m_pInstance)
+            m_pInstance->SetData(TYPE_LADYVASHJ_EVENT, NOT_STARTED);
+    }
+
+    void RemoveAllShieldGenerators()
+    {
+        for (uint8 i = 0; i < MAX_SHIELD_GEN; ++i)
+        {
+            if (Creature* pTemp = m_creature->GetMap()->GetCreature(m_auiShieldGeneratorChannel[i]))
+            {
+                if (pTemp->isAlive())
+                    pTemp->SetDeathState(JUST_DIED);
+
+                m_auiShieldGeneratorChannel[i] == 0;
+            }
+        }
     }
 
     void Aggro(Unit* /*pWho*/) override
@@ -183,13 +217,12 @@ struct boss_lady_vashjAI : public ScriptedAI
             // Initialize all the shield generators
             if (m_pInstance)
             {
-                GuidList lShieldGeneratorsGuid;
-                m_pInstance->GetShieldGeneratorsGUIDList(lShieldGeneratorsGuid);
+                m_creature->RemoveAllAuras();
 
-                for (GuidList::const_iterator itr = lShieldGeneratorsGuid.begin(); itr != lShieldGeneratorsGuid.end(); ++itr)
+                for (uint8 i = 0; i < MAX_SHIELD_GEN; ++i)
                 {
-                    if (Creature* pGenerator = m_creature->GetMap()->GetCreature(*itr))
-                        pGenerator->CastSpell(m_creature, SPELL_MAGIC_BARRIER, false);
+                    if (Creature* pCreature = m_creature->SummonCreature(NPC_SHIELD_GENERATOR, afShieldGeneratorChannelPos[i][0], afShieldGeneratorChannelPos[i][1], afShieldGeneratorChannelPos[i][2], afShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0))
+                        m_auiShieldGeneratorChannel[i] = pCreature->GetObjectGuid();
                 }
             }
 
@@ -210,6 +243,16 @@ struct boss_lady_vashjAI : public ScriptedAI
             case NPC_ENCHANTED_ELEMENTAL:
                 pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0.0f, 0.0f);
                 break;
+            case NPC_SHIELD_GENERATOR:
+                //we should really expect database to have this set already
+                if (!pSummoned->HasFlag(UNIT_FIELD_FLAGS, (UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE)))
+                {
+                    pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    pSummoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                }
+
+                pSummoned->CastSpell(m_creature, SPELL_MAGIC_BARRIER, true);
+                break;
         }
     }
 
@@ -217,7 +260,7 @@ struct boss_lady_vashjAI : public ScriptedAI
     {
         // Set the timer when summoned killed
         if (pSummoned->GetEntry() == NPC_TAINTED_ELEMENTAL)
-            m_uiTaintedElementalTimer = 50000;
+            m_uiTaintedElementalTimer = 30000;
     }
 
     void SummonedCreatureDespawn(Creature* pSummoned) override
@@ -230,7 +273,7 @@ struct boss_lady_vashjAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* /*pVictim*/) override
+    void KilledUnit(Unit* pVictim) override
     {
         switch (urand(0, 2))
         {
@@ -240,7 +283,7 @@ struct boss_lady_vashjAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* /*pKiller*/) override
+    void JustDied(Unit* pVictim) override
     {
         DoScriptText(SAY_DEATH, m_creature);
 
@@ -454,9 +497,12 @@ struct mob_enchanted_elementalAI : public ScriptedAI
 {
     mob_enchanted_elementalAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         SetCombatMovement(false);
         Reset();
     }
+
+    ScriptedInstance *m_pInstance;
 
     void Reset() override { }
 

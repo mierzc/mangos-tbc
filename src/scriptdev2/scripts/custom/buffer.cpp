@@ -66,7 +66,7 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
             // kontrola goldov
             if (player->GetMoney() >= SINGLE_COST)
             {
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, " |TInterface/ICONS/Spell_holy_spellwarding:30:30:-18:0|t  --[[ BUFFS ]]--", GOSSIP_SENDER_MAIN, 100);
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, " |TInterface/ICONS/Spell_holy_spellwarding:30:30:-18:0|t  --[[ BUFFS ]]--", GOSSIP_SENDER_MAIN, 1000);
             }
             else {
                 player->GetSession()->SendAreaTriggerMessage("%s , You haven't enough money to buy Buffs!", player->GetName());
