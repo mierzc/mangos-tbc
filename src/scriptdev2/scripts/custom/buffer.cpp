@@ -26,7 +26,7 @@ EndScriptData */
 #define LESS "|TInterface/ICONS/Spell_chargenegative:30:30:-18:0|t|cff0000ff<<==[ Back ]== |r"
 
 #define SPEC_TANK "|TInterface/ICONS/Ability_warrior_defensivestance:30:30:-18:0|t TANK"
-#define SPEC_MELLE "|TInterface/ICONS/Spell_holy_fistofjustice:30:30:-18:0|t MELLE DMG"
+#define SPEC_MELEE "|TInterface/ICONS/Spell_holy_fistofjustice:30:30:-18:0|t MELEE DMG"
 #define SPEC_HEAL "|TInterface/ICONS/Spell_holy_circleofrenewal:30:30:-18:0|t HEAL"
 #define SPEC_DPS "|TInterface/ICONS/Spell_fire_flamebolt:30:30:-18:0|t SPELL DMG"
 #define SPEC_RANGED_DMG "|TInterface/ICONS/Inv_ammo_arrow_02:30:30:-18:0|t RANGED DMG"
@@ -59,6 +59,12 @@ enum spells
     POWER_WORD_FORTITUDE = 25389,
     SONGFLOWER_SERENADE = 15366 // 1 hour
 };
+
+uint32 tankArray[]     = { THORNS, ARCANE_INTELECT, BLESSING_OF_KINGS, MARK_OF_THE_WILD, POWER_WORD_FORTITUDE, SONGFLOWER_SERENADE };
+uint32 meleeArray[]    = { BLESSING_OF_MIGHT, MARK_OF_THE_WILD, POWER_WORD_FORTITUDE, ARCANE_INTELECT, SONGFLOWER_SERENADE };
+uint32 healArray[]     = { ARCANE_INTELECT, BLESSING_OF_SALVATION, DIVINE_SPIRIT, MARK_OF_THE_WILD, POWER_WORD_FORTITUDE, SONGFLOWER_SERENADE };
+uint32 spelldmgArray[] = { ARCANE_INTELECT, BLESSING_OF_SALVATION, DIVINE_SPIRIT, MARK_OF_THE_WILD, POWER_WORD_FORTITUDE, SONGFLOWER_SERENADE };
+uint32 rangedmgArray[] = { ARCANE_INTELECT, BLESSING_OF_MIGHT, DIVINE_SPIRIT, MARK_OF_THE_WILD, POWER_WORD_FORTITUDE, SONGFLOWER_SERENADE };
 
 bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 {
@@ -110,7 +116,9 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 
 bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
-    // player->PlayerTalkClass->ClearMenus();
+    player->PlayerTalkClass->ClearMenus();
+    _Creature->Respawn();
+    _Creature->RemoveAllAuras();
     // switch(player->getClass())
     switch (action)
     {
@@ -126,7 +134,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, SINGLE_BLESSING_OF_SALVATION, GOSSIP_SENDER_MAIN, 1100);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, MORE,                         GOSSIP_SENDER_MAIN, 1200);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, LESS,                         GOSSIP_SENDER_MAIN, 9999);
-        player->SendPreparedGossip(_Creature);
+        //player->SendPreparedGossip(_Creature);
         player->SEND_GOSSIP_MENU(1, _Creature->GetObjectGuid());
         break;
     case 1200: // Buffs Next Page 1
@@ -138,7 +146,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, MAINMENU,                    GOSSIP_SENDER_MAIN, 9999);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, LESS,                        GOSSIP_SENDER_MAIN, 1000);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, TEXT_BYE,                    GOSSIP_SENDER_MAIN, 9998);
-        player->SendPreparedGossip(_Creature);
+        //player->SendPreparedGossip(_Creature);
         player->SEND_GOSSIP_MENU(1, _Creature->GetObjectGuid());
         break;
 
@@ -146,62 +154,53 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
     case 2000: // Buffs for Specialization
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, COST_SPEC,       GOSSIP_SENDER_MAIN, 9999);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, SPEC_TANK,       GOSSIP_SENDER_MAIN, 2001);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, SPEC_MELLE,      GOSSIP_SENDER_MAIN, 2002);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, SPEC_MELEE,      GOSSIP_SENDER_MAIN, 2002);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, SPEC_HEAL,       GOSSIP_SENDER_MAIN, 2003);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, SPEC_DPS,        GOSSIP_SENDER_MAIN, 2004);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, SPEC_RANGED_DMG, GOSSIP_SENDER_MAIN, 2005);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, LESS,            GOSSIP_SENDER_MAIN, 9999);
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, TEXT_BYE,        GOSSIP_SENDER_MAIN, 9998);
-        player->SendPreparedGossip(_Creature);
+        //player->SendPreparedGossip(_Creature);
         player->SEND_GOSSIP_MENU(1, _Creature->GetObjectGuid());
         break;
         
     case 2001: // TANK
-        _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
+/*        _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
         _Creature->CastSpell(player, ARCANE_INTELECT,      true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
         _Creature->CastSpell(player, THORNS,               true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
         _Creature->CastSpell(player, MARK_OF_THE_WILD,     true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
         _Creature->CastSpell(player, BLESSING_OF_KINGS,    true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
+        */
+        for (int i = 0; i < sizeof(tankArray)/ sizeof(uint32); i++)
+            player->CastSpell(player, tankArray[i], true); // , nullptr, nullptr,_Creature->GetObjectGuid(), nullptr
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
         player->ModifyMoney(-CLASS_COST);
         player->CLOSE_GOSSIP_MENU();
         break;
     case 2002: // HEAL
-        _Creature->CastSpell(player, MARK_OF_THE_WILD,      true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, POWER_WORD_FORTITUDE,  true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, ARCANE_INTELECT,       true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, BLESSING_OF_SALVATION, true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, DIVINE_SPIRIT,         true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
+        for (int i = 0; i < sizeof(healArray) / sizeof(uint32); i++)
+            player->CastSpell(player, healArray[i], true);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
         player->ModifyMoney(-CLASS_COST);
         player->CLOSE_GOSSIP_MENU();
         break;
     case 2003: // SPELL DMG
-        _Creature->CastSpell(player, MARK_OF_THE_WILD,      true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, POWER_WORD_FORTITUDE,  true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, ARCANE_INTELECT,       true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, BLESSING_OF_SALVATION, true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, DIVINE_SPIRIT,         true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
+        for (int i = 0; i < sizeof(spelldmgArray)/ sizeof(uint32); i++)
+            player->CastSpell(player, spelldmgArray[i], true);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
         player->ModifyMoney(-CLASS_COST);
         player->CLOSE_GOSSIP_MENU();
         break;
-    case 2004: // MELE DMG
-        _Creature->CastSpell(player, POWER_WORD_FORTITUDE, true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, ARCANE_INTELECT,      true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, BLESSING_OF_MIGHT,    true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, MARK_OF_THE_WILD,     true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, DIVINE_SPIRIT,        true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
+    case 2004: // MELEE DMG
+        for (int i = 0; i < sizeof(meleeArray) / sizeof(uint32); i++)
+            player->CastSpell(player, meleeArray[i], true);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
         player->ModifyMoney(-CLASS_COST);
         player->CLOSE_GOSSIP_MENU();
         break;
     case 2005: // RANGED DMG
-        _Creature->CastSpell(player, MARK_OF_THE_WILD,      true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, POWER_WORD_FORTITUDE,  true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, BLESSING_OF_SALVATION, true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, ARCANE_INTELECT,       true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        _Creature->CastSpell(player, DIVINE_SPIRIT,         true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
+        for (int i = 0; i < sizeof(rangedmgArray) / sizeof(uint32); i++)
+            player->CastSpell(player, rangedmgArray[i], true);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
         player->ModifyMoney(-CLASS_COST);
         player->CLOSE_GOSSIP_MENU();
@@ -211,7 +210,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
 
     case 1010: // POWER_WORD_FORTITUDE
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, POWER_WORD_FORTITUDE, false);
+        player->CastSpell(player, POWER_WORD_FORTITUDE, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed %s !", player->GetName());
         player->PlayDirectSound(3337); //
@@ -219,7 +218,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1020: // DIVINE_SPIRIT
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, DIVINE_SPIRIT, false);
+        player->CastSpell(player, DIVINE_SPIRIT, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -227,7 +226,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1030: // SHADOW_PROTECTION
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, SHADOW_PROTECTION, false);
+        player->CastSpell(player, SHADOW_PROTECTION, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -235,7 +234,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1040: // MARK_OF_THE_WILD 
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, MARK_OF_THE_WILD, false);
+        player->CastSpell(player, MARK_OF_THE_WILD, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -243,7 +242,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1050: // THORNS
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, THORNS, false);
+        player->CastSpell(player, THORNS, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -251,7 +250,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1060: // ARCANE_INTELECT
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, ARCANE_INTELECT, false);
+        player->CastSpell(player, ARCANE_INTELECT, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -259,7 +258,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1070: // BLESSING_OF_MIGHT
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, BLESSING_OF_MIGHT, false);
+        player->CastSpell(player, BLESSING_OF_MIGHT, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -267,7 +266,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1080: // BLESSING_OF_KINGS
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, BLESSING_OF_KINGS, false);
+        player->CastSpell(player, BLESSING_OF_KINGS, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -275,7 +274,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1090: // BLESSING_OF_WISDOM
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, BLESSING_OF_WISDOM, false);
+        player->CastSpell(player, BLESSING_OF_WISDOM, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -283,7 +282,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
     case 1100: // BLESSING_OF_SALVATION
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, BLESSING_OF_SALVATION, false);
+        player->CastSpell(player, BLESSING_OF_SALVATION, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -292,7 +291,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
 
     case 1270: // SONGFLOWER SERENADE
         player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, SONGFLOWER_SERENADE, false);
+        player->CastSpell(player, SONGFLOWER_SERENADE, false);
         _Creature->HandleEmote(EMOTE_ONESHOT_WAVE);
         player->GetSession()->SendAreaTriggerMessage("You are now buffed!");
         player->PlayDirectSound(3337); //
@@ -300,7 +299,7 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         break;
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     case 8000: // Heal me
-        _Creature->CastSpell(player, 38588, false);  //  38588 Flash Heal efect, 31782 Rejuvenation
+        player->CastSpell(player, 38588, false);  //  38588 Flash Heal efect, 31782 Rejuvenation
         if (player->GetPowerType() == POWER_MANA){
             player->SetPower(POWER_MANA, player->GetMaxPower(POWER_MANA));
             player->SetHealth(player->GetMaxHealth());
