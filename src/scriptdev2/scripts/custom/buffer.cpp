@@ -68,6 +68,7 @@ uint32 rangedmgArray[] = { ARCANE_INTELECT, BLESSING_OF_MIGHT, DIVINE_SPIRIT, MA
 
 bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 {
+    _Creature->SetPower(POWER_MANA, _Creature->GetMaxPower(POWER_MANA));
     ////////////////// MAIN MENU ///////////////////////////
     player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, " |cffff0000 Choose from menu: |r", GOSSIP_SENDER_MAIN, 9999);
     // kontrola kombatu
@@ -117,7 +118,6 @@ bool GossipHello_MCBuffer(Player *player, Creature *_Creature)
 bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
     player->PlayerTalkClass->ClearMenus();
-    _Creature->Respawn();
     // switch(player->getClass())
     switch (action)
     {
@@ -176,23 +176,23 @@ bool GossipSelect_MCBuffer(Player *player, Creature *_Creature, uint32 sender, u
         player->ModifyMoney(-CLASS_COST);
         player->CLOSE_GOSSIP_MENU();
         break;
-    case 2002: // HEAL
+    case 2002: // MELEE DMG
+        for (int i = 0; i < sizeof(meleeArray) / sizeof(uint32); i++)
+            _Creature->CastSpell(player, meleeArray[i], true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
+        player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
+        player->ModifyMoney(-CLASS_COST);
+        player->CLOSE_GOSSIP_MENU();
+        break;
+    case 2003: // HEAL
         for (int i = 0; i < sizeof(healArray) / sizeof(uint32); i++)
             _Creature->CastSpell(player, healArray[i], true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
         player->ModifyMoney(-CLASS_COST);
         player->CLOSE_GOSSIP_MENU();
         break;
-    case 2003: // SPELL DMG
+    case 2004: // SPELL DMG
         for (int i = 0; i < sizeof(spelldmgArray)/ sizeof(uint32); i++)
             _Creature->CastSpell(player, spelldmgArray[i], true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
-        player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
-        player->ModifyMoney(-CLASS_COST);
-        player->CLOSE_GOSSIP_MENU();
-        break;
-    case 2004: // MELEE DMG
-        for (int i = 0; i < sizeof(meleeArray) / sizeof(uint32); i++)
-            _Creature->CastSpell(player, meleeArray[i], true, nullptr, nullptr, _Creature->GetObjectGuid(), nullptr);
         player->GetSession()->SendAreaTriggerMessage("You are now full buffed!");
         player->ModifyMoney(-CLASS_COST);
         player->CLOSE_GOSSIP_MENU();
