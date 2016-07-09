@@ -68,7 +68,8 @@ enum
     NPC_TIDEWALKER_LURKER           = 21920
 };
 
-static const uint32 m_auiSpellWateryGraveTeleport[] = { 37850, 38023, 38024, 38025 };
+// static const uint32 m_auiSpellWateryGraveTeleport[] = { 37850, 38023, 38024, 38025 };
+static const uint32 m_auiSpellWateryGraveTeleport[] = { 37850 };
 
 struct boss_morogrim_tidewalkerAI : public ScriptedAI
 {
@@ -172,7 +173,7 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
                 // summon murlocs - north
                 DoCastSpellIfCan(m_creature, SPELL_SUMMON_MURLOC_A6, CAST_TRIGGERED);
                 DoCastSpellIfCan(m_creature, SPELL_SUMMON_MURLOC_A7, CAST_TRIGGERED);
-                DoCastSpellIfCan(m_creature, SPELL_SUMMON_MURLOC_A8, CAST_TRIGGERED);
+//                DoCastSpellIfCan(m_creature, SPELL_SUMMON_MURLOC_A8, CAST_TRIGGERED);
 //                DoCastSpellIfCan(m_creature, SPELL_SUMMON_MURLOC_A9, CAST_TRIGGERED);
 //                DoCastSpellIfCan(m_creature, SPELL_SUMMON_MURLOC_A10, CAST_TRIGGERED);
 
