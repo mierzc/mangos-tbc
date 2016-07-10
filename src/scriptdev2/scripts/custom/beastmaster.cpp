@@ -178,6 +178,7 @@ void CreatePet(Player* player, Creature* creature, uint32 entry)
 bool GossipHello_Npc_Beastmaster(Player* player, Creature* m_creature)
 {
     player->ADD_GOSSIP_ITEM(4, "|TInterface\\icons\\Ability_hunter_beasttaming:26:26:-15:0|t Obtain a New Pet.", GOSSIP_SENDER_MAIN, 10);
+    player->ADD_GOSSIP_ITEM(4, "|TInterface\\icons\\Ability_hunter_beasttaming:26:26:-15:0|t New Pet levelup.", GOSSIP_SENDER_MAIN, 5000);
     player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Ability_hunter_beastcall:26:26:-15:0|t Take me to the Stable.", GOSSIP_SENDER_MAIN, GOSSIP_OPTION_STABLEPET);
     player->ADD_GOSSIP_ITEM(6, "|TInterface\\icons\\Inv_misc_food_58:26:26:-15:0|t Sell me some Food for my Pet.", GOSSIP_SENDER_MAIN, GOSSIP_OPTION_VENDOR);
     player->ADD_GOSSIP_ITEM(5, "|TInterface\\icons\\Ability_spy:26:26:-15:0|t Close Beastmaster Window.", GOSSIP_SENDER_MAIN, 150);
@@ -194,6 +195,7 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
 
     case 100:
         player->ADD_GOSSIP_ITEM(4, "|TInterface\\icons\\Ability_hunter_beasttaming:26:26:-15:0|t Obtain a New Pet.", GOSSIP_SENDER_MAIN, 10);
+        player->ADD_GOSSIP_ITEM(4, "|TInterface\\icons\\Ability_hunter_beasttaming:26:26:-15:0|t New Pet levelup.", GOSSIP_SENDER_MAIN, 5000);
         player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Ability_hunter_beastcall:26:26:-15:0|t Take me to the Stable.", GOSSIP_SENDER_MAIN, GOSSIP_OPTION_STABLEPET);
         player->ADD_GOSSIP_ITEM(6, "|TInterface\\icons\\Inv_misc_food_58:26:26:-15:0|t Sell me some Food for my Pet.", GOSSIP_SENDER_MAIN, GOSSIP_OPTION_VENDOR);
         player->ADD_GOSSIP_ITEM(5, "|TInterface\\icons\\Ability_spy:26:26:-15:0|t Close Beastmaster Window.", GOSSIP_SENDER_MAIN, 150);
@@ -211,6 +213,21 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         // Food vendor
     case GOSSIP_OPTION_VENDOR:
         player->GetSession()->SendListInventory(m_creature->GetObjectGuid());
+        break;
+        // pet 70 lvl
+    case 5000:
+        Pet* pet = player->GetPet();
+        if (!pet)
+            return false;
+
+        if (pet->getLevel() <= 69)
+        {
+            pet->SetLevel(70);
+            pet->InitStatsForLevel(70);
+            m_creature->MonsterWhisper("Your pet got level 70.", player, false);
+        }
+        else
+            m_creature->MonsterWhisper("Your pet already has 70 levels.", player, false);
         break;
 
         // rozdelenie petov
