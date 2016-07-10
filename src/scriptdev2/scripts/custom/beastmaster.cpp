@@ -222,6 +222,10 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         if (player->GetPet()->getLevel() <= 69)
         {
             player->GetPet()->SetLevel(70);
+            // happiness
+            player->GetPet()->SetPower(POWER_HAPPINESS, 10480000);
+            // loyalty
+            player->GetPet()->SetByteValue(UNIT_FIELD_BYTES_1, 1, 6);
             player->GetPet()->InitStatsForLevel(70);
             m_creature->MonsterWhisper("Your pet got level 70.", player, false);
         }
