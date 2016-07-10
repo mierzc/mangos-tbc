@@ -216,14 +216,13 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         break;
         // pet 70 lvl
     case 5000:
-        Pet* pet = player->GetPet();
-        if (!pet)
+        if (!player->GetPet())
             return false;
 
-        if (pet->getLevel() <= 69)
+        if (player->GetPet()->getLevel() <= 69)
         {
-            pet->SetLevel(70);
-            pet->InitStatsForLevel(70);
+            player->GetPet()->SetLevel(70);
+            player->GetPet()->InitStatsForLevel(70);
             m_creature->MonsterWhisper("Your pet got level 70.", player, false);
         }
         else
