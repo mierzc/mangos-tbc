@@ -51,10 +51,6 @@ enum
     // GO_BRIDGE_PART_2              = 184204,
     // GO_BRIDGE_PART_3              = 184205,
 
-    // Door Fathom Lord
-    GO_PORT_FATHOM_1 = 1000030,
-    GO_PORT_FATHOM_2 = 1000031,
-
     SPELL_LEOTHERAS_BANISH          = 37546,
 };
 

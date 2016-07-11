@@ -60,10 +60,10 @@ void instance_serpentshrine_cavern::OnCreatureCreate(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_LADYVASHJ:
-        case NPC_LEOTHERAS:
         case NPC_SHARKKIS:
         case NPC_TIDALVESS:
         case NPC_CARIBDIS:
+        case NPC_LEOTHERAS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_GREYHEART_SPELLBINDER:
@@ -96,17 +96,6 @@ void instance_serpentshrine_cavern::OnObjectCreate(GameObject* pGo)
         case GO_SHIELD_GENERATOR_4:
             m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
             break;
-
-        case GO_PORT_FATHOM_1:
-        case GO_PORT_FATHOM_2:
-            if (m_auiEncounter[TYPE_KARATHRESS_EVENT] == IN_PROGRESS)
-                pGo->SetGoState(GO_STATE_READY);
-            else 
-            if (m_auiEncounter[TYPE_KARATHRESS_EVENT] == DONE)
-                pGo->SetGoState(GO_STATE_ACTIVE);
-            break;
-        default:
-            pGo->SetGoState(GO_STATE_ACTIVE);
     }
 }
 
@@ -114,66 +103,45 @@ void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)
 {
     switch (uiType)
     {
-    case TYPE_HYDROSS_EVENT:
-        m_auiEncounter[uiType] = uiData;
-        break;
-    case TYPE_LEOTHERAS_EVENT:
-        m_auiEncounter[uiType] = uiData;
-        if (uiData == FAIL)
-        {
-            for (GuidList::const_iterator itr = m_lSpellBindersGUIDList.begin(); itr != m_lSpellBindersGUIDList.end(); ++itr)
+        case TYPE_HYDROSS_EVENT:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_LEOTHERAS_EVENT:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == FAIL)
             {
-                if (Creature* pSpellBinder = instance->GetCreature(*itr))
-                    pSpellBinder->Respawn();
-            }
+                for (GuidList::const_iterator itr = m_lSpellBindersGUIDList.begin(); itr != m_lSpellBindersGUIDList.end(); ++itr)
+                {
+                    if (Creature* pSpellBinder = instance->GetCreature(*itr))
+                        pSpellBinder->Respawn();
+                }
 
-            m_uiSpellBinderCount = 0;
-        }
-        break;
-    case TYPE_THELURKER_EVENT:
-    case TYPE_MOROGRIM_EVENT:
-        m_auiEncounter[uiType] = uiData;
-        break;
-    case TYPE_LADYVASHJ_EVENT:
-        m_auiEncounter[uiType] = uiData;
-        if (uiData == FAIL)
-        {
-            // interrupt the shield
-            for (GuidList::const_iterator itr = m_lShieldGeneratorGUIDList.begin(); itr != m_lShieldGeneratorGUIDList.end(); ++itr)
+                m_uiSpellBinderCount = 0;
+            }
+            break;
+        case TYPE_THELURKER_EVENT:
+        case TYPE_KARATHRESS_EVENT:
+        case TYPE_MOROGRIM_EVENT:
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case TYPE_LADYVASHJ_EVENT:
+            m_auiEncounter[uiType] = uiData;
+            if (uiData == FAIL)
             {
-                if (Creature* pGenerator = instance->GetCreature(*itr))
-                    pGenerator->InterruptNonMeleeSpells(false);
+                // interrupt the shield
+                for (GuidList::const_iterator itr = m_lShieldGeneratorGUIDList.begin(); itr != m_lShieldGeneratorGUIDList.end(); ++itr)
+                {
+                    if (Creature* pGenerator = instance->GetCreature(*itr))
+                        pGenerator->InterruptNonMeleeSpells(false);
+                }
+
+                // reset generators
+                DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_1, GO_FLAG_NO_INTERACT, false);
+                DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_2, GO_FLAG_NO_INTERACT, false);
+                DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_3, GO_FLAG_NO_INTERACT, false);
+                DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_4, GO_FLAG_NO_INTERACT, false);
             }
-
-            // reset generators
-            DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_1, GO_FLAG_NO_INTERACT, false);
-            DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_2, GO_FLAG_NO_INTERACT, false);
-            DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_3, GO_FLAG_NO_INTERACT, false);
-            DoToggleGameObjectFlags(GO_SHIELD_GENERATOR_4, GO_FLAG_NO_INTERACT, false);
-        }
-        break;
-
-    case TYPE_KARATHRESS_EVENT:
-        switch (uiData)
-        {
-        case DONE:
-            // Reset door on Fail or Done
-            if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_PORT_FATHOM_1))
-                pDoor->ResetDoorOrButton();
-            m_auiEncounter[uiType] = uiData;
             break;
-        case FAIL:
-            if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_PORT_FATHOM_1))
-                pDoor->UseDoorOrButton();
-            m_auiEncounter[uiType] = uiData;
-            break;
-        case IN_PROGRESS:
-            if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_PORT_FATHOM_1))
-                DoUseDoorOrButton(GO_PORT_FATHOM_1);
-            m_auiEncounter[uiType] = uiData;
-            break;
-        }
-        m_auiEncounter[uiType] = uiData;
     }
 
     if (uiData == DONE)
