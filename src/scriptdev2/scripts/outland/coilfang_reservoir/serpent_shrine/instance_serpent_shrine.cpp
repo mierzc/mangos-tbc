@@ -60,10 +60,10 @@ void instance_serpentshrine_cavern::OnCreatureCreate(Creature* pCreature)
     switch (pCreature->GetEntry())
     {
         case NPC_LADYVASHJ:
+        case NPC_LEOTHERAS:
         case NPC_SHARKKIS:
         case NPC_TIDALVESS:
         case NPC_CARIBDIS:
-        case NPC_LEOTHERAS:
             m_mNpcEntryGuidStore[pCreature->GetEntry()] = pCreature->GetObjectGuid();
             break;
         case NPC_GREYHEART_SPELLBINDER:
@@ -101,10 +101,13 @@ void instance_serpentshrine_cavern::OnObjectCreate(GameObject* pGo)
         case GO_PORT_FATHOM_2:
             if (m_auiEncounter[TYPE_KARATHRESS_EVENT] == IN_PROGRESS)
                 pGo->SetGoState(GO_STATE_READY);
+            else 
+            if (m_auiEncounter[TYPE_KARATHRESS_EVENT] == DONE)
+                pGo->SetGoState(GO_STATE_ACTIVE);
             break;
-
+        default:
+            pGo->SetGoState(GO_STATE_ACTIVE);
     }
-    m_mGoEntryGuidStore[pGo->GetEntry()] = pGo->GetObjectGuid();
 }
 
 void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)
@@ -151,13 +154,26 @@ void instance_serpentshrine_cavern::SetData(uint32 uiType, uint32 uiData)
         break;
 
     case TYPE_KARATHRESS_EVENT:
-        if (uiData == DONE)
+        switch (uiData)
         {
-            DoUseDoorOrButton(GO_PORT_FATHOM_1);
-            DoUseDoorOrButton(GO_PORT_FATHOM_2);
+        case DONE:
+            // Reset door on Fail or Done
+            if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_PORT_FATHOM_1))
+                pDoor->ResetDoorOrButton();
             m_auiEncounter[uiType] = uiData;
+            break;
+        case FAIL:
+            if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_PORT_FATHOM_1))
+                pDoor->UseDoorOrButton();
+            m_auiEncounter[uiType] = uiData;
+            break;
+        case IN_PROGRESS:
+            if (GameObject* pDoor = GetSingleGameObjectFromStorage(GO_PORT_FATHOM_1))
+                DoUseDoorOrButton(GO_PORT_FATHOM_1);
+            m_auiEncounter[uiType] = uiData;
+            break;
         }
-        break;
+        m_auiEncounter[uiType] = uiData;
     }
 
     if (uiData == DONE)
