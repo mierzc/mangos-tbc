@@ -226,6 +226,7 @@
     <ClCompile Include="..\..\src\scriptdev2\scripts\custom\games.cpp" />
     <ClCompile Include="..\..\src\scriptdev2\scripts\custom\MysteriaGuard.cpp" />
     <ClCompile Include="..\..\src\scriptdev2\scripts\custom\npc_mysteria_bgchanger.cpp" />
+    <ClCompile Include="..\..\src\scriptdev2\scripts\custom\profession.cpp" />
     <ClCompile Include="..\..\src\scriptdev2\scripts\custom\teleporter.cpp" />
     <ClCompile Include="..\..\src\scriptdev2\scripts\eastern_kingdoms\alterac_mountains.cpp" />
     <ClCompile Include="..\..\src\scriptdev2\scripts\eastern_kingdoms\arathi_highlands.cpp" />

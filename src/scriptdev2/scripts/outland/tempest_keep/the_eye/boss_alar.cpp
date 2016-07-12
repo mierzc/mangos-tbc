@@ -331,7 +331,7 @@ struct boss_alarAI : public ScriptedAI
 
             if (m_uiMeltArmorTimer < uiDiff)
             {
-                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MELT_ARMOR) == CAST_OK)
+                // if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_MELT_ARMOR) == CAST_OK)
                     m_uiMeltArmorTimer = 60000;
             }
             else

@@ -220,12 +220,14 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         {
             m_creature->MonsterWhisper("You are not a Hunter!", player, false);
             player->GetSession()->SendNotification("%s , you are not a Hunter!", player->GetName());
+            player->CLOSE_GOSSIP_MENU();
             return false;
         }
 
         if (!player->GetPet())
         {
             m_creature->MonsterWhisper("You do not have pet!", player, false);
+            player->CLOSE_GOSSIP_MENU();
             return false;
         }
 
@@ -245,6 +247,8 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         }
         else
             m_creature->MonsterWhisper("Your pet already has 70 levels.", player, false);
+
+        player->CLOSE_GOSSIP_MENU();
         break;
 
         // rozdelenie petov

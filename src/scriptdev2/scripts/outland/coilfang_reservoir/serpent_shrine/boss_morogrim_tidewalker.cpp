@@ -68,7 +68,6 @@ enum
     NPC_TIDEWALKER_LURKER           = 21920
 };
 
-// static const uint32 m_auiSpellWateryGraveTeleport[] = { 37850, 38023, 38024, 38025 };
 static const uint32 m_auiSpellWateryGraveTeleport[] = { 37850 };
 
 struct boss_morogrim_tidewalkerAI : public ScriptedAI

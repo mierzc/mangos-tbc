@@ -1192,6 +1192,9 @@
     <ClCompile Include="..\..\src\scriptdev2\scripts\custom\beastmaster.cpp">
       <Filter>scripts\custom</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\scriptdev2\scripts\custom\profession.cpp">
+      <Filter>scripts\custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\scriptdev2\base\escort_ai.h">
