@@ -243,6 +243,7 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
             // Save to DB
             //player->GetPet()->SavePetToDB(PET_SAVE_AS_CURRENT);
             m_creature->MonsterWhisper("Your pet got level 70.", player, false);
+            return true;
         }
         else
             m_creature->MonsterWhisper("Your pet already has 70 levels.", player, false);
