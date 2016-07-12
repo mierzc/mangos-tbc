@@ -227,19 +227,20 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
             m_creature->MonsterWhisper("You do not have pet!", player, false);
             return false;
 
-        if (player->GetPet()->getLevel() <= 69)
+        Pet* pet = player->GetPet();
+        if (pet->getLevel() <= 69)
         {
-            player->GetPet()->SetLevel(70);
+            pet->SetLevel(70);
             // happiness
-            player->GetPet()->SetPower(POWER_HAPPINESS, 10480000);
+            pet->SetPower(POWER_HAPPINESS, 10480000);
             // loyalty
-            player->GetPet()->SetByteValue(UNIT_FIELD_BYTES_1, 1, 6);
+            pet->SetByteValue(UNIT_FIELD_BYTES_1, 1, 6);
             // Initialize spell, stat
-            player->GetPet()->InitStatsForLevel(70);
+            // pet->InitStatsForLevel(70);
             // SET Training Points
-            player->GetPet()->SetTP(0);
+            pet->SetTP(0);
+            pet->SetHealthPercent(100);
             m_creature->MonsterWhisper("Your pet got level 70.", player, false);
-            return true;
         }
         else
             m_creature->MonsterWhisper("Your pet already has 70 levels.", player, false);
