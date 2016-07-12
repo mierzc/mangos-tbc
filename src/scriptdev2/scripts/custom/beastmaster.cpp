@@ -216,7 +216,15 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         break;
         // pet 70 lvl
     case 5000:
+        if (player->getClass() != CLASS_HUNTER)
+        {
+            m_creature->MonsterWhisper("You are not a Hunter!", player, false);
+            player->GetSession()->SendNotification("%s , you are not a Hunter!", player->GetName());
+            return false;
+        }
+
         if (!player->GetPet())
+            m_creature->MonsterWhisper("You do not have pet!", player, false);
             return false;
 
         if (player->GetPet()->getLevel() <= 69)
@@ -226,7 +234,14 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
             player->GetPet()->SetPower(POWER_HAPPINESS, 10480000);
             // loyalty
             player->GetPet()->SetByteValue(UNIT_FIELD_BYTES_1, 1, 6);
+            // Initialize spell, stat
+            player->GetPet()->AIM_Initialize();
             player->GetPet()->InitStatsForLevel(70);
+            player->PetSpellInitialize();
+            // SET TP
+            player->GetPet()->SetTP(0);
+            // Save to DB
+            //player->GetPet()->SavePetToDB(PET_SAVE_AS_CURRENT);
             m_creature->MonsterWhisper("Your pet got level 70.", player, false);
         }
         else
