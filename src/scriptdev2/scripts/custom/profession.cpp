@@ -3,14 +3,13 @@ Profesion trainer
 2016 by Mireno
 */
 #include "precompiled.h"
-/*
 #include "Chat.h"
 #include "Language.h"
 #include "Spell.h"
 #include "WorldSession.h"
 #include "World.h"
 #include "Player.h"
-*/
+
 #define COST_PROFF 100*GOLD // 100g
 
 bool GossipHello_Npc_Profession(Player* player, Creature* m_creature)
@@ -50,7 +49,7 @@ bool GossipHello_Npc_Profession(Player* player, Creature* m_creature)
     else if(player->HasSkill(SKILL_TAILORING)) // 197
         player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_tailoring:26:26:-15:0|t       Set Tailoring skill to 300 (100g)", GOSSIP_SENDER_MAIN, 1000);
     else
-        player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500|rError|cffffffff]:|r |cffffffff First you learn any profession! |r");
+        player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Error|r|cffffffff]:|r |cffffffff First you learn any profession! |r");
     //player->ADD_GOSSIP_ITEM(5, "|TInterface\\icons\\Ability_spy:26:26:-15:0|t Close Window.", GOSSIP_SENDER_MAIN, 9999);
     player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, m_creature->GetObjectGuid());
     return true;
@@ -176,5 +175,5 @@ void AddSC_Npc_Profession()
     newscript->Name = "npc_profession";
     newscript->pGossipHello = &GossipHello_Npc_Profession;
     newscript->pGossipSelect = &GossipSelect_Npc_Profession;
-    newscript->RegisterSelf(false);
+    newscript->RegisterSelf();
 }
