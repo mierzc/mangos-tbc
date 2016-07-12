@@ -12,6 +12,18 @@ Profesion trainer
 
 #define COST_PROFF 100*GOLD // 100g
 
+#define MENU_ALCHEMY        "|TInterface\\icons\\Trade_alchemy:26:26:-15:0|t Set Alchemy skill to 300 (100g)"
+#define MENU_BLACKSMITHING  "|TInterface\\icons\\Trade_blacksmithing:26:26:-15:0|t Set Blacksmithing skill to 300 (100g)"
+#define MENU_ENCHANTING     "|TInterface\\icons\\Trade_engraving:26:26:-15:0|t Set Enchanting skill to 300 (100g)"
+#define MENU_ENGINEERING    "|TInterface\\icons\\Trade_engineering:26:26:-15:0|t Set Engineering skill to 300 (100g)"
+#define MENU_HERBALISM      "|TInterface\\icons\\Trade_herbalism:26:26:-15:0|t Set Herbalism skill to 300 (100g)"
+#define MENU_JEWELCRAFTING  "|TInterface\\icons\\Inv_misc_gem_01:26:26:-15:0|t Set Jewelcrafting skill to 300 (100g)"
+#define MENU_LEATHERWORKING "|TInterface\\icons\\Trade_leatherworking:26:26:-15:0|t Set Leatherworking skill to 300 (100g)"
+#define MENU_MINING         "|TInterface\\icons\\Trade_mining:26:26:-15:0|t Set Mining skill to 300 (100g)"
+#define MENU_SKINNING       "|TInterface\\icons\\Inv_misc_pelt_wolf_01:26:26:-15:0|t Set Skinnning skill to 300 (100g)"
+#define MENU_TAILORING      "|TInterface\\icons\\Trade_tailoring:26:26:-15:0|t Set Tailoring skill to 300 (100g)"
+#define MENU_CLOSE          "|TInterface\\icons\\Ability_spy:26:26:-15:0|t Close Window."
+
 bool GossipHello_Npc_Profession(Player* player, Creature* m_creature)
 {
     if (player->isInCombat())
@@ -29,27 +41,27 @@ bool GossipHello_Npc_Profession(Player* player, Creature* m_creature)
         return false;
     }
     if (player->HasSkill(SKILL_ALCHEMY)) // 171
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_alchemy:26:26:-15:0|t         Set Alchemy skill to 300 (100g)", GOSSIP_SENDER_MAIN, 100);
+        player->ADD_GOSSIP_ITEM(2, MENU_ALCHEMY, GOSSIP_SENDER_MAIN, 100);
     if (player->HasSkill(SKILL_BLACKSMITHING)) // 164
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_blacksmithing:26:26:-15:0|t   Set Blacksmithing skill to 300 (100g)", GOSSIP_SENDER_MAIN, 200);
+        player->ADD_GOSSIP_ITEM(2, MENU_BLACKSMITHING, GOSSIP_SENDER_MAIN, 200);
     if (player->HasSkill(SKILL_ENCHANTING)) // 333
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_engraving:26:26:-15:0|t       Set Enchanting skill to 300 (100g)", GOSSIP_SENDER_MAIN, 300);
-    if(player->HasSkill(SKILL_ENGINEERING)) // 202
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_engineering:26:26:-15:0|t     Set Engineering skill to 300 (100g)", GOSSIP_SENDER_MAIN, 400);
-    if(player->HasSkill(SKILL_HERBALISM)) // 182
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_herbalism:26:26:-15:0|t       Set Herbalism skill to 300 (100g)", GOSSIP_SENDER_MAIN, 500);
-    if(player->HasSkill(SKILL_JEWELCRAFTING)) // 755
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Inv_misc_gem_01:26:26:-15:0|t       Set Jewelcrafting skill to 300 (100g)", GOSSIP_SENDER_MAIN, 600);
-    if(player->HasSkill(SKILL_LEATHERWORKING)) //165 
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_leatherworking:26:26:-15:0|t  Set Leatherworking skill to 300 (100g)", GOSSIP_SENDER_MAIN, 700);
-    if(player->HasSkill(SKILL_MINING)) // 186
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_mining:26:26:-15:0|t          Set Mining skill to 300 (100g)", GOSSIP_SENDER_MAIN, 800);
-    if(player->HasSkill(SKILL_SKINNING)) // 393
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Inv_misc_pelt_wolf_01:26:26:-15:0|t Set Skinnning skill to 300 (100g)", GOSSIP_SENDER_MAIN, 900);
-    if(player->HasSkill(SKILL_TAILORING)) // 197
-        player->ADD_GOSSIP_ITEM(2, "|TInterface\\icons\\Trade_tailoring:26:26:-15:0|t       Set Tailoring skill to 300 (100g)", GOSSIP_SENDER_MAIN, 1000);
-    // player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Error|r|cffffffff]:|r |cffffffff First you learn any profession! |r");
-    // player->ADD_GOSSIP_ITEM(5, "|TInterface\\icons\\Ability_spy:26:26:-15:0|t Close Window.", GOSSIP_SENDER_MAIN, 9999);
+        player->ADD_GOSSIP_ITEM(2, MENU_ENCHANTING, GOSSIP_SENDER_MAIN, 300);
+    if (player->HasSkill(SKILL_ENGINEERING)) // 202
+        player->ADD_GOSSIP_ITEM(2, MENU_ENGINEERING, GOSSIP_SENDER_MAIN, 400);
+    if (player->HasSkill(SKILL_HERBALISM)) // 182
+        player->ADD_GOSSIP_ITEM(2, MENU_HERBALISM, GOSSIP_SENDER_MAIN, 500);
+    if (player->HasSkill(SKILL_JEWELCRAFTING)) // 755
+        player->ADD_GOSSIP_ITEM(2, MENU_JEWELCRAFTING, GOSSIP_SENDER_MAIN, 600);
+    if (player->HasSkill(SKILL_LEATHERWORKING)) //165 
+        player->ADD_GOSSIP_ITEM(2, MENU_LEATHERWORKING, GOSSIP_SENDER_MAIN, 700);
+    if (player->HasSkill(SKILL_MINING)) // 186
+        player->ADD_GOSSIP_ITEM(2, MENU_MINING, GOSSIP_SENDER_MAIN, 800);
+    if (player->HasSkill(SKILL_SKINNING)) // 393
+        player->ADD_GOSSIP_ITEM(2, MENU_SKINNING, GOSSIP_SENDER_MAIN, 900);
+    if (player->HasSkill(SKILL_TAILORING)) // 197
+        player->ADD_GOSSIP_ITEM(2, MENU_TAILORING, GOSSIP_SENDER_MAIN, 1000);
+
+    player->ADD_GOSSIP_ITEM(5, MENU_CLOSE, GOSSIP_SENDER_MAIN, 9999);
     player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, m_creature->GetObjectGuid());
     return true;
 }
@@ -72,7 +84,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Alchemy already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Alchemy you already now! |r");
         }
         break;
         // Blacksmithing
@@ -87,7 +99,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Blacksmithing already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Blacksmithing you already now! |r");
         }
         break;
         // Enchanting
@@ -102,7 +114,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Enchanting already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Enchanting you already now! |r");
         }
         break;
         // Engineering
@@ -117,7 +129,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Engineering already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Engineering you already now! |r");
         }
         break;
         // Herbalism
@@ -132,7 +144,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Herbalism already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Herbalism you already now! |r");
         }
         break;
         // Jewelcrafting
@@ -147,7 +159,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Jewelcrafting already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Jewelcrafting you already now! |r");
         }
         break;
         // Leatherworking
@@ -162,7 +174,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Leatherworking already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Leatherworking you already now! |r");
         }
         break;
         // Mining
@@ -177,7 +189,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Mining already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Mining you already now! |r");
         }
         break;
         // Skinning
@@ -192,7 +204,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Skinning already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Skinning you already now! |r");
         }
         break;
         // Tailoring
@@ -207,7 +219,7 @@ bool GossipSelect_Npc_Profession(Player* player, Creature* m_creature, uint32 /*
         else
         {
             player->CLOSE_GOSSIP_MENU();
-            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Tailoring already now! |r");
+            player->GetSession()->SendNotification("|cffffffff[|r|cFFFF4500Profession|r|cffffffff]:|r |cffffffff Tailoring you already now! |r");
         }
         break;
         // Close
