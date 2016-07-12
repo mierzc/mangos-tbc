@@ -224,8 +224,10 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         }
 
         if (!player->GetPet())
+        {
             m_creature->MonsterWhisper("You do not have pet!", player, false);
             return false;
+        }
 
         Pet* newpet = player->GetPet();
         if (newpet->getLevel() <= 69)
