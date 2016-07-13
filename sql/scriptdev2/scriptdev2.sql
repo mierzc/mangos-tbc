@@ -4,11 +4,11 @@
 
 TRUNCATE scripted_areatrigger;
 TRUNCATE scripted_event_id;
-UPDATE creature_template SET ScriptName='';
-UPDATE gameobject_template SET ScriptName='';
-UPDATE item_template SET ScriptName='';
-UPDATE instance_template SET ScriptName='';
-UPDATE world_template SET ScriptName='';
+-- UPDATE creature_template SET ScriptName='';
+-- UPDATE gameobject_template SET ScriptName='';
+-- UPDATE item_template SET ScriptName='';
+-- UPDATE instance_template SET ScriptName='';
+-- UPDATE world_template SET ScriptName='';
 /*  */
 
 /* AREATRIGGER */
