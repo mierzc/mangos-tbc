@@ -526,6 +526,9 @@
     <ClCompile Include="..\..\src\game\LevelCustom.cpp">
       <Filter>Chat Commands</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\game\AutoBroadcastMgr.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\game\AccountMgr.h">
@@ -999,6 +1002,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\game\BattleGround\BattleGroundWS.h">
       <Filter>BattleGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\game\AutoBroadcastMgr.h">
+      <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

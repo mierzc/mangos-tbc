@@ -345,6 +345,7 @@
     <ClCompile Include="..\..\src\game\AuctionHouseBot\AuctionHouseBot.cpp" />
     <ClCompile Include="..\..\src\game\AuctionHouseHandler.cpp" />
     <ClCompile Include="..\..\src\game\AuctionHouseMgr.cpp" />
+    <ClCompile Include="..\..\src\game\AutoBroadcastMgr.cpp" />
     <ClCompile Include="..\..\src\game\Bag.cpp" />
     <ClCompile Include="..\..\src\game\BattleGround\BattleGround.cpp" />
     <ClCompile Include="..\..\src\game\BattleGround\BattleGroundAA.cpp" />
@@ -513,6 +514,7 @@
     <ClInclude Include="..\..\src\game\ArenaTeam.h" />
     <ClInclude Include="..\..\src\game\AuctionHouseBot\AuctionHouseBot.h" />
     <ClInclude Include="..\..\src\game\AuctionHouseMgr.h" />
+    <ClInclude Include="..\..\src\game\AutoBroadcastMgr.h" />
     <ClInclude Include="..\..\src\game\Bag.h" />
     <ClInclude Include="..\..\src\game\BattleGround\BattleGround.h" />
     <ClInclude Include="..\..\src\game\BattleGround\BattleGroundAA.h" />

@@ -961,6 +961,7 @@ enum MangosStrings
 
     // Reserved for old client release branches specific strings
     // Room for old clients 2.x           1300-1399 not used
+    LANG_AUTO_BROADCAST                 = 1300,
     // Room for old clients 1.x           1400-1499 not used
 
     // Level 2 (continue)
