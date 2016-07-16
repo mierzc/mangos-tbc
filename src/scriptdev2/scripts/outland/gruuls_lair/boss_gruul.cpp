@@ -137,7 +137,10 @@ struct boss_gruulAI : public ScriptedAI
             pTarget->CastSpell(pTarget, SPELL_SHATTER_EFFECT, true);
 
             if (pTarget->HasAura(SPELL_STONED))
-                pTarget->RemoveAurasDueToSpell(SPELL_STONED);
+            {
+                pTarget->RemoveAurasDueToSpell(SPELL_STONED); // GRONN_LORDS_GRASP 33572
+                pTarget->RemoveAurasDueToSpell(33572); 
+            }
 
             // clear this, if we are still performing
             if (m_bPerformingGroundSlam)

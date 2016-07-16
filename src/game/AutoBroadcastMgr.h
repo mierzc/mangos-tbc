@@ -22,14 +22,14 @@
 #define _ABRMGR_H
 
 #include <unordered_map>
-using namespace std;
+
 struct AutoBroadcastData
 {
     std::string msg;
     uint32 nextid;
 };
 
-typedef unordered_map<uint32, AutoBroadcastData> AutoBroadcastDataMap;
+typedef std::unordered_map<uint32, AutoBroadcastData> AutoBroadcastDataMap;
 
 class AbrMgr
 {

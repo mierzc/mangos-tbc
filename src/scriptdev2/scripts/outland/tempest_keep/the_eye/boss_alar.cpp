@@ -279,7 +279,7 @@ struct boss_alarAI : public ScriptedAI
                 m_uiRangeCheckTimer = 0;
                 m_bCanSummonEmber = false;
                 m_uiPlatformMoveTimer = 0;
-                m_uiFlameQuillsTimer = 180000;
+                m_uiFlameQuillsTimer = 80000;
             }
             else
                 m_uiFlameQuillsTimer -= uiDiff;

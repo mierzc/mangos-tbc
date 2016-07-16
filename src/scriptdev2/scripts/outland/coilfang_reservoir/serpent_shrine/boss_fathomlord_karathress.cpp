@@ -245,7 +245,7 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
         m_uiHurlTridentTimer    = 30000;
         m_uiLeechingThrowTimer  = 20000;
         m_uiTheBeastWithinTimer = 30000;
-        m_uiMultiTossTimer      = urand(20000, 30000);
+        m_uiMultiTossTimer      = urand(40000, 50000);
         if (!m_creature->GetPet())
             m_uiPetTimer        = 10000;
     }
@@ -286,10 +286,10 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
 
         if (m_uiHurlTridentTimer < uiDiff)
         {
-            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_HURL_TRIDENT, 1))
+            if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1, SPELL_HURL_TRIDENT, 0))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT) == CAST_OK)
-                    m_uiHurlTridentTimer = 15000;
+                    m_uiHurlTridentTimer = 35000;
             }
         }
         else
@@ -316,7 +316,7 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
             {
                 if (DoCastSpellIfCan(pTarget, SPELL_HURL_TRIDENT) == CAST_OK)
-                    m_uiMultiTossTimer = urand(15000, 20000);
+                    m_uiMultiTossTimer = urand(35000, 40000);
             }
         }
         else

@@ -48,7 +48,7 @@
 #include "CreatureAIRegistry.h"
 #include "Policies/Singleton.h"
 #include "BattleGround/BattleGroundMgr.h"
-#include "Language.h"         // ABR WLK
+#include "Language.h"
 #include "AutoBroadcastMgr.h" // ABR WLK
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "VMapFactory.h"
@@ -1273,14 +1273,6 @@ void World::SetInitialWorldSettings()
     AIRegistry::Initialize();
     Player::InitVisibleBits();
 
-    if (sConfig.GetIntDefault("AutoBroadcast.On", 1) == 1) // ABR WLK if
-         {
-        sLog.outString();
-        sLog.outString("Starting Autobroadcast system by Wlk Wlezley...");
-        sAbrMgr.LoadAbrData();
-        SendBroadcast();
-        }
-
     ///- Initialize MapManager
     sLog.outString("Starting Map System");
     sMapMgr.Initialize();
@@ -1315,6 +1307,14 @@ void World::SetInitialWorldSettings()
     sLog.outString("Loading grids for active creatures or transports...");
     sObjectMgr.LoadActiveEntities(nullptr);
     sLog.outString();
+
+    if (sConfig.GetIntDefault("AutoBroadcast.On", 1) == 1) // ABR WLK if
+    {
+        sLog.outString();
+        sLog.outString("Starting Autobroadcast system by Wlk Wlezley...");
+        sAbrMgr.LoadAbrData();
+        SendBroadcast();
+    }
 
     // Delete all characters which have been deleted X days before
     Player::DeleteOldCharacters();

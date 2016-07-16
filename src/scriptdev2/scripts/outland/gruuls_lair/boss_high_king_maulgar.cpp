@@ -270,15 +270,17 @@ struct boss_olm_the_summonerAI : public Council_Base_AI
         else
             m_uiDeathCoilTimer -= uiDiff;
 
-        if (m_uiSummonTimer < uiDiff)
-        {
-            if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_WILD_FELHUNTER) == CAST_OK)
-                m_uiSummonTimer = urand(25000, 35000);
-        }
-        else
-            m_uiSummonTimer -= uiDiff;
+       // Creature* pOlm = m_pInstance->GetSingleCreatureFromStorage(18834);
+        //if (pOlm && pOlm->isAlive())
+            if (m_uiSummonTimer < uiDiff)
+            {
+                if (DoCastSpellIfCan(m_creature, SPELL_SUMMON_WILD_FELHUNTER) == CAST_OK)
+                    m_uiSummonTimer = urand(35000, 40000);
+            }
+            else
+                m_uiSummonTimer -= uiDiff;
 
-        DoMeleeAttackIfReady();
+            DoMeleeAttackIfReady();
     }
 };
 
@@ -405,7 +407,7 @@ struct boss_blindeye_the_seerAI : public Council_Base_AI
         {
             if (Unit* pTarget = DoSelectLowestHpFriendly(50.0f))
             {
-                if (DoCastSpellIfCan(pTarget, SPELL_HEAL) == CAST_OK)
+                //if (DoCastSpellIfCan(pTarget, SPELL_HEAL) == CAST_OK)
                     m_uiHealTimer = urand(15000, 40000);
             }
         }
