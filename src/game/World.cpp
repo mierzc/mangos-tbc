@@ -49,7 +49,6 @@
 #include "Policies/Singleton.h"
 #include "BattleGround/BattleGroundMgr.h"
 #include "Language.h"
-#include "AutoBroadcastMgr.h" // ABR WLK
 #include "OutdoorPvP/OutdoorPvP.h"
 #include "VMapFactory.h"
 #include "MoveMap.h"
@@ -1256,7 +1255,6 @@ void World::SetInitialWorldSettings()
     // Update "uptime" table based on configuration entry in minutes.
     m_timers[WUPDATE_CORPSES].SetInterval(20 * MINUTE * IN_MILLISECONDS);
     m_timers[WUPDATE_DELETECHARS].SetInterval(DAY * IN_MILLISECONDS); // check for chars to delete every day
-    m_timers[WUPDATE_AUTOBROADCAST].SetInterval(sConfig.GetIntDefault("AutoBroadcast.Timer", 10)*MINUTE*IN_MILLISECONDS); // ABR WLK
 
     // for AhBot
     m_timers[WUPDATE_AHBOT].SetInterval(20 * IN_MILLISECONDS); // every 20 sec
@@ -1307,15 +1305,7 @@ void World::SetInitialWorldSettings()
     sLog.outString("Loading grids for active creatures or transports...");
     sObjectMgr.LoadActiveEntities(nullptr);
     sLog.outString();
-
-    if (sConfig.GetIntDefault("AutoBroadcast.On", 1) == 1) // ABR WLK if
-    {
-        sLog.outString();
-        sLog.outString("Starting Autobroadcast system by Wlk Wlezley...");
-        sAbrMgr.LoadAbrData();
-        SendBroadcast();
-    }
-
+ 
     // Delete all characters which have been deleted X days before
     Player::DeleteOldCharacters();
 
@@ -1470,15 +1460,6 @@ void World::Update(uint32 diff)
         m_timers[WUPDATE_EVENTS].SetInterval(nextGameEvent);
         m_timers[WUPDATE_EVENTS].Reset();
     }
-
-    if (sConfig.GetIntDefault("AutoBroadcast.On", 1) == 1) // ABR WLK if
-         {
-        if (m_timers[WUPDATE_AUTOBROADCAST].Passed())
-             {
-            m_timers[WUPDATE_AUTOBROADCAST].Reset();
-            SendBroadcast();
-            }
-        }
 
     /// </ul>
     ///- Move all creatures with "delayed move" and remove and delete all objects with "delayed remove"
@@ -1878,29 +1859,6 @@ void World::ProcessCliCommands()
 
         delete command;
     }
-}
-
-void World::SendBroadcast() // ABR WLK fce
-{
-    /*
-    std::string msg;
-    static int nextid;
-
-    if (nextid == 0)
-    {
-        nextid = sAbrMgr.GetAutoBroadcastData(nextid)->nextid;
-        sLog.outString("Next AutoBroadcast ID: %u", nextid);
-        sLog.outString();
-        return;
-    }
-
-    msg = sAbrMgr.GetAutoBroadcastData(nextid)->msg;
-
-    sWorld.SendWorldText(LANG_AUTO_BROADCAST, msg.c_str());
-    sLog.outString("AutoBroadcast ID %u: '%s'", nextid, msg.c_str());
-    nextid = sAbrMgr.GetAutoBroadcastData(nextid)->nextid;
-    WorldDatabase.PExecute("REPLACE INTO `autobroadcast`(`id`,`text`,`next`) VALUES (0,'last_nextid',%u)", nextid);
-    */
 }
 
 void World::InitResultQueue()

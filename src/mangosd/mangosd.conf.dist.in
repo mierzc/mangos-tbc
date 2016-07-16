@@ -727,10 +727,6 @@ LogColors = ""
 #        Default: 0 (false)
 #                 1 (true)
 #
-#    AutoBroadcast
-#    AutoBroadcast.On      // 1 = enabled, 0 = disabled
-#    AutoBroadcast.Timer   // autobroadcast in minutes (default: 10).
-#
 #    BeepAtStart
 #        Beep at mangosd start finished (mostly work only at Unix/Linux systems)
 #        Default: 1 (true)
@@ -815,8 +811,6 @@ SkillChance.Prospecting = 0
 OffhandCheckAtTalentsReset = 0
 PetUnsummonAtMount = 0
 Event.Announce = 0
-AutoBroadcast.On = 1
-AutoBroadcast.Timer = 10
 BeepAtStart = 1
 ShowProgressBars = 0
 WaitAtStartupError = 0
