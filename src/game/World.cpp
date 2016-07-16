@@ -1882,6 +1882,7 @@ void World::ProcessCliCommands()
 
 void World::SendBroadcast() // ABR WLK fce
 {
+    /*
     std::string msg;
     static int nextid;
 
@@ -1899,6 +1900,7 @@ void World::SendBroadcast() // ABR WLK fce
     sLog.outString("AutoBroadcast ID %u: '%s'", nextid, msg.c_str());
     nextid = sAbrMgr.GetAutoBroadcastData(nextid)->nextid;
     WorldDatabase.PExecute("REPLACE INTO `autobroadcast`(`id`,`text`,`next`) VALUES (0,'last_nextid',%u)", nextid);
+    */
 }
 
 void World::InitResultQueue()
