@@ -467,6 +467,7 @@ struct boss_kaelthasAI : public ScriptedAI
                     // Switch to next phase, no matter if the weapons are killed or not
                     if (DoCastSpellIfCan(m_creature, SPELL_RESURRECTION) == CAST_OK)
                     {
+                        m_creature->SetHealth(10000);
                         DoScriptText(SAY_PHASE3_ADVANCE, m_creature);
                         m_uiPhaseSubphase = 0;
                         m_uiPhaseTimer    = 180000;
