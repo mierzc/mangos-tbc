@@ -485,11 +485,11 @@ struct boss_kaelthasAI : public ScriptedAI
                 if (m_uiPhaseTimer < uiDiff)
                 {
                     DoScriptText(SAY_PHASE4_INTRO2, m_creature);
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    DoResetThreat();
-                    m_creature->SetInCombatWithZone();
+//                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+//                    DoResetThreat();
+//                    m_creature->SetInCombatWithZone();
                     m_uiPhase      = PHASE_4_SOLO;
-                    m_uiPhaseTimer = 30000;
+                    m_uiPhaseTimer = 1000;
                 }
                 else
                     m_uiPhaseTimer -= uiDiff;
@@ -509,7 +509,7 @@ struct boss_kaelthasAI : public ScriptedAI
                     if (m_uiNetherBeamTimer < uiDiff)
                     {
                         if (DoCastSpellIfCan(m_creature, SPELL_NETHER_BEAM) == CAST_OK)
-                            m_uiNetherBeamTimer = urand(2000, 4000);
+                            m_uiNetherBeamTimer = urand(3000, 4000);
                     }
                     else
                         m_uiNetherBeamTimer -= uiDiff;
@@ -527,7 +527,7 @@ struct boss_kaelthasAI : public ScriptedAI
                         if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
                         {
                             if (DoCastSpellIfCan(pTarget, SPELL_FIREBALL) == CAST_OK)
-                                m_uiFireballTimer = urand(3000, 5000);
+                                m_uiFireballTimer = urand(4000, 5000);
                         }
                     }
                     else
@@ -779,13 +779,13 @@ struct advisor_base_ai : public ScriptedAI
         m_creature->StopMoving();
         m_creature->ClearComboPointHolders();
         m_creature->RemoveAllAurasOnDeath();
-        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
-        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+//        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
+//        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
+//        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ClearAllReactives();
         m_creature->GetMotionMaster()->Clear();
         m_creature->GetMotionMaster()->MoveIdle();
-        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+//        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
 
         DoCastSpellIfCan(m_creature, SPELL_KAEL_PHASE_2, CAST_TRIGGERED);
     }
@@ -795,9 +795,9 @@ struct advisor_base_ai : public ScriptedAI
         // Remove fake death
         if (pSpell->Id == SPELL_RESURRECTION && pCaster->GetEntry() == NPC_KAELTHAS)
         {
-            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-            m_creature->GetMotionMaster()->Clear();
+//            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+//            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+//            m_creature->GetMotionMaster()->Clear();
             if (m_creature->GetEntry() == NPC_CAPERNIAN)
                 DoStartMovement(m_creature->getVictim(), 20.0f);
             else
@@ -1148,14 +1148,14 @@ struct mob_phoenix_tkAI : public ScriptedAI
         m_creature->StopMoving();
         m_creature->ClearComboPointHolders();
         m_creature->RemoveAllAurasOnDeath();
-        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
-        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+//        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
+//        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
+//        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ClearAllReactives();
         m_creature->SetTargetGuid(ObjectGuid());
         m_creature->GetMotionMaster()->Clear();
         m_creature->GetMotionMaster()->MoveIdle();
-        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+//        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
 
         // Spawn egg and make invisible
         DoCastSpellIfCan(m_creature, SPELL_EMBER_BLAST, CAST_TRIGGERED);
@@ -1199,7 +1199,7 @@ struct mob_phoenix_tkAI : public ScriptedAI
         if (m_uiCycleTimer < uiDiff)
         {
             // spell Burn should possible do this, but it doesn't, so do this for now.
-            uint32 uiDmg = urand(4500, 5500);
+            uint32 uiDmg = urand(2500, 3500);
             if (uiDmg > m_creature->GetHealth())
                 DoSetFakeDeath();
             else
