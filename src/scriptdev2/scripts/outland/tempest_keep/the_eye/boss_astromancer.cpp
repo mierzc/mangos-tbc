@@ -61,7 +61,7 @@ enum
     WV_ARMOR                            = 31000,            // ToDo: this value need to be checked
 
     MAX_SPOTLIGHTS                      = 3,
-    MAX_AGENTS                          = 4,
+    MAX_AGENTS                          = 2,
 };
 
 // Spells used to summon the Spotlights on 2.4.3 - Astromancer Split

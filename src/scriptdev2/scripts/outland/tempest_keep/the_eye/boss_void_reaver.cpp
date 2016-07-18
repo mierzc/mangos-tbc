@@ -60,7 +60,7 @@ struct boss_void_reaverAI : public ScriptedAI
     void Reset() override
     {
         m_uiPoundingTimer   = 13000;
-        m_uiArcaneOrbTimer  = 3000;
+        m_uiArcaneOrbTimer  = 5000;
         m_uiKnockAwayTimer  = 30000;
         m_uiBerserkTimer    = 10 * MINUTE * IN_MILLISECONDS;
     }
@@ -140,7 +140,7 @@ struct boss_void_reaverAI : public ScriptedAI
             }
 
             if (suitableTargets.empty())
-                m_uiArcaneOrbTimer = 3000;
+                m_uiArcaneOrbTimer = 5000;
             else
             {
                 Unit* pTarget = suitableTargets[urand(0, suitableTargets.size() - 1)];
@@ -148,7 +148,7 @@ struct boss_void_reaverAI : public ScriptedAI
                 if (pTarget)
                     m_creature->SummonCreature(NPC_ARCANE_ORB_TARGET, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                m_uiArcaneOrbTimer = 3000;
+                m_uiArcaneOrbTimer = 15000;
             }
         }
         else
