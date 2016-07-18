@@ -465,13 +465,13 @@ struct boss_kaelthasAI : public ScriptedAI
                 if (m_uiPhaseTimer < uiDiff)
                 {
                     // Switch to next phase, no matter if the weapons are killed or not
-                    if (DoCastSpellIfCan(m_creature, SPELL_RESURRECTION) == CAST_OK)
-                    {
+//                    if (DoCastSpellIfCan(m_creature, SPELL_RESURRECTION) == CAST_OK)
+//                    {
                         DoScriptText(SAY_PHASE3_ADVANCE, m_creature);
                         m_uiPhaseSubphase = 0;
                         m_uiPhaseTimer    = 180000;
                         m_uiPhase = PHASE_4_SOLO; // PHASE_3_ADVISOR_ALL
-                    }
+//                    }
                 }
                 else
                     m_uiPhaseTimer -= uiDiff;
@@ -489,7 +489,7 @@ struct boss_kaelthasAI : public ScriptedAI
                     DoResetThreat();
                     m_creature->SetInCombatWithZone();
                     m_uiPhase      = PHASE_4_SOLO;
-                    m_uiPhaseTimer = 1000;
+                    m_uiPhaseTimer = 30000;
                 }
                 else
                     m_uiPhaseTimer -= uiDiff;
