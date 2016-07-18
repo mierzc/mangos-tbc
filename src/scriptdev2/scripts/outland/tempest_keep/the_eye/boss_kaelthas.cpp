@@ -485,9 +485,9 @@ struct boss_kaelthasAI : public ScriptedAI
                 if (m_uiPhaseTimer < uiDiff)
                 {
                     DoScriptText(SAY_PHASE4_INTRO2, m_creature);
-//                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-//                    DoResetThreat();
-//                    m_creature->SetInCombatWithZone();
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    DoResetThreat();
+                    m_creature->SetInCombatWithZone();
                     m_uiPhase      = PHASE_4_SOLO;
                     m_uiPhaseTimer = 1000;
                 }
@@ -781,11 +781,11 @@ struct advisor_base_ai : public ScriptedAI
         m_creature->RemoveAllAurasOnDeath();
 //        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
 //        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
-//        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ClearAllReactives();
         m_creature->GetMotionMaster()->Clear();
         m_creature->GetMotionMaster()->MoveIdle();
-//        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
 
         DoCastSpellIfCan(m_creature, SPELL_KAEL_PHASE_2, CAST_TRIGGERED);
     }
@@ -795,9 +795,9 @@ struct advisor_base_ai : public ScriptedAI
         // Remove fake death
         if (pSpell->Id == SPELL_RESURRECTION && pCaster->GetEntry() == NPC_KAELTHAS)
         {
-//            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-//            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-//            m_creature->GetMotionMaster()->Clear();
+            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+            m_creature->GetMotionMaster()->Clear();
             if (m_creature->GetEntry() == NPC_CAPERNIAN)
                 DoStartMovement(m_creature->getVictim(), 20.0f);
             else
@@ -1150,12 +1150,12 @@ struct mob_phoenix_tkAI : public ScriptedAI
         m_creature->RemoveAllAurasOnDeath();
 //        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
 //        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
-//        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ClearAllReactives();
         m_creature->SetTargetGuid(ObjectGuid());
         m_creature->GetMotionMaster()->Clear();
         m_creature->GetMotionMaster()->MoveIdle();
-//        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
 
         // Spawn egg and make invisible
         DoCastSpellIfCan(m_creature, SPELL_EMBER_BLAST, CAST_TRIGGERED);
