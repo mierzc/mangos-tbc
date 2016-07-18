@@ -762,17 +762,17 @@ struct advisor_base_ai : public ScriptedAI
         if (!m_bCanFakeDeath)
             return;
 
-        if (uiDamage < m_creature->GetHealth())
-            return;
+//        if (uiDamage < m_creature->GetHealth())
+//            return;
 
         // Make sure it won't die by accident
-//        if (m_bFakeDeath)
-//        {
+        if (m_bFakeDeath)
+        {
 //            uiDamage = 0;
-//            return;
-//        }
+            return;
+        }
 
-        uiDamage = 0;
+//        uiDamage = 0;
 //        m_bFakeDeath = true;
 
 //        m_creature->InterruptNonMeleeSpells(true);
@@ -1125,18 +1125,18 @@ struct mob_phoenix_tkAI : public ScriptedAI
 
     void DamageTaken(Unit* /*pKiller*/, uint32& uiDamage) override
     {
-        if (uiDamage < m_creature->GetHealth())
-            return;
+//        if (uiDamage < m_creature->GetHealth())
+//            return;
 
         // Prevent glitch if in fake death
         if (m_bFakeDeath)
         {
-            uiDamage = 0;
+//            uiDamage = 0;
             return;
         }
 
         // prevent death
-        uiDamage = 0;
+//        uiDamage = 0;
 //        DoSetFakeDeath();
     }
 
