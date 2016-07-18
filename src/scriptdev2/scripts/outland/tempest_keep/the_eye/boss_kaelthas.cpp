@@ -150,7 +150,7 @@ enum
     POINT_ID_AIR                        = 2,
 
     MAX_WEAPONS                         = 7,
-    MAX_MIND_CONTROL                    = 3,
+    MAX_MIND_CONTROL                    = 1,
 };
 
 static const uint32 m_auiSpellSummonWeapon[MAX_WEAPONS] =
@@ -162,8 +162,8 @@ static const uint32 m_auiSpellSummonWeapon[MAX_WEAPONS] =
 // teleport spells for gravity lapse event
 static const uint32 m_auiSpellGravityLapseTeleport[] =
 {
-    35966, 35967, 35968, 35969, 35970, 35971, 35972, 35973, 35974, 35975, 35976, 35977, 35978, 35979, 35980,
-    35981, 35982, 35983, 35984, 35985, 35986, 35987, 35988, 35989, 35990
+    35966, 35967, 35968, 35969, 35970
+    // , 35971, 35972, 35973, 35974, 35975, 35976, 35977, 35978, 35979, 35980, 35981, 35982, 35983, 35984, 35985, 35986, 35987, 35988, 35989, 35990
 };
 
 static const float aCenterPos[3] = {795.00f, -0.46f, 48.72f};
@@ -210,7 +210,7 @@ struct boss_kaelthasAI : public ScriptedAI
         m_uiPhaseSubphase           = 0;
 
         // Spells
-        m_uiFireballTimer           = urand(1000, 3000);
+        m_uiFireballTimer           = urand(2000, 3000);
         m_uiArcaneDisruptionTimer   = 45000;
         m_uiPhoenixTimer            = 50000;
         m_uiFlameStrikeTimer        = 30000;
@@ -467,11 +467,10 @@ struct boss_kaelthasAI : public ScriptedAI
                     // Switch to next phase, no matter if the weapons are killed or not
                     if (DoCastSpellIfCan(m_creature, SPELL_RESURRECTION) == CAST_OK)
                     {
-                        m_creature->SetHealth(10000);
                         DoScriptText(SAY_PHASE3_ADVANCE, m_creature);
                         m_uiPhaseSubphase = 0;
                         m_uiPhaseTimer    = 180000;
-                        m_uiPhase         = PHASE_3_ADVISOR_ALL;
+                        m_uiPhase = PHASE_4_SOLO; // PHASE_3_ADVISOR_ALL
                     }
                 }
                 else
