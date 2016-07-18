@@ -162,8 +162,7 @@ static const uint32 m_auiSpellSummonWeapon[MAX_WEAPONS] =
 // teleport spells for gravity lapse event
 static const uint32 m_auiSpellGravityLapseTeleport[] =
 {
-    35966, 35967, 35968, 35969, 35970
-    // , 35971, 35972, 35973, 35974, 35975, 35976, 35977, 35978, 35979, 35980, 35981, 35982, 35983, 35984, 35985, 35986, 35987, 35988, 35989, 35990
+    35966, 35967, 35968, 35969, 35970     // , 35971, 35972, 35973, 35974, 35975, 35976, 35977, 35978, 35979, 35980, 35981, 35982, 35983, 35984, 35985, 35986, 35987, 35988, 35989, 35990
 };
 
 static const float aCenterPos[3] = {795.00f, -0.46f, 48.72f};
@@ -767,27 +766,27 @@ struct advisor_base_ai : public ScriptedAI
             return;
 
         // Make sure it won't die by accident
-        if (m_bFakeDeath)
-        {
-            uiDamage = 0;
-            return;
-        }
+//        if (m_bFakeDeath)
+//        {
+//            uiDamage = 0;
+//            return;
+//        }
 
         uiDamage = 0;
-        m_bFakeDeath = true;
+//        m_bFakeDeath = true;
 
-        m_creature->InterruptNonMeleeSpells(true);
-        m_creature->SetHealth(0);
-        m_creature->StopMoving();
-        m_creature->ClearComboPointHolders();
-        m_creature->RemoveAllAurasOnDeath();
+//        m_creature->InterruptNonMeleeSpells(true);
+//        m_creature->SetHealth(0);
+//        m_creature->StopMoving();
+//        m_creature->ClearComboPointHolders();
+//        m_creature->RemoveAllAurasOnDeath();
 //        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
 //        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->ClearAllReactives();
-        m_creature->GetMotionMaster()->Clear();
-        m_creature->GetMotionMaster()->MoveIdle();
-        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+//        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+//        m_creature->ClearAllReactives();
+//        m_creature->GetMotionMaster()->Clear();
+//        m_creature->GetMotionMaster()->MoveIdle();
+//        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
 
         DoCastSpellIfCan(m_creature, SPELL_KAEL_PHASE_2, CAST_TRIGGERED);
     }
@@ -1138,7 +1137,7 @@ struct mob_phoenix_tkAI : public ScriptedAI
 
         // prevent death
         uiDamage = 0;
-        DoSetFakeDeath();
+//        DoSetFakeDeath();
     }
 
     void DoSetFakeDeath()
@@ -1150,8 +1149,8 @@ struct mob_phoenix_tkAI : public ScriptedAI
         m_creature->StopMoving();
         m_creature->ClearComboPointHolders();
         m_creature->RemoveAllAurasOnDeath();
-//        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
-//        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
+        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
+        m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ClearAllReactives();
         m_creature->SetTargetGuid(ObjectGuid());
@@ -1203,7 +1202,8 @@ struct mob_phoenix_tkAI : public ScriptedAI
             // spell Burn should possible do this, but it doesn't, so do this for now.
             uint32 uiDmg = urand(2500, 3500);
             if (uiDmg > m_creature->GetHealth())
-                DoSetFakeDeath();
+                m_creature->MonsterSay("No death!", LANG_UNIVERSAL, nullptr);
+//                DoSetFakeDeath();
             else
                 m_creature->DealDamage(m_creature, uiDmg, 0, DOT, SPELL_SCHOOL_MASK_FIRE, nullptr, false);
 
