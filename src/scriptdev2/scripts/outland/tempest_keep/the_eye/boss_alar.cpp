@@ -47,6 +47,7 @@ enum
     SPELL_FLAME_PATCH       = 35380,
 
     MAX_PLATFORMS           = 4,
+    SPAWN_EMBER_OF_ALAR     = 1,
 
     POINT_ID_RESSURRECT     = 0,            // center of the hall
     POINT_ID_PLATFORM       = 1,            // platform points
@@ -394,7 +395,7 @@ struct boss_alarAI : public ScriptedAI
 
                         // Spawn 2 Embers of Alar
                         float fX, fY, fZ;
-                        for (uint8 i = 0; i < 2; ++i)
+                        for (uint8 i = 0; i < SPAWN_EMBER_OF_ALAR; ++i)
                         {
                             m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 5.0f, fX, fY, fZ);
                             m_creature->SummonCreature(NPC_EMBER_OF_ALAR, fX, fY, fZ, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
