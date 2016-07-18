@@ -470,6 +470,8 @@ struct boss_kaelthasAI : public ScriptedAI
                         DoScriptText(SAY_PHASE3_ADVANCE, m_creature);
                         m_uiPhaseSubphase = 0;
                         m_uiPhaseTimer    = 180000;
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        DoResetThreat();
                         m_uiPhase = PHASE_4_SOLO; // PHASE_3_ADVISOR_ALL
 //                    }
                 }
