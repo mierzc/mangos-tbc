@@ -466,12 +466,15 @@ struct boss_kaelthasAI : public ScriptedAI
                     // Switch to next phase, no matter if the weapons are killed or not
 //                    if (DoCastSpellIfCan(m_creature, SPELL_RESURRECTION) == CAST_OK)
 //                    {
-                        DoScriptText(SAY_PHASE3_ADVANCE, m_creature);
-                        m_uiPhaseSubphase = 0;
-                        m_uiPhaseTimer    = 180000;
+//                        DoScriptText(SAY_PHASE3_ADVANCE, m_creature);
+//                        m_uiPhaseSubphase = 0;
+//                        m_uiPhaseTimer    = 180000;
+                        DoScriptText(SAY_PHASE4_INTRO2, m_creature);
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         DoResetThreat();
+                        m_creature->SetInCombatWithZone();
                         m_uiPhase = PHASE_4_SOLO; // PHASE_3_ADVISOR_ALL
+                        m_uiPhaseTimer = 30000;
 //                    }
                 }
                 else
@@ -630,8 +633,8 @@ struct boss_kaelthasAI : public ScriptedAI
                         {
                             DoScriptText(urand(0, 1) ? SAY_GRAVITYLAPSE1 : SAY_GRAVITYLAPSE2, m_creature);;
                             m_uiGravityIndex       = 0;
-                            m_uiNetherBeamTimer    = 8000;
-                            m_uiNetherVaporTimer   = 4000;
+                            m_uiNetherBeamTimer    = 18000;
+                            m_uiNetherVaporTimer   = 14000;
                             m_uiGravityExpireTimer = 30000;
                             m_uiGravityLapseTimer  = 90000;
                         }
@@ -876,7 +879,7 @@ struct boss_thaladred_the_darkenerAI : public advisor_base_ai
         if (m_uiSilenceTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_SILENCE) == CAST_OK)
-                m_uiSilenceTimer = urand(7000, 13000);
+                m_uiSilenceTimer = urand(10000, 13000);
         }
         else
             m_uiSilenceTimer -= uiDiff;
@@ -1080,7 +1083,7 @@ struct boss_master_engineer_telonicusAI : public advisor_base_ai
         {
             if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0))
             {
-                if (DoCastSpellIfCan(pTarget, SPELL_REMOTE_TOY) == CAST_OK)
+//                if (DoCastSpellIfCan(pTarget, SPELL_REMOTE_TOY) == CAST_OK)
                     m_uiRemoteToyTimer = urand(10000, 15000);
             }
         }
@@ -1202,7 +1205,7 @@ struct mob_phoenix_tkAI : public ScriptedAI
             // spell Burn should possible do this, but it doesn't, so do this for now.
             uint32 uiDmg = urand(2500, 3500);
             if (uiDmg > m_creature->GetHealth())
-                m_creature->MonsterSay("No death!", LANG_UNIVERSAL, nullptr);
+                m_creature->MonsterSay("Death!", LANG_UNIVERSAL, nullptr);
 //                DoSetFakeDeath();
             else
                 m_creature->DealDamage(m_creature, uiDmg, 0, DOT, SPELL_SCHOOL_MASK_FIRE, nullptr, false);
