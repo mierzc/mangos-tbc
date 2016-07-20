@@ -600,7 +600,7 @@ void Map::Remove(Player* player, bool remove)
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
     {
         // invalid coordinates
-        player->ResetMap();
+        //player->ResetMap();
 
         if (remove)
             DeleteFromWorld(player);
@@ -625,7 +625,7 @@ void Map::Remove(Player* player, bool remove)
     SendRemoveTransports(player);
     UpdateObjectVisibility(player, cell, p);
 
-    player->ResetMap();
+    //player->ResetMap();
     if (remove)
         DeleteFromWorld(player);
 }

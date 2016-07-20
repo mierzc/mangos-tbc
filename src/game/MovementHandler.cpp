@@ -101,6 +101,10 @@ void WorldSession::HandleMoveWorldportAckOpcode()
 
     GetPlayer()->SetSemaphoreTeleportFar(false);
 
+       if (GetPlayer()->IsInWorld())
+       if (Map* oldMap = GetPlayer()->GetMap())
+           oldMap->Remove(GetPlayer(), false);
+
     // relocate the player to the teleport destination
     if (!map)
         map = sMapMgr.CreateMap(loc.mapid, GetPlayer());
