@@ -353,7 +353,7 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
                         // Randomize the portals
                         std::random_shuffle(m_vSpotLightsGuidVector.begin(), m_vSpotLightsGuidVector.end());
                         // Summon 2 priests
-                        for (uint8 i = 0; i < 1; ++i)
+                        for (uint8 i = 0; i < 2; ++i)
                         {
                             if (Creature* pSpotlight = m_creature->GetMap()->GetCreature(m_vSpotLightsGuidVector[i]))
                                 m_creature->SummonCreature(NPC_SOLARIUM_PRIEST, pSpotlight->GetPositionX(), pSpotlight->GetPositionY(), pSpotlight->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 0);

@@ -152,8 +152,8 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
         // Handle watery grave teleport - each player hit has his own teleport spell
         if (pSpell->Id == SPELL_WATERY_GRAVE && pTarget->GetTypeId() == TYPEID_PLAYER)
         {
-            DoCastSpellIfCan(pTarget, m_auiSpellWateryGraveTeleport[1], CAST_TRIGGERED);
-            //++m_uiGraveIndex;
+            DoCastSpellIfCan(pTarget, m_auiSpellWateryGraveTeleport[m_uiGraveIndex], CAST_TRIGGERED);
+            m_uiGraveIndex = 1;
         }
     }
 
@@ -205,7 +205,7 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
                 if (DoCastSpellIfCan(m_creature, SPELL_WATERY_GRAVE) == CAST_OK)
                 {
                     DoScriptText(EMOTE_WATERY_GRAVE, m_creature);
-                    m_uiWateryGraveTimer = 45000;
+                    m_uiWateryGraveTimer = 30000;
                     m_uiGraveIndex = 0;
                 }
             }
@@ -229,7 +229,7 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
 //                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_3, CAST_TRIGGERED);
 //                    DoCastSpellIfCan(m_creature, SPELL_SUMMON_GLOBULE_4, CAST_TRIGGERED);
 
-                    m_uiWateryGlobulesTimer = 45000;
+                    m_uiWateryGlobulesTimer = 25000;
                 }
             }
             else
@@ -261,7 +261,7 @@ struct mob_water_globuleAI : public ScriptedAI
         if (m_uiTargetTimer < uiDiff)
         {
             if (DoCastSpellIfCan(m_creature, SPELL_WATER_GLOBULE_NEW_TARGET) == CAST_OK)
-                m_uiTargetTimer = 50000;
+                m_uiTargetTimer = 20000;
         }
         else
             m_uiTargetTimer -= uiDiff;
