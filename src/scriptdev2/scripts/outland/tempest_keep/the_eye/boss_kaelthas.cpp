@@ -395,7 +395,7 @@ struct boss_kaelthasAI : public ScriptedAI
                     {
                         case 0:
                             DoScriptText(SAY_INTRO_THALADRED, m_creature);
-                            m_uiPhaseTimer = 7000;
+                            m_uiPhaseTimer = 30000;
                             break;
 
                         case 1:
@@ -409,7 +409,7 @@ struct boss_kaelthasAI : public ScriptedAI
 
                         case 2:
                             DoScriptText(SAY_INTRO_SANGUINAR, m_creature);
-                            m_uiPhaseTimer = 12500;
+                            m_uiPhaseTimer = 30500;
                             break;
 
                         case 3:
@@ -423,7 +423,7 @@ struct boss_kaelthasAI : public ScriptedAI
 
                         case 4:
                             DoScriptText(SAY_INTRO_CAPERNIAN, m_creature);
-                            m_uiPhaseTimer = 7000;
+                            m_uiPhaseTimer = 30000;
                             break;
 
                         case 5:
@@ -437,7 +437,7 @@ struct boss_kaelthasAI : public ScriptedAI
 
                         case 6:
                             DoScriptText(SAY_INTRO_TELONICUS, m_creature);
-                            m_uiPhaseTimer = 8400;
+                            m_uiPhaseTimer = 30400;
                             break;
 
                         case 7:
@@ -446,7 +446,7 @@ struct boss_kaelthasAI : public ScriptedAI
                                 pAdvisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                                 pAdvisor->SetInCombatWithZone();
                             }
-                            m_uiPhaseTimer = 0;
+                            m_uiPhaseTimer = 180000;
                             break;
                     }
 
@@ -469,6 +469,7 @@ struct boss_kaelthasAI : public ScriptedAI
 //                        DoScriptText(SAY_PHASE3_ADVANCE, m_creature);
 //                        m_uiPhaseSubphase = 0;
 //                        m_uiPhaseTimer    = 180000;
+ //                       m_uiPhase = PHASE_3_ADVISOR_ALL;
                         DoScriptText(SAY_PHASE4_INTRO2, m_creature);
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         DoResetThreat();
