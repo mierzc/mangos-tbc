@@ -6255,6 +6255,10 @@ uint32 Unit::SpellHealingBonusDone(Unit* pVictim, SpellEntry const* spellProto, 
     if (spellProto->DmgClass == SPELL_DAMAGE_CLASS_NONE)
         return healamount < 0 ? 0 : healamount;
 
+    // no bonus for heal potions/bandages
+    if (spellProto->SpellFamilyName == SPELLFAMILY_POTION/* || spellProto->Mechanic == MECHANIC_BANDAGE*/)
+        return healamount;
+
     // Healing Done
     // Done total percent damage auras
     float  DoneTotalMod = 1.0f;

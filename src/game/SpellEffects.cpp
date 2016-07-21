@@ -3260,6 +3260,10 @@ void Spell::EffectEnergize(SpellEffectIndex eff_idx)
     if (unitTarget->GetMaxPower(power) == 0)
         return;
 
+    // Alchemist's stone for mana potions, doesn't work in aura proc
+    if (unitTarget->HasAura(17619) && m_spellInfo->SpellFamilyName == SPELLFAMILY_POTION)
+        damage *= 1.4f;
+
     m_caster->EnergizeBySpell(unitTarget, m_spellInfo->Id, damage, power);
 
     // Mad Alchemist's Potion
