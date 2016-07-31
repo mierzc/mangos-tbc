@@ -17,7 +17,7 @@
  */
 
 #include "BIH.h"
-
+#include <stdexcept>
 #include <cmath>
 #include <stdexcept>
 
