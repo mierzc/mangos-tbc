@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is part of the CMaNGOS Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify
@@ -6507,7 +6507,7 @@ void ObjectMgr::LoadPointsOfInterest()
     sLog.outString();
 }
 
-static char SERVER_SIDE_SPELL[] = "CMaNGOS server-side spell";
+static char* SERVER_SIDE_SPELL = (char*)"CMaNGOS server-side spell";
 
 struct SQLSpellLoader : public SQLStorageLoaderBase<SQLSpellLoader, SQLHashStorage>
 {
