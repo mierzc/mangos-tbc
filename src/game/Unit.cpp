@@ -2272,6 +2272,8 @@ void Unit::AttackerStateUpdate(Unit* pVictim, WeaponAttackType attType, bool ext
         return;
     }
 
+    RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_MELEE_ATTACK);
+
     // attack can be redirected to another target
     if (Unit* magnetTarget = SelectMagnetTarget(pVictim))
          pVictim = magnetTarget;
@@ -2292,11 +2294,20 @@ void Unit::AttackerStateUpdate(Unit* pVictim, WeaponAttackType attType, bool ext
                          GetGUIDLow(), pVictim->GetGUIDLow(), pVictim->GetTypeId(), damageInfo.damage, damageInfo.absorb, damageInfo.blocked_amount, damageInfo.resist);
 
     if (Unit* owner = GetOwner())
-    {
-        owner->AddThreat(pVictim);
-        owner->SetInCombatWith(pVictim);
-        pVictim->SetInCombatWith(owner);
-    }
+        if (owner->GetTypeId() == TYPEID_UNIT)
+        {
+            owner->SetInCombatWith(pVictim);
+            owner->AddThreat(pVictim);
+            pVictim->SetInCombatWith(owner);
+        }
+
+    for (GuidSet::const_iterator itr = m_guardianPets.begin(); itr != m_guardianPets.end(); ++itr)
+        if (Unit* pet = (Unit*)GetMap()->GetPet(*itr))
+        {
+            pet->SetInCombatWith(pVictim);
+            pet->AddThreat(pVictim);
+            pVictim->SetInCombatWith(pet);
+        }
 
     // if damage pVictim call AI reaction
     pVictim->AttackedBy(this);
@@ -5343,10 +5354,13 @@ void Unit::AttackedBy(Unit* attacker)
         pet->AttackedBy(attacker);
 }
 
-bool Unit::AttackStop(bool targetSwitch /*=false*/)
+void Unit::AttackStop(bool targetSwitch /*=false*/, bool includingCast /*=false*/)
 {
+    if (includingCast && IsNonMeleeSpellCasted(false))
+        InterruptNonMeleeSpells(false);
+
     if (!m_attacking)
-        return false;
+        return;
 
     Unit* victim = m_attacking;
 
@@ -5373,25 +5387,17 @@ bool Unit::AttackStop(bool targetSwitch /*=false*/)
     }
 
     SendMeleeAttackStop(victim);
-
-    return true;
 }
 
 void Unit::CombatStop(bool includingCast)
 {
-    if (includingCast && IsNonMeleeSpellCasted(false))
-        InterruptNonMeleeSpells(false);
-
-    AttackStop();
+    AttackStop(true, includingCast);
     RemoveAllAttackers();
 
     if (GetTypeId() == TYPEID_PLAYER)
         ((Player*)this)->SendAttackSwingCancelAttack();     // melee and ranged forced attack cancel
-    else if (GetTypeId() == TYPEID_UNIT)
-    {
-        if (((Creature*)this)->GetTemporaryFactionFlags() & TEMPFACTION_RESTORE_COMBAT_STOP)
-            ((Creature*)this)->ClearTemporaryFaction();
-    }
+    else if (((Creature*)this)->GetTemporaryFactionFlags() & TEMPFACTION_RESTORE_COMBAT_STOP)
+        ((Creature*)this)->ClearTemporaryFaction();
 
     ClearInCombat();
 }
@@ -5428,7 +5434,9 @@ void Unit::RemoveAllAttackers()
     while (!m_attackers.empty())
     {
         AttackerSet::iterator iter = m_attackers.begin();
-        if (!(*iter)->AttackStop())
+        (*iter)->AttackStop();
+
+        if (m_attacking)
         {
             sLog.outError("WORLD: Unit has an attacker that isn't attacking it!");
             m_attackers.erase(iter);
