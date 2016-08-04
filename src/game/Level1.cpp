@@ -136,7 +136,7 @@ bool ChatHandler::HandleAnnounceCommand(char* args)
 
         // EMkove announce
         else if (m_session->GetSecurity() == SEC_EVENTMASTER)
-            sWorld.SendWorldText(LANG_SYSTEMMESSAGE, m_session->GetPlayerName(), args);
+            sWorld.SendWorldText(LANG_EVENT_ANNOUNCE, m_session->GetPlayerName(), args);
 
         // GMkove announce
         else if(m_session->GetSecurity()== SEC_GAMEMASTER)
@@ -144,7 +144,7 @@ bool ChatHandler::HandleAnnounceCommand(char* args)
 
         // DEVkove announce
         else if (m_session->GetSecurity() == SEC_DEVELOPER)
-            sWorld.SendWorldText(LANG_SYSTEMMESSAGE, m_session->GetPlayerName(), args);
+            sWorld.SendWorldText(LANG_DEVELOPER_ANNOUNCE, m_session->GetPlayerName(), args);
 
         // Adminove announce
         else
