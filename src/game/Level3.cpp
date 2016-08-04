@@ -5733,10 +5733,16 @@ bool ChatHandler::HandleServerPLimitCommand(char* args)
         int val;
         if (strncmp(param, "player", l) == 0)
             sWorld.SetPlayerLimit(-SEC_PLAYER);
+        else if (strncmp(param, "vip", l) == 0)
+            sWorld.SetPlayerLimit(-SEC_VIP);
         else if (strncmp(param, "moderator", l) == 0)
             sWorld.SetPlayerLimit(-SEC_MODERATOR);
+        else if (strncmp(param, "eventmaster", l) == 0)
+            sWorld.SetPlayerLimit(-SEC_EVENTMASTER);
         else if (strncmp(param, "gamemaster", l) == 0)
             sWorld.SetPlayerLimit(-SEC_GAMEMASTER);
+        else if (strncmp(param, "developer", l) == 0)
+            sWorld.SetPlayerLimit(-SEC_DEVELOPER);
         else if (strncmp(param, "administrator", l) == 0)
             sWorld.SetPlayerLimit(-SEC_ADMINISTRATOR);
         else if (strncmp(param, "reset", l) == 0)
@@ -5762,8 +5768,11 @@ bool ChatHandler::HandleServerPLimitCommand(char* args)
     switch (allowedAccountType)
     {
         case SEC_PLAYER:        secName = "Player";        break;
+        case SEC_VIP:           secName = "VIP";           break;
         case SEC_MODERATOR:     secName = "Moderator";     break;
+        case SEC_EVENTMASTER:   secName = "Eventmaster";   break;
         case SEC_GAMEMASTER:    secName = "Gamemaster";    break;
+        case SEC_DEVELOPER:     secName = "Developer";     break;
         case SEC_ADMINISTRATOR: secName = "Administrator"; break;
         default:                secName = "<unknown>";     break;
     }

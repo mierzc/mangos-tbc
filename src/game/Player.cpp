@@ -406,7 +406,7 @@ Player::Player(WorldSession* session) : Unit(), m_mover(this), m_camera(this), m
     m_session = session;
 
     m_ExtraFlags = 0;
-    if (GetSession()->GetSecurity() >= SEC_GAMEMASTER)
+    if (GetSession()->GetSecurity() >= SEC_MODERATOR)
         SetAcceptTicket(true);
 
     // players always accept
@@ -2442,7 +2442,7 @@ void Player::UpdateFreeTalentPoints(bool resetIfNeed)
         // if used more that have then reset
         if (m_usedTalentCount > talentPointsForLevel)
         {
-            if (resetIfNeed && GetSession()->GetSecurity() < SEC_ADMINISTRATOR)
+            if (resetIfNeed && GetSession()->GetSecurity() < SEC_DEVELOPER)
                 resetTalents(true);
             else
                 SetFreeTalentPoints(0);
@@ -14083,7 +14083,7 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
 
     // check name limitations
     if (ObjectMgr::CheckPlayerName(m_name) != CHAR_NAME_SUCCESS ||
-        (GetSession()->GetSecurity() == SEC_PLAYER && sObjectMgr.IsReservedName(m_name)))
+        (GetSession()->GetSecurity() == SEC_VIP && sObjectMgr.IsReservedName(m_name)))
     {
         delete result;
         CharacterDatabase.PExecute("UPDATE characters SET at_login = at_login | '%u' WHERE guid ='%u'",
@@ -14561,7 +14561,7 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
     delete result;
 
     // GM state
-    if (GetSession()->GetSecurity() > SEC_PLAYER)
+    if (GetSession()->GetSecurity() > SEC_VIP)
     {
         switch (sWorld.getConfig(CONFIG_UINT32_GM_LOGIN_STATE))
         {
@@ -18113,7 +18113,7 @@ bool Player::IsVisibleGloballyFor(Player* u) const
         return true;
 
     // GMs are visible for higher gms (or players are visible for gms)
-    if (u->GetSession()->GetSecurity() > SEC_PLAYER)
+    if (u->GetSession()->GetSecurity() > SEC_VIP)
         return GetSession()->GetSecurity() <= u->GetSession()->GetSecurity();
 
     // non faction visibility non-breakable for non-GMs

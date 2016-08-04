@@ -210,13 +210,13 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
             Player* player = sObjectMgr.GetPlayer(to.c_str());
             uint32 tSecurity = GetSecurity();
             uint32 pSecurity = player ? player->GetSession()->GetSecurity() : SEC_PLAYER;
-            if (!player || (tSecurity == SEC_PLAYER && pSecurity > SEC_PLAYER && !player->isAcceptWhispers()))
+            if (!player || (tSecurity <= SEC_VIP && pSecurity > SEC_PLAYER && !player->isAcceptWhispers()))
             {
                 SendPlayerNotFoundNotice(to);
                 return;
             }
 
-            if (!sWorld.getConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_CHAT) && tSecurity == SEC_PLAYER && pSecurity == SEC_PLAYER)
+            if (!sWorld.getConfig(CONFIG_BOOL_ALLOW_TWO_SIDE_INTERACTION_CHAT) && tSecurity <= SEC_VIP && pSecurity <= SEC_VIP)
             {
                 if (GetPlayer()->GetTeam() != player->GetTeam())
                 {

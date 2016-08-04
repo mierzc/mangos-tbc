@@ -473,7 +473,7 @@ bool WorldSocket::HandlePing(WorldPacket &recvPacket)
 
             if (max_count && m_overSpeedPings > max_count)
             {
-                if (m_session && m_session->GetSecurity() == SEC_PLAYER)
+                if (m_session && m_session->GetSecurity() <= SEC_VIP)
                 {
                     sLog.outError("WorldSocket::HandlePing: Player kicked for "
                                   "overspeeded pings address = %s",

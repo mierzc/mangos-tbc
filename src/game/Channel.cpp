@@ -80,7 +80,7 @@ void Channel::Join(Player* player, const char* password)
         return;
     }
 
-    if (HasFlag(CHANNEL_FLAG_LFG) && sWorld.getConfig(CONFIG_BOOL_RESTRICTED_LFG_CHANNEL) && player->GetSession()->GetSecurity() == SEC_PLAYER &&
+    if (HasFlag(CHANNEL_FLAG_LFG) && sWorld.getConfig(CONFIG_BOOL_RESTRICTED_LFG_CHANNEL) && player->GetSession()->GetSecurity() <= SEC_VIP &&
             (player->GetGroup() || player->m_lookingForGroup.Empty()))
     {
         MakeNotInLfg(&data);
@@ -473,7 +473,7 @@ void Channel::List(Player* player)
 
         // PLAYER can't see MODERATOR, GAME MASTER, ADMINISTRATOR characters
         // MODERATOR, GAME MASTER, ADMINISTRATOR can see all
-        if (plr && (player->GetSession()->GetSecurity() > SEC_PLAYER || plr->GetSession()->GetSecurity() <= gmLevelInWhoList) &&
+        if (plr && (player->GetSession()->GetSecurity() > SEC_VIP || plr->GetSession()->GetSecurity() <= gmLevelInWhoList) &&
                 plr->IsVisibleGloballyFor(player))
         {
             data << ObjectGuid(i->first);
