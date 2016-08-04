@@ -264,7 +264,7 @@ struct boss_nalorakkAI : public ScriptedAI
             // Lacerating Slash
             if (m_uiLaceratingSlashTimer < uiDiff)
             {
-                if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_LACERATING_SLASH) == CAST_OK)
+                // if (DoCastSpellIfCan(m_creature->getVictim(), SPELL_LACERATING_SLASH) == CAST_OK)
                     m_uiLaceratingSlashTimer = urand(6000, 20000);
             }
             else

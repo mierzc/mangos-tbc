@@ -48,7 +48,7 @@ enum
     SPELL_EAGLE_SWOOP       = 44732,
 
     NPC_SOARING_EAGLE       = 24858,
-    MAX_EAGLE_COUNT         = 6,
+    MAX_EAGLE_COUNT         = 3,
 };
 
 struct boss_akilzonAI : public ScriptedAI
