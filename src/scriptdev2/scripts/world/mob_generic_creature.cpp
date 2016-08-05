@@ -88,7 +88,8 @@ struct generic_creatureAI : public ScriptedAI
             return;
 
         // If we are within range melee the target
-        if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
+        // if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
+        if (Unit* victim = m_creature->getVictim())
         {
             // Make sure our attack is ready
             if (m_creature->isAttackReady())

@@ -1334,7 +1334,8 @@ struct npc_burster_wormAI : public ScriptedAI
             }
 
             // If we are within range melee the target
-            if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
+            //if (m_creature->CanReachWithMeleeAttack(m_creature->getVictim()))
+            if (Unit* victim = m_creature->getVictim())
                 DoMeleeAttackIfReady();
             else
             {
