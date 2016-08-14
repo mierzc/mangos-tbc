@@ -97,12 +97,21 @@ Player* ObjectAccessor::FindPlayerByName(const char* name)
 void
 ObjectAccessor::SaveAllPlayers()
 {
-    HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
+/*    HashMapHolder<Player>::ReadGuard g(HashMapHolder<Player>::GetLock());
     //HashMapHolder<Player>::MapType& m = sObjectAccessor.GetPlayers();
     HashMapHolder<Player>::MapType& m = HashMapHolder<Player>::GetContainer();
     HashMapHolder<Player>::MapType::iterator itr = m.begin();
     for (; itr != m.end(); ++itr)
-        itr->second->SaveToDB();
+        itr->second->SaveToDB();*/
+    SessionMap const& smap = sWorld.GetAllSessions();
+    SessionMap::const_iterator iter;
+    for (iter = smap.begin(); iter != smap.end(); ++iter){
+        if (Player* player = iter->second->GetPlayer()){
+            if (player->IsInWorld()){
+                player->SaveToDB();
+            }
+        }
+
 }
 
 void ObjectAccessor::KickPlayer(ObjectGuid guid)
