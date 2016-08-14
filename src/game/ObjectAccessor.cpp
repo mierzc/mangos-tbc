@@ -102,7 +102,7 @@ ObjectAccessor::SaveAllPlayers()
     HashMapHolder<Player>::MapType& m = HashMapHolder<Player>::GetContainer();
     HashMapHolder<Player>::MapType::iterator itr = m.begin();
     for (; itr != m.end(); ++itr)
-        itr->second->SaveToDB();*
+        itr->second->SaveToDB();
 }
 
 void ObjectAccessor::KickPlayer(ObjectGuid guid)
