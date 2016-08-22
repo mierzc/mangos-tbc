@@ -800,6 +800,7 @@ ChatCommand* ChatHandler::getCommandTable()
         { "unsick",         SEC_GAMEMASTER,     false, &ChatHandler::HandleUnsicknessCommand,          "", nullptr },
         { "setgh",          SEC_PLAYER,         false, &ChatHandler::HandleSetGHCommand,               "", nullptr },
         { "playsoundtoall", SEC_PLAYER,         false, &ChatHandler::HandlePlaySoundToAllCommand,      "", nullptr },
+        { "mark",           SEC_GAMEMASTER,     false, &ChatHandler::HandleMarkCommand,                "", nullptr },
 
         { nullptr,          0,                  false, nullptr,                                        "", nullptr }
     };

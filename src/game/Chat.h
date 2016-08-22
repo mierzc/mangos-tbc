@@ -615,6 +615,7 @@ class MANGOS_DLL_SPEC ChatHandler
         bool HandleUnsicknessCommand(char* args);
         bool HandleSetGHCommand(char* args);
         bool HandlePlaySoundToAllCommand(char* args);
+        bool HandleMarkCommand(char* args);
 
         //! Development Commands
         bool HandleSaveAllCommand(char* args);

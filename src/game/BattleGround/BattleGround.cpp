@@ -873,24 +873,36 @@ void BattleGround::RewardMark(Player* plr, uint32 count)
     {
         case BATTLEGROUND_AV:
             if (count == ITEM_WINNER_COUNT)
+            {
                 RewardSpellCast(plr, SPELL_AV_MARK_WINNER);
+                RewardItem(plr, ITEM_MYSTERIA_STAR, ITEM_MYSTERIA_STAR_COUNT); // Mysteria Star
+            }
             else
                 RewardSpellCast(plr, SPELL_AV_MARK_LOSER);
             break;
         case BATTLEGROUND_WS:
             if (count == ITEM_WINNER_COUNT)
+            {
                 RewardSpellCast(plr, SPELL_WS_MARK_WINNER);
+                RewardItem(plr, ITEM_MYSTERIA_STAR, ITEM_MYSTERIA_STAR_COUNT); // Mysteria Star
+            }
             else
                 RewardSpellCast(plr, SPELL_WS_MARK_LOSER);
             break;
         case BATTLEGROUND_AB:
             if (count == ITEM_WINNER_COUNT)
+            {
                 RewardSpellCast(plr, SPELL_AB_MARK_WINNER);
+                RewardItem(plr, ITEM_MYSTERIA_STAR, ITEM_MYSTERIA_STAR_COUNT); // Mysteria Star
+            }                
             else
                 RewardSpellCast(plr, SPELL_AB_MARK_LOSER);
             break;
         case BATTLEGROUND_EY:
-            RewardItem(plr, ITEM_EY_MARK_OF_HONOR, count);
+        {
+                RewardItem(plr, ITEM_EY_MARK_OF_HONOR, count);
+                RewardItem(plr, ITEM_MYSTERIA_STAR, ITEM_MYSTERIA_STAR_COUNT); // Mysteria Star
+        }
             break;
         default:
             break;

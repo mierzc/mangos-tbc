@@ -721,3 +721,97 @@ bool ChatHandler::HandlePlaySoundToAllCommand(char* args)
     PSendSysMessage(LANG_YOU_HEAR_SOUND, dwSoundId);
     return true;
 }
+
+// Mysteria Star
+bool ChatHandler::HandleMarkCommand(char* args)
+{
+    uint32 itemId = 38186;
+    int32 count;
+
+    // ak nieje parameter, pocet je defaultne 1
+    if (!*args)
+        count = 1;
+    else
+        count = strtol(args, NULL, 10);
+
+    // ak je vlozena hodnota chybna, vrati 0
+    if (count == 0)
+        return false;
+
+    // Ziskanie targetu hraca
+    Player* pl = m_session->GetPlayer();
+    Player* plTarget = getSelectedPlayer();
+    // Ak nieje target, da Eventerovi samotnemu.
+    //TODO: ma to vobec vyznam?
+    if (!plTarget)
+        plTarget = pl;
+
+    // Sprava do Logu (len pri detajlnom log-ovani)
+    sLog.outDetail(GetMangosString(LANG_ADDITEM), itemId, count);
+
+    // Snaha vytvorit objekt (malo by sa podarit ale aj motyka vystreli...)
+    ItemPrototype const *pProto = ObjectMgr::GetItemPrototype(itemId);
+    if (!pProto)
+    {
+        PSendSysMessage(LANG_COMMAND_ITEMIDINVALID, itemId);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    // odobratie itemu (zaporny pocet)
+    if (count < 0)
+    {
+        if (!plTarget->HasItemCount(itemId, -count, false)) // itemId, count, inBankAlso
+        {
+            ChatHandler(pl->GetSession()).PSendSysMessage("You do not have enough Mysteria Star!");
+            pl->GetSession()->SendNotification("You do not have enough Mysteria Star!");
+            return false;
+        }
+
+        plTarget->DestroyItemCount(itemId, -count, true, false);
+        PSendSysMessage(LANG_REMOVEITEM, itemId, -count, GetNameLink(plTarget).c_str());
+        return true;
+    }
+
+    // Pridanie itemu
+    uint32 noSpaceForCount = 0;
+
+    // kontrola miesta v bagu a najdenie miesta
+    ItemPosCountVec dest;
+    uint8 msg = plTarget->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, count, &noSpaceForCount);
+    if (msg != EQUIP_ERR_OK)                               // convert to possible store amount
+        count -= noSpaceForCount;
+
+    if (count == 0 || dest.empty())                         // can't add any
+    {
+        PSendSysMessage(LANG_ITEM_CANNOT_CREATE, itemId, noSpaceForCount);
+        SetSentErrorMessage(true);
+        return false;
+    }
+
+    Item* item = plTarget->StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
+
+    // Odstranenie bindovania ak gm si da item sam aby ho mohol tradeovat
+    // 
+    // TODO ma to vyznam?
+    /*
+    if(pl==plTarget)
+    for(ItemPosCountVec::const_iterator itr = dest.begin(); itr != dest.end(); ++itr)
+    if(Item* item1 = pl->GetItemByPos(itr->pos))
+    item1->SetBinding( false );
+    */
+
+    // Pridanie itemu
+    if (count > 0 && item)
+    {
+        pl->SendNewItem(item, count, false, true);
+        if (pl != plTarget)
+            plTarget->SendNewItem(item, count, true, false);
+    }
+
+    // Chyba pri nedostatku miesta
+    if (noSpaceForCount > 0)
+        PSendSysMessage(LANG_ITEM_CANNOT_CREATE, itemId, noSpaceForCount);
+
+    return true;
+}

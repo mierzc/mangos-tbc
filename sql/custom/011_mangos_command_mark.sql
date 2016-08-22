@@ -1,0 +1,1 @@
+INSERT INTO `command` (`name`,`security`,`help`) VALUES ('mark',3,'Syntax: .mark or .mark # Add to target or self Mysteria Star # quantity of Mysteria Star');
