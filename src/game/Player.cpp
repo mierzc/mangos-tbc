@@ -3355,6 +3355,11 @@ void Player::removeSpell(uint32 spell_id, bool disabled, bool learn_low_rank, bo
         data << uint16(spell_id);
         GetSession()->SendPacket(&data);
     }
+
+    // remove auras due to triggered spells
+    const uint32* triggeredSpells = sSpellStore.LookupEntry(spell_id)->EffectTriggerSpell;
+    for (uint32 i = 0; i < MAX_EFFECT_INDEX; ++i)
+        RemoveAurasDueToSpell(triggeredSpells[i]);
 }
 
 void Player::RemoveSpellCooldown(uint32 spell_id, bool update /* = false */)
@@ -19998,6 +20003,9 @@ void Player::HandleFall(MovementInfo const& movementInfo)
         if (damageperc > 0)
         {
             uint32 damage = (uint32)(damageperc * GetMaxHealth() * sWorld.getConfig(CONFIG_FLOAT_RATE_DAMAGE_FALL));
+            // Fall v test zone (na encyho ziadost)
+            if(GetMapId() == 13)
+                uint32 damage = (uint32)(damageperc * GetMaxHealth() * sWorld.getConfig(CONFIG_FLOAT_RATE_DAMAGE_FALL_TEST));
 
             float height = position->z;
             UpdateAllowedPositionZ(position->x, position->y, height);
