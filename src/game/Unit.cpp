@@ -5433,14 +5433,15 @@ bool Unit::isAttackingPlayer() const
 
 void Unit::RemoveAllAttackers()
 {
-    while (!m_combatData->attackers.empty())
+    while (!m_attackers.empty())
     {
-        AttackerSet::iterator iter = m_combatData->attackers.begin();
+        AttackerSet::iterator iter = m_attackers.begin();
+        (*iter)->AttackStop();
 
-        if (!(*iter)->AttackStop())
+        if (m_attacking)
         {
-            //sLog.outError("WORLD: Unit has an attacker that isn't attacking it!");
-            m_combatData->attackers.erase(iter);
+            sLog.outError("WORLD: Unit has an attacker that isn't attacking it!");
+            m_attackers.erase(iter);
         }
     }
 }
@@ -7872,7 +7873,7 @@ bool Unit::SelectHostileTarget()
     // Note: creature not have targeted movement generator but have attacker in this case
     if (GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE)
     {
-        for (AttackerSet::const_iterator itr = m_combatData->attackers.begin(); itr != m_combatData->attackers.end(); ++itr)
+        for (AttackerSet::const_iterator itr = m_attackers.begin(); itr != m_attackers.end(); ++itr)
         {
             if ((*itr)->IsInMap(this) && (*itr)->isTargetableForAttack() && (*itr)->isInAccessablePlaceFor((Creature*)this))
                 return false;
@@ -9086,7 +9087,7 @@ void Unit::StopMoving(bool forceSendStop /*=false*/)
         return;
 
     Movement::MoveSplineInit init(*this);
-    init.Stop();
+    init.Stop(forceSendStop);
 }
 
 void Unit::InterruptMoving(bool forceSendStop /*=false*/)
@@ -10067,8 +10068,9 @@ void Unit::ResetControlState(bool attackCharmer /*= true*/)
     possessed->clearUnitState(UNIT_STAT_CONTROLLED);
     possessed->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED);
     possessed->SetCharmerGuid(ObjectGuid());
-    SetCharmGuid(ObjectGuid());
+    possessed->StopMoving(true);
 
+    SetCharmGuid(ObjectGuid());
     Creature* possessedCreature = nullptr;
     if (possessed->GetTypeId() == TYPEID_UNIT)
     {
