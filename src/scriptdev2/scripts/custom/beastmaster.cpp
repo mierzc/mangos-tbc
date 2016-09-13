@@ -24,7 +24,7 @@
 #include "Language.h"
 #include "ObjectGuid.h"
 #include "World.h"
-#include "CreatureAI.h"
+#include "AI/CreatureAI.h"
 #include "Util.h"
 
 #define MAINMENU "|TInterface/ICONS/Ability_Spy:30:30:-18:0|t <= Main Menu"
@@ -40,9 +40,15 @@ void CreatePet(Player* player, Creature* creature, uint32 entry)
         player->CLOSE_GOSSIP_MENU();
         return;
     }
+
+    if (player->GetPet()) {
+        creature->MonsterWhisper("First you must drop your pet!", player, false);
+        player->PlayerTalkClass->CloseGossip();
+        return;
+    }
+
     Map *map = player->GetMap();
-    // Creature* creatureTarget = (Creature*)entry;
-    Creature* creatureTarget = creature->SummonCreature(entry, player->GetPositionX(), player->GetPositionY() - 2, player->GetPositionZ(), player->GetOrientation(), TEMPSUMMON_CORPSE_DESPAWN, 0); // TEMPSUMMON_CORPSE_TIMED_DESPAWN, 0
+    Creature* creatureTarget = creature->SummonCreature(entry, player->GetPositionX(), player->GetPositionY() + 2, player->GetPositionZ(), player->GetOrientation(), TEMPSUMMON_CORPSE_DESPAWN, 500); // TEMPSUMMON_CORPSE_TIMED_DESPAWN, 0
     if (!creatureTarget) return;
 
     uint32 spell_id = 13481;
@@ -54,126 +60,33 @@ void CreatePet(Player* player, Creature* creature, uint32 entry)
         delete pet;
         return;
     }
-    /*
-    //CreatureCreatePos pos(creature, creature->GetOrientation());
-    //uint32 pet_number = sObjectMgr.GeneratePetNumber();
 
-    // CreatedBySpell
-    pet->SetUInt32Value(UNIT_CREATED_BY_SPELL, spell_id);
-
-    // kill original creature
     creatureTarget->SetDeathState(JUST_DIED);
-    creatureTarget->SetHealth(0);
     creatureTarget->RemoveCorpse();
+    creatureTarget->SetHealth(0);
+    pet->SetPower(POWER_HAPPINESS, 10480000);    
+    pet->SetByteValue(UNIT_FIELD_BYTES_1, 1, 6);// loyalty
+    pet->SetTP(350);    // pet->SetTP(pet->getLevel() * (pet->GetLoyaltyLevel() - 1));    
+    pet->GetCharmInfo()->SetReactState(ReactStates(1));// react state
 
-    // uint32 guid = map->GenerateLocalLowGuid(HIGHGUID_PET);
-    // pet type
-    pet->setPetType(HUNTER_PET);
-    // happiness
-    // pet->SetMaxPower(POWER_HAPPINESS, pet->GetCreatePowers(POWER_HAPPINESS));
-    pet->SetPower(POWER_HAPPINESS, 10480000);
-    // owner
-    pet->SetOwnerGuid(player->GetObjectGuid());
-    //pet->SetUInt64Value(UNIT_FIELD_CREATEDBY, player->GetGUIDLow());
-    // faction
-    pet->setFaction(player->getFaction());
-    // prepare visual effect for levelup
-    pet->SetUInt32Value(UNIT_FIELD_LEVEL, player->getLevel() - 1);
-    // pet->SetLevel(player->getLevel() -1);
-
-    // pet->GetMap()->GetObjectsStore().insert<Pet>(pet->GetGUID(), (Pet*)entry);
-    // pet->GetMap()->AddToMap((Creature*)pet);
-    pet->GetMap()->Add((Creature*)pet);
-    // visual effect for levelup for lulz
-    // pet->SetUInt32Value(UNIT_FIELD_LEVEL, player->getLevel() -1);
-
-    CreatureInfo const* creatureInfo = ObjectMgr::GetCreatureTemplate(entry);
-    if(!creatureInfo || !creatureInfo->isTameable())
-    {
-    delete pet;
-    return;
-    }
-
-    pet->SetPowerType(POWER_FOCUS);
-    pet->SetCanModifyStats(true);
-    // experience
-    // pet->SetUInt32Value(UNIT_FIELD_PETEXPERIENCE, 0);
-    // loyalty
-    pet->SetByteValue(UNIT_FIELD_BYTES_1, 1, 6);
-    // SET TP
-    pet->SetTP(350);
-    // react state
-    pet->GetCharmInfo()->SetReactState(ReactStates(1));
-    // pvp
-    if(player->IsPvP())
-    pet->SetPvP(true);
-
-    // pet number
-    pet->GetCharmInfo()->SetPetNumber(sObjectMgr.GeneratePetNumber(), true);
-    if (!pet->InitStatsForLevel(player->getLevel()))
-    {
-    //pet init stats for lvl
-    pet->InitStatsForLevel(player->getLevel());
-    pet->SynchronizeLevelWithOwner();
-    pet->UpdateAllStats();
-    pet->InitPetCreateSpells();
-    // pet->UpdateWalkMode(player);
-    }
-
-    // caster has pet now
-    player->SetPet(pet);
-    // pet->AIM_Initialize();
-    // creature->AddToWorld();
-
-    player->PetSpellInitialize();
-    // Save pet to DB
-    pet->SavePetToDB(PET_SAVE_AS_CURRENT);
-    */
     pet->SetOwnerGuid(player->GetObjectGuid());
     pet->SetCreatorGuid(player->GetObjectGuid());
     pet->setFaction(player->getFaction());
     pet->SetUInt32Value(UNIT_CREATED_BY_SPELL, spell_id);
 
-    if (player->IsPvP())
-        pet->SetPvP(true);
-
-    pet->InitStatsForLevel(70);
-    pet->GetCharmInfo()->SetPetNumber(sObjectMgr.GeneratePetNumber(), true);
-    // this enables pet details window (Shift+P)
-    pet->AIM_Initialize();
-    pet->InitPetCreateSpells();
-    pet->SetHealth(pet->GetMaxHealth());
-    // happiness
-    pet->SetPower(POWER_HAPPINESS, 10480000);
-    // loyalty
-    pet->SetByteValue(UNIT_FIELD_BYTES_1, 1, 6);
-    // SET TP
-    pet->SetTP(350);
-    // pet->SetTP(pet->getLevel() * (pet->GetLoyaltyLevel() - 1));
-    // react state
-    pet->GetCharmInfo()->SetReactState(ReactStates(1));
-    // "kill" original creature
-    creatureTarget->ForcedDespawn();
-
-    // prepare visual effect for levelup
-    pet->SetUInt32Value(UNIT_FIELD_LEVEL, player->getLevel() - 1);
-
-    // add to world
+    pet->SetUInt32Value(UNIT_FIELD_LEVEL, 69);
     pet->GetMap()->Add((Creature*)pet);
-
-    // visual effect for levelup
-    pet->SetUInt32Value(UNIT_FIELD_LEVEL, player->getLevel());
-
-    // caster have pet now
+    pet->SetUInt32Value(UNIT_FIELD_LEVEL, 70);
+    pet->InitStatsForLevel(70);
+    pet->UpdateAllStats();
     player->SetPet(pet);
-
     pet->SavePetToDB(PET_SAVE_AS_CURRENT);
     player->PetSpellInitialize();
-
+    if (player->IsPvP())
+        pet->SetPvP(true);
     player->CLOSE_GOSSIP_MENU();
     creature->MonsterWhisper("You have learned a way of the beast, congratulations.", player, false);
 }
-
 
 bool GossipHello_Npc_Beastmaster(Player* player, Creature* m_creature)
 {
@@ -318,6 +231,7 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Ability_hunter_pet_hyena:26:26:-15:0|t|r Hyena.", GOSSIP_SENDER_MAIN, 2010);
         player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Ability_hunter_pet_cat:26:26:-15:0|t|r Mountain Lion - Prowl.", GOSSIP_SENDER_MAIN, 2011);
         player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Ability_hunter_pet_wolf:26:26:-15:0|t|r Wolf.", GOSSIP_SENDER_MAIN, 2012);
+        player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Ability_hunter_pet_cat:26:26:-15:0|t|r Amani Elder Lynx.", GOSSIP_SENDER_MAIN, 2013); 
         player->ADD_GOSSIP_ITEM(2, LESS, GOSSIP_SENDER_MAIN, 2000);
         player->ADD_GOSSIP_ITEM(2, MAINMENU, GOSSIP_SENDER_MAIN, 100);
         player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, m_creature->GetObjectGuid());
@@ -413,6 +327,10 @@ bool GossipSelect_Npc_Beastmaster(Player* player, Creature* m_creature, uint32 /
         CreatePet(player, m_creature, 20330); // 1131
         player->CLOSE_GOSSIP_MENU();
         break;
+    case 2013: // Amani Elder Lynx
+        CreatePet(player, m_creature, 24530); // 
+        player->CLOSE_GOSSIP_MENU();
+        break;
         // ============================================
     case 3001: // Turtle
         CreatePet(player, m_creature, 14123);
@@ -439,20 +357,3 @@ void AddSC_Npc_Beastmaster()
     newscript->pGossipSelect = &GossipSelect_Npc_Beastmaster;
     newscript->RegisterSelf();
 }
-
-/*
-
-player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Ability_hunter_pet_turtle:26:26:-15:0|t|r Turtle.", GOSSIP_SENDER_MAIN, 19);
-player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Ability_hunter_pet_wasp:26:26:-15:0|t|r Wasp.", GOSSIP_SENDER_MAIN, 20);
-player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Ability_hunter_pet_worm:26:26:-15:0|t|r Worm.", GOSSIP_SENDER_MAIN, 56);
-player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Ability_druid_catform:26:26:-15:0|t|r Loque'nahak.", GOSSIP_SENDER_MAIN, 57);
-player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Spell_nature_spiritwolf:26:26:-15:0|t|r Skoll.", GOSSIP_SENDER_MAIN, 58);
-player->ADD_GOSSIP_ITEM(6, "|cff00ff00|TInterface\\icons\\Spell_shadow_spectralsight:26:26:-15:0|t|r Gondria.", GOSSIP_SENDER_MAIN, 59);
-player->ADD_GOSSIP_ITEM(2, "<- Get a New Normal Pet.", GOSSIP_SENDER_MAIN, 100);
-player->ADD_GOSSIP_ITEM(4, LESS, GOSSIP_SENDER_MAIN, 30);
-player->ADD_GOSSIP_ITEM(2, MAINMENU, GOSSIP_SENDER_MAIN, 100);
-Ability hunter pet netherray
-Ability hunter pet owl
-Ability hunter pet sporebat
-Ability hunter pet vulture
-*/
