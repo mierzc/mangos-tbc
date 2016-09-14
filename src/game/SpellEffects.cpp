@@ -3650,17 +3650,25 @@ void Spell::EffectSummonType(SpellEffectIndex eff_idx)
         // TODO :: Totem, Pet and Critter may not use this
         level += std::max(m_spellInfo->EffectMultipleValue[eff_idx], 1.0f);
     }
-
     // level of creature summoned using engineering item based at engineering skill level
-    if (m_caster->GetTypeId() == TYPEID_PLAYER && m_CastItem)
+    else if (m_CastItem)
     {
         ItemPrototype const* proto = m_CastItem->GetProto();
         if (proto && proto->RequiredSkill == SKILL_ENGINEERING && proto->InventoryType == INVTYPE_TRINKET)
+        {
             if (uint16 engineeringSkill = ((Player*)m_caster)->GetSkillValue(SKILL_ENGINEERING))
             {
                 level = engineeringSkill / 5;
                 amount = 1;                                 // TODO HACK (needs a neat way of doing)
             }
+        }
+        else if (CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(m_spellInfo->EffectMiscValue[eff_idx]))
+        {
+            if (level >= cInfo->MaxLevel)
+                level = cInfo->MaxLevel;
+            else if (level <= cInfo->MinLevel)
+                level = cInfo->MinLevel;
+        }
     }
 
     CreatureSummonPositions summonPositions;
@@ -3809,13 +3817,7 @@ void Spell::EffectSummonType(SpellEffectIndex eff_idx)
 
             // Notify original caster if not done already
             if (caster && caster->AI())
-            {
                 caster->AI()->JustSummoned(itr->creature);
-
-                // TODO: handling attack start here is not correct we do not check any react state before (REACT_PASSIVE ?)
-                if (caster->isInCombat() && !(itr->creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE)))
-                    itr->creature->AI()->AttackStart(m_caster->getAttackerForHelper());
-            }
         }
     }
 }
@@ -4689,9 +4691,9 @@ void Spell::EffectSummonPet(SpellEffectIndex eff_idx)
     if (m_caster->GetTypeId() == TYPEID_PLAYER)
     {
         NewSummon->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
+        NewSummon->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
 
         NewSummon->SetByteValue(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_SUPPORTABLE | UNIT_BYTE2_FLAG_AURAS);
-        NewSummon->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
 
         NewSummon->GetCharmInfo()->SetPetNumber(pet_number, true);
 
@@ -4706,20 +4708,15 @@ void Spell::EffectSummonPet(SpellEffectIndex eff_idx)
     }
     else
     {
+        NewSummon->SetUInt32Value(UNIT_NPC_FLAGS, cInfo->NpcFlags);
+        NewSummon->SetUInt32Value(UNIT_FIELD_FLAGS, cInfo->UnitFlags);
+
         // Notify Summoner
         if (m_originalCaster && (m_originalCaster != m_caster)
             && (m_originalCaster->GetTypeId() == TYPEID_UNIT) && ((Creature*)m_originalCaster)->AI())
-        {
             ((Creature*)m_originalCaster)->AI()->JustSummoned(NewSummon);
-            if (m_originalCaster->isInCombat() && !(NewSummon->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE)))
-                ((Creature*)NewSummon)->AI()->AttackStart(m_originalCaster->getAttackerForHelper());
-        }
         else if ((m_caster->GetTypeId() == TYPEID_UNIT) && ((Creature*)m_caster)->AI())
-        {
             ((Creature*)m_caster)->AI()->JustSummoned(NewSummon);
-            if (m_caster->isInCombat() && !(NewSummon->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PASSIVE)))
-                ((Creature*)NewSummon)->AI()->AttackStart(m_caster->getAttackerForHelper());
-        }
     }
 }
 
