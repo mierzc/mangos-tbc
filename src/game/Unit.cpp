@@ -1784,38 +1784,42 @@ void Unit::DealMeleeDamage(CalcDamageInfo* damageInfo, bool durabilityLoss)
         if (GetTypeId() == TYPEID_PLAYER && pVictim->isAlive())
             ((Player*)this)->CastItemCombatSpell(pVictim, damageInfo->attackType);
 
-        // victim's damage shield
-        std::set<Aura*> alreadyDone;
-        AuraList const& vDamageShields = pVictim->GetAurasByType(SPELL_AURA_DAMAGE_SHIELD);
-        for (AuraList::const_iterator i = vDamageShields.begin(); i != vDamageShields.end();)
+        // If not immune
+        if (damageInfo->TargetState != VICTIMSTATE_IS_IMMUNE)
         {
-            if (alreadyDone.find(*i) == alreadyDone.end())
+            // victim's damage shield
+            std::set<Aura*> alreadyDone;
+            AuraList const& vDamageShields = pVictim->GetAurasByType(SPELL_AURA_DAMAGE_SHIELD);
+            for (AuraList::const_iterator i = vDamageShields.begin(); i != vDamageShields.end();)
             {
-                alreadyDone.insert(*i);
-                uint32 damage = (*i)->GetModifier()->m_amount;
-                SpellEntry const* i_spellProto = (*i)->GetSpellProto();
-                // Calculate absorb resist ??? no data in opcode for this possibly unable to absorb or resist?
-                // uint32 absorb;
-                // uint32 resist;
-                // CalcAbsorbResist(pVictim, SpellSchools(spellProto->School), SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-                // damage-=absorb + resist;
+                if (alreadyDone.find(*i) == alreadyDone.end())
+                {
+                    alreadyDone.insert(*i);
+                    uint32 damage = (*i)->GetModifier()->m_amount;
+                    SpellEntry const* i_spellProto = (*i)->GetSpellProto();
+                    // Calculate absorb resist ??? no data in opcode for this possibly unable to absorb or resist?
+                    // uint32 absorb;
+                    // uint32 resist;
+                    // CalcAbsorbResist(pVictim, SpellSchools(spellProto->School), SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
+                    // damage-=absorb + resist;
 
-                pVictim->DealDamageMods(this, damage, nullptr);
+                    pVictim->DealDamageMods(this, damage, nullptr);
 
-                WorldPacket data(SMSG_SPELLDAMAGESHIELD, (8 + 8 + 4 + 4 + 4));
-                data << pVictim->GetObjectGuid();
-                data << GetObjectGuid();
-                data << uint32(i_spellProto->Id);
-                data << uint32(damage);                  // Damage
-                data << uint32(i_spellProto->SchoolMask);
-                pVictim->SendMessageToSet(&data, true);
+                    WorldPacket data(SMSG_SPELLDAMAGESHIELD, (8 + 8 + 4 + 4 + 4));
+                    data << pVictim->GetObjectGuid();
+                    data << GetObjectGuid();
+                    data << uint32(i_spellProto->Id);
+                    data << uint32(damage);                  // Damage
+                    data << uint32(i_spellProto->SchoolMask);
+                    pVictim->SendMessageToSet(&data, true);
 
-                pVictim->DealDamage(this, damage, nullptr, SPELL_DIRECT_DAMAGE, GetSpellSchoolMask(i_spellProto), i_spellProto, true);
+                    pVictim->DealDamage(this, damage, nullptr, SPELL_DIRECT_DAMAGE, GetSpellSchoolMask(i_spellProto), i_spellProto, true);
 
-                i = vDamageShields.begin();
+                    i = vDamageShields.begin();
+                }
+                else
+                    ++i;
             }
-            else
-                ++i;
         }
     }
 }
@@ -2150,6 +2154,11 @@ void Unit::CalculateDamageAbsorbAndResist(Unit* pCaster, SpellSchoolMask schoolM
 
             RemainingDamage -= currentAbsorb;
 
+            if (caster->IsImmuneToDamage(schoolMask))
+            {
+                SendSpellMiss(caster, (*i)->GetSpellProto()->Id, SPELL_MISS_IMMUNE);
+                return;
+            }
 
             uint32 splitted = currentAbsorb;
             uint32 splitted_absorb = 0;
@@ -2178,6 +2187,12 @@ void Unit::CalculateDamageAbsorbAndResist(Unit* pCaster, SpellSchoolMask schoolM
             uint32 splitted = uint32(RemainingDamage * (*i)->GetModifier()->m_amount / 100.0f);
 
             RemainingDamage -=  int32(splitted);
+
+            if (caster->IsImmuneToDamage(schoolMask))
+            {
+                SendSpellMiss(caster, (*i)->GetSpellProto()->Id, SPELL_MISS_IMMUNE);
+                return;
+            }
 
             uint32 split_absorb = 0;
             pCaster->DealDamageMods(caster, splitted, &split_absorb);
