@@ -886,7 +886,8 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
             }
         }
 
-        if (damagetype == DIRECT_DAMAGE || damagetype == SPELL_DIRECT_DAMAGE || damagetype == DOT)
+        if ((damagetype == DIRECT_DAMAGE || damagetype == SPELL_DIRECT_DAMAGE || damagetype == DOT)
+            && !(spellProto && spellProto->HasAttribute(SPELL_ATTR_EX4_DAMAGE_DOESNT_BREAK_AURAS)))
         {
             int32 auraInterruptFlags = AURA_INTERRUPT_FLAG_DAMAGE;
             if (damagetype != DOT)
@@ -1878,13 +1879,13 @@ uint32 Unit::CalcArmorReducedDamage(Unit* pVictim, const uint32 damage)
     return (newdamage > 1) ? newdamage : 1;
 }
 
-void Unit::CalculateDamageAbsorbAndResist(Unit* pCaster, SpellSchoolMask schoolMask, DamageEffectType damagetype, const uint32 damage, uint32* absorb, uint32* resist, bool canReflect)
+void Unit::CalculateDamageAbsorbAndResist(Unit* pCaster, SpellSchoolMask schoolMask, DamageEffectType damagetype, const uint32 damage, uint32* absorb, uint32* resist, bool canReflect, bool ignoreResists)
 {
     if (!pCaster || !isAlive() || !damage)
         return;
 
     // Magic damage, check for resists
-    if ((schoolMask & SPELL_SCHOOL_MASK_NORMAL) == 0)
+    if ((schoolMask & SPELL_SCHOOL_MASK_NORMAL) == 0 && !ignoreResists)
     {
         // Get base victim resistance for school
         float tmpvalue2 = (float)GetResistance(GetFirstSchoolInMask(schoolMask));
@@ -2252,7 +2253,7 @@ void Unit::CalculateAbsorbResistBlock(Unit* pCaster, SpellNonMeleeDamage* damage
         damageInfo->damage -= damageInfo->blocked;
     }
 
-    CalculateDamageAbsorbAndResist(pCaster, GetSpellSchoolMask(spellProto), SPELL_DIRECT_DAMAGE, damageInfo->damage, &damageInfo->absorb, &damageInfo->resist, !spellProto->HasAttribute(SPELL_ATTR_EX2_CANT_REFLECTED));
+    CalculateDamageAbsorbAndResist(pCaster, GetSpellSchoolMask(spellProto), SPELL_DIRECT_DAMAGE, damageInfo->damage, &damageInfo->absorb, &damageInfo->resist, IsReflectableSpell(spellProto), spellProto->HasAttribute(SPELL_ATTR_EX4_IGNORE_RESISTANCES));
     damageInfo->damage -= damageInfo->absorb + damageInfo->resist;
 }
 
@@ -2808,7 +2809,6 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit* pVictim, SpellEntry const* spell)
     return SPELL_MISS_NONE;
 }
 
-// TODO need use unit spell resistances in calculations
 SpellMissInfo Unit::MagicSpellHitResult(Unit* pVictim, SpellEntry const* spell)
 {
     // Can`t miss on dead target (on skinning for example)
@@ -2876,6 +2876,19 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit* pVictim, SpellEntry const* spell)
 
     if (rand < tmp)
         return SPELL_MISS_RESIST;
+
+    if ((schoolMask & SPELL_SCHOOL_MASK_NORMAL) == 0 && IsBinarySpell(spell) && !spell->HasAttribute(SPELL_ATTR_EX4_IGNORE_RESISTANCES))
+    {
+        // Get base victim resistance for school
+        float targetResistance = (float)GetResistance(GetFirstSchoolInMask(schoolMask));
+        // Ignore resistance by self SPELL_AURA_MOD_TARGET_RESISTANCE aura
+        targetResistance += (float)GetTotalAuraModifierByMiscMask(SPELL_AURA_MOD_TARGET_RESISTANCE, schoolMask);
+
+        rand = irand(0, 10000);
+
+        if (targetResistance / (getLevel() * 5) * 0.75) // compute resistance percentage for binary spell
+            return SPELL_MISS_RESIST;
+    }
 
     return SPELL_MISS_NONE;
 }
@@ -3654,8 +3667,8 @@ bool Unit::AddSpellAuraHolder(SpellAuraHolder* holder)
 
     // ghost spell check, allow apply any auras at player loading in ghost mode (will be cleanup after load)
     if (!isAlive() && !IsDeathPersistentSpell(aurSpellInfo) &&
-            !IsDeathOnlySpell(aurSpellInfo) &&
-            (GetTypeId() != TYPEID_PLAYER || !((Player*)this)->GetSession()->PlayerLoading()))
+        !IsDeathOnlySpell(aurSpellInfo) && !aurSpellInfo->HasAttribute(SPELL_ATTR_EX2_CAN_TARGET_DEAD) &&
+        (GetTypeId() != TYPEID_PLAYER || !((Player*)this)->GetSession()->PlayerLoading()))
     {
         delete holder;
         return false;
@@ -4503,7 +4516,7 @@ void Unit::RemoveArenaAuras(bool onleave)
                 // don't remove stances, shadowform, pally/hunter auras
                 !iter->second->IsPassive() &&               // don't remove passive auras
                 (!iter->second->GetSpellProto()->HasAttribute(SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY) ||
-                 !iter->second->GetSpellProto()->HasAttribute(SPELL_ATTR_UNK8)) &&
+                 !iter->second->GetSpellProto()->HasAttribute(SPELL_ATTR_HIDE_IN_COMBAT_LOG)) &&
                 // not unaffected by invulnerability auras or not having that unknown flag (that seemed the most probable)
                 (iter->second->IsPositive() != onleave))    // remove positive buffs on enter, negative buffs on leave
         {
@@ -5744,6 +5757,9 @@ Unit* Unit::SelectMagnetTarget(Unit* victim, Spell* spell, SpellEffectIndex eff)
     // Magic case
     if (spell && (spell->m_spellInfo->DmgClass == SPELL_DAMAGE_CLASS_NONE || spell->m_spellInfo->DmgClass == SPELL_DAMAGE_CLASS_MAGIC))
     {
+        if (spell->m_spellInfo->HasAttribute(SPELL_ATTR_ABILITY) || spell->m_spellInfo->HasAttribute(SPELL_ATTR_EX_CANT_BE_REDIRECTED) || spell->m_spellInfo->HasAttribute(SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY))
+            return nullptr;
+
         Unit::AuraList const& magnetAuras = victim->GetAurasByType(SPELL_AURA_SPELL_MAGNET);
         for (Unit::AuraList::const_iterator itr = magnetAuras.begin(); itr != magnetAuras.end(); ++itr)
         {
@@ -5875,7 +5891,7 @@ int32 Unit::SpellBonusWithCoeffs(SpellEntry const* spellProto, int32 total, int3
  */
 uint32 Unit::SpellDamageBonusDone(Unit* pVictim, SpellEntry const* spellProto, uint32 pdamage, DamageEffectType damagetype, uint32 stack)
 {
-    if (!spellProto || !pVictim || damagetype == DIRECT_DAMAGE)
+    if (!spellProto || !pVictim || damagetype == DIRECT_DAMAGE || spellProto->HasAttribute(SPELL_ATTR_EX6_NO_DMG_PERCENT_MODS))
         return pdamage;
 
     // For totems get damage bonus from owner (statue isn't totem in fact)
@@ -6555,7 +6571,7 @@ bool Unit::IsImmuneToSpellEffect(SpellEntry const* spellInfo, SpellEffectIndex i
  */
 uint32 Unit::MeleeDamageBonusDone(Unit* pVictim, uint32 pdamage, WeaponAttackType attType, SpellEntry const* spellProto, DamageEffectType damagetype, uint32 stack)
 {
-    if (!pVictim || pdamage == 0)
+    if (!pVictim || pdamage == 0 || (spellProto && spellProto->HasAttribute(SPELL_ATTR_EX6_NO_DMG_PERCENT_MODS)))
         return pdamage;
 
     // differentiate for weapon damage based spells
@@ -8696,9 +8712,9 @@ void CharmInfo::InitCharmCreateSpells()
     }
 }
 
-bool CharmInfo::AddSpellToActionBar(uint32 spell_id, ActiveStates newstate)
+bool CharmInfo::AddSpellToActionBar(uint32 spellId, ActiveStates newstate)
 {
-    uint32 first_id = sSpellMgr.GetFirstSpellInChain(spell_id);
+    uint32 first_id = sSpellMgr.GetFirstSpellInChain(spellId);
 
     // new spell rank can be already listed
     for (uint8 i = 0; i < MAX_UNIT_ACTION_BAR_INDEX; ++i)
@@ -8707,7 +8723,7 @@ bool CharmInfo::AddSpellToActionBar(uint32 spell_id, ActiveStates newstate)
         {
             if (PetActionBar[i].IsActionBarForSpell() && sSpellMgr.GetFirstSpellInChain(action) == first_id)
             {
-                PetActionBar[i].SetAction(spell_id);
+                PetActionBar[i].SetAction(spellId);
                 return true;
             }
         }
@@ -8718,7 +8734,7 @@ bool CharmInfo::AddSpellToActionBar(uint32 spell_id, ActiveStates newstate)
     {
         if (!PetActionBar[i].GetAction() && PetActionBar[i].IsActionBarForSpell())
         {
-            SetActionBar(i, spell_id, newstate == ACT_DECIDE ? ACT_DISABLED : newstate);
+            SetActionBar(i, spellId, newstate == ACT_DECIDE ? IsAutocastable(spellId) ? ACT_DISABLED : ACT_PASSIVE : newstate);
             return true;
         }
     }
@@ -8784,8 +8800,14 @@ void CharmInfo::LoadPetActionBar(const std::string& data)
         PetActionBar[index].SetActionAndType(action, ActiveStates(type));
 
         // check correctness
-        if (PetActionBar[index].IsActionBarForSpell() && !sSpellStore.LookupEntry(PetActionBar[index].GetAction()))
-            SetActionBar(index, 0, ACT_DISABLED);
+        if (PetActionBar[index].IsActionBarForSpell())
+        {
+            SpellEntry const* spellInfo = sSpellStore.LookupEntry(PetActionBar[index].GetAction());
+            if (!spellInfo)
+                SetActionBar(index, 0, ACT_DISABLED);
+            else if (!IsAutocastable(spellInfo))
+                SetActionBar(index, PetActionBar[index].GetAction(), ACT_PASSIVE);
+        }
     }
 }
 
