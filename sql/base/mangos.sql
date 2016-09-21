@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `db_version`;
 CREATE TABLE `db_version` (
   `version` varchar(120) DEFAULT NULL,
   `creature_ai_version` varchar(120) DEFAULT NULL,
-  `required_s2331_01_mangos_event_linkedto` bit(1) DEFAULT NULL
+  `required_s2332_01_mangos_more_spell_data` bit(1) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Used DB version notes';
 
 --
@@ -13176,6 +13176,7 @@ INSERT INTO `spell_bonus_data` VALUES
 (20424, 0.2,    0,       0,     0,     'Paladin - Seal of Command Proc'),
 (25742, 0.1,    0,       0,     0,     'Paladin - Seal of Righteousness Proc'),
 (31803, 0,      0.034,   0,     0,     'Paladin - Seal of Vengeance Proc on Enemy'),
+(42463, 0.022,  0,       0,     0,     'Paladin - Seal of Vengeance Proc on Enemy (fully stacked)'),
 /* Priest */
 (44041, 0.143,  0,       0,     0,     'Priest - Chastise'),
 (2944,  0,      0.2,     0,     0,     'Priest - Devouring Plague'),
@@ -13183,6 +13184,7 @@ INSERT INTO `spell_bonus_data` VALUES
 (14914, 0.75,   0.05,    0,     0,     'Priest - Holy Fire'),
 (15237, 0.1606, 0,       0,     0,     'Priest - Holy Nova Damage'),
 (23455, 0.1606, 0,       0,     0,     'Priest - Holy Nova Heal'),
+(7001,  0,      0.33,    0,     0,     'Priest - Lightwell Renew'),
 (8129,  0,      0,       0,     0,     'Priest - Mana Burn'),
 (15407, 0,      0.19,    0,     0,     'Priest - Mind Flay'),
 (17,    0.3,    0,       0,     0,     'Priest - Power Word: Shield'),
@@ -13735,6 +13737,11 @@ INSERT INTO `spell_chain` VALUES
 (27870,724,724,2,0),
 (27871,27870,724,3,0),
 (28275,27871,724,4,0),
+/* Lightwell Renew */
+(7001,0,7001,1,0),
+(27873,7001,7001,2,0),
+(27874,27873,7001,3,0),
+(28276,27874,7001,4,0),
 /* Prayer of Healing */
 (596,0,596,1,0),
 (996,596,596,2,0),
@@ -15349,7 +15356,7 @@ INSERT INTO `spell_proc_event` VALUES
 (17799, 0x20,  0, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x00000000, 0x00000000, 0.000000, 0.000000,  0),
 (17800, 0x20,  0, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x00000000, 0x00000000, 0.000000, 0.000000,  0),
 (18094, 0x00,  5, 0x000000000000000A, 0x000000000000000A, 0x000000000000000A, 0x00000000, 0x00000000, 0.000000, 0.000000,  0),
-(18096, 0x00,  5, 0x0000008000000060, 0x0000008000000060, 0x0000008000000060, 0x00000000, 0x00000000, 0.000000, 0.000000,  0),
+(18096, 0x00,  5, 0x0000008000000060, 0x0000008000000060, 0x0000008000000060, 0x00051000, 0x00000000, 0.000000, 0.000000,  0),
 (18119, 0x00,  5, 0x000010C0000003E5, 0x000010C0000003E5, 0x000010C0000003E5, 0x00000000, 0x00000000, 0.000000, 0.000000,  0),
 (18137, 0x7F,  0, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x00000000, 0x00000000, 0.000000, 0.000000,  3),
 (18820, 0x7F,  0, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x00000000, 0x00010000, 0.000000, 0.000000,  0),

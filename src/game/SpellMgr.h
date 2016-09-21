@@ -186,6 +186,39 @@ inline bool IsElementalShield(SpellEntry const* spellInfo)
     return (spellInfo->SpellFamilyFlags & uint64(0x42000000400)) || spellInfo->Id == 23552;
 }
 
+inline bool IsSpellEffectAbleToCrit(const SpellEntry* entry, SpellEffectIndex index)
+{
+    if (!entry || entry->HasAttribute(SPELL_ATTR_EX2_CANT_CRIT))
+        return false;
+
+    switch (entry->Effect[index])
+    {
+        case SPELL_EFFECT_SCHOOL_DAMAGE:
+        case SPELL_EFFECT_HEAL:
+        case SPELL_EFFECT_WEAPON_DAMAGE_NOSCHOOL:
+        case SPELL_EFFECT_WEAPON_PERCENT_DAMAGE:
+        case SPELL_EFFECT_WEAPON_DAMAGE:
+        case SPELL_EFFECT_NORMALIZED_WEAPON_DMG:
+            return true;
+        case SPELL_EFFECT_ENERGIZE: // Mana Potion and similar spells, Lay on hands
+            return (entry->SpellFamilyName && entry->DmgClass);
+    }
+    return false;
+}
+
+inline bool IsSpellAbleToCrit(const SpellEntry* entry)
+{
+    if (!entry || entry->HasAttribute(SPELL_ATTR_EX2_CANT_CRIT))
+        return false;
+
+    for (uint32 i = EFFECT_INDEX_0; i < MAX_EFFECT_INDEX; ++i)
+    {
+        if (entry->Effect[i] && IsSpellEffectAbleToCrit(entry, SpellEffectIndex(i)))
+            return true;
+    }
+    return false;
+}
+
 int32 CompareAuraRanks(uint32 spellId_1, uint32 spellId_2);
 
 // order from less to more strict
@@ -206,7 +239,7 @@ inline bool IsPassiveSpellStackableWithRanks(SpellEntry const* spellProto)
 
 inline bool IsAutocastable(SpellEntry const* spellInfo)
 {
-    return !(spellInfo->HasAttribute(SPELL_ATTR_EX4_UNAUTOCASTABLE) || spellInfo->HasAttribute(SPELL_ATTR_PASSIVE));
+    return !(spellInfo->HasAttribute(SPELL_ATTR_EX_UNAUTOCASTABLE_BY_CHARMED) || spellInfo->HasAttribute(SPELL_ATTR_PASSIVE));
 }
 
 inline bool IsAutocastable(uint32 spellId)

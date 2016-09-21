@@ -6145,7 +6145,7 @@ int32 Unit::SpellBaseDamageBonusTaken(SpellSchoolMask schoolMask)
 bool Unit::IsSpellCrit(Unit* pVictim, SpellEntry const* spellProto, SpellSchoolMask schoolMask, WeaponAttackType attackType)
 {
     // not critting spell
-    if (spellProto->HasAttribute(SPELL_ATTR_EX2_CANT_CRIT))
+    if (!IsSpellAbleToCrit(spellProto))
         return false;
 
     // Creatures do not crit with their spells or abilities, unless it is owned by a player (pet, totem, etc)
@@ -6159,12 +6159,12 @@ bool Unit::IsSpellCrit(Unit* pVictim, SpellEntry const* spellProto, SpellSchoolM
     float crit_chance = 0.0f;
     switch (spellProto->DmgClass)
     {
-        case SPELL_DAMAGE_CLASS_NONE:
-            return false;
+        case SPELL_DAMAGE_CLASS_NONE: // By default uses spell attack table: Many heals and damage spells
         case SPELL_DAMAGE_CLASS_MAGIC:
         {
+            // Physical school with spell attack table equals base crit chance: healthstone, potion, etc
             if (schoolMask & SPELL_SCHOOL_MASK_NORMAL)
-                crit_chance = 0.0f;
+                crit_chance = float(m_baseSpellCritChance);
             // For other schools
             else if (GetTypeId() == TYPEID_PLAYER)
                 crit_chance = GetFloatValue(PLAYER_SPELL_CRIT_PERCENTAGE1 + GetFirstSchoolInMask(schoolMask));
@@ -9150,81 +9150,131 @@ void Unit::InterruptMoving(bool forceSendStop /*=false*/)
     StopMoving(forceSendStop || isMoving);
 }
 
-void Unit::SetFeared(bool apply, ObjectGuid casterGuid, uint32 spellID, uint32 time)
+void Unit::SetImmobilizedState(bool apply, bool stun)
 {
+    const uint32 immobilized = (UNIT_STAT_ROOT | UNIT_STAT_STUNNED);
+    const uint32 state = stun ? UNIT_STAT_STUNNED : UNIT_STAT_ROOT;
+    const Unit* charmer = GetCharmer();
+    const bool player = ((charmer ? charmer : this)->GetTypeId() == TYPEID_PLAYER);
     if (apply)
     {
-        if (HasAuraType(SPELL_AURA_PREVENTS_FLEEING))
-            return;
-
-        SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_FLEEING);
-
-        GetMotionMaster()->MovementExpired(false);
-        CastStop(GetObjectGuid() == casterGuid ? spellID : 0);
-
-        if (GetTypeId() == TYPEID_UNIT)
-            SetTargetGuid(ObjectGuid());                    // creature feared loose its target
-
-        Unit* caster = IsInWorld() ?  GetMap()->GetUnit(casterGuid) : nullptr;
-
-        GetMotionMaster()->MoveFleeing(caster, time);       // caster==nullptr processed in MoveFleeing
+        addUnitState(state);
+        if (!player)
+            StopMoving();
+        else
+        {
+            // Clear unit movement flags
+            m_movementInfo.SetMovementFlags(MOVEFLAG_NONE);
+            if (stun)
+                SetStandState(UNIT_STAND_STATE_STAND); // in 1.5 client
+            SetRoot(true);
+        }
     }
     else
     {
-        RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_FLEEING);
-
-        GetMotionMaster()->MovementExpired(false);
-
-        if (GetTypeId() != TYPEID_PLAYER && isAlive())
-        {
-            Creature* c = ((Creature*)this);
-            // restore appropriate movement generator
-            if (getVictim())
-            {
-                SetTargetGuid(getVictim()->GetObjectGuid());  // restore target
-                GetMotionMaster()->MoveChase(getVictim());
-            }
-            else
-                GetMotionMaster()->Initialize();
-
-            // attack caster if can
-            if (Unit* caster = IsInWorld() ? GetMap()->GetUnit(casterGuid) : nullptr)
-                c->AttackedBy(caster);
-        }
+        clearUnitState(state);
+        // Prevent giving ability to move if more immobilizers are active
+        if (!hasUnitState(immobilized) && (player || m_movementInfo.HasMovementFlag(MOVEFLAG_ROOT)))
+            SetRoot(false);
     }
+}
 
-    if (GetTypeId() == TYPEID_PLAYER)
-        ((Player*)this)->SetClientControl(this, !apply);
+void Unit::SetFeared(bool apply, ObjectGuid casterGuid, uint32 spellID, uint32 time)
+{
+    SetIncapacitatedState(apply, UNIT_FLAG_FLEEING, casterGuid, spellID, time);
 }
 
 void Unit::SetConfused(bool apply, ObjectGuid casterGuid, uint32 spellID)
 {
+    SetIncapacitatedState(apply, UNIT_FLAG_CONFUSED, casterGuid, spellID);
+}
+
+void Unit::SetStunned(bool apply, ObjectGuid casterGuid, uint32 spellID)
+{
+    SetIncapacitatedState(apply, UNIT_FLAG_STUNNED, casterGuid, spellID);
+}
+
+void Unit::SetIncapacitatedState(bool apply, uint32 state, ObjectGuid casterGuid, uint32 spellID, uint32 time)
+{
+    // We are interested only in a particular subset of flags:
+    const uint32 filter = (UNIT_FLAG_STUNNED | UNIT_FLAG_CONFUSED | UNIT_FLAG_FLEEING);
+    if (!state || !(state & filter) || (state & ~filter))
+        return;
+
+    Player* controller = GetCharmerOrOwnerPlayerOrPlayerItself();
+    const bool control = controller ? controller->IsClientControl(this) : false;
+    const bool movement = (state != UNIT_FLAG_STUNNED);
+    const bool stun = (state & UNIT_FLAG_STUNNED);
+    const bool fleeing = (state & UNIT_FLAG_FLEEING);
+
     if (apply)
     {
-        SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_CONFUSED);
-
-        CastStop(GetObjectGuid() == casterGuid ? spellID : 0);
-
-        GetMotionMaster()->MoveConfused();
+        if (fleeing && HasAuraType(SPELL_AURA_PREVENTS_FLEEING))
+        {
+            if (state == UNIT_FLAG_FLEEING)
+                return;
+            else
+                state &= ~UNIT_FLAG_FLEEING;
+        }
+        SetFlag(UNIT_FIELD_FLAGS, state);
     }
     else
-    {
-        RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_CONFUSED);
+        RemoveFlag(UNIT_FIELD_FLAGS, state);
 
+    if (movement)
         GetMotionMaster()->MovementExpired(false);
+    if (apply)
+        CastStop(GetObjectGuid() == casterGuid ? spellID : 0);
 
-        if (GetTypeId() != TYPEID_PLAYER && isAlive())
+    if (GetTypeId() == TYPEID_UNIT)
+    {
+        if (HasFlag(UNIT_FIELD_FLAGS, filter))
         {
-            // restore appropriate movement generator
-            if (getVictim())
-                GetMotionMaster()->MoveChase(getVictim());
-            else
-                GetMotionMaster()->Initialize();
+            if (!GetTargetGuid().IsEmpty()) // Incapacitated creature loses its target
+                SetTargetGuid(ObjectGuid());
+        }
+        else if (isAlive())
+        {
+            if (Unit* victim = getVictim())
+            {
+                SetTargetGuid(victim->GetObjectGuid());  // Restore target
+                if (movement)
+                    GetMotionMaster()->MoveChase(victim); // Restore movement generator
+            }
+            else if (movement)
+                GetMotionMaster()->Initialize(); // Reset movement generator
+
+            if (!apply && fleeing)
+            {
+                // Attack the caster if can on fear expiration
+                if (Unit* caster = IsInWorld() ? GetMap()->GetUnit(casterGuid) : nullptr)
+                    ((Creature*)this)->AttackedBy(caster);
+            }
         }
     }
 
-    if (GetTypeId() == TYPEID_PLAYER)
-        ((Player*)this)->SetClientControl(this, !apply);
+    // Update stun if required:
+    if (stun)
+        SetImmobilizedState(apply, true);
+
+    if (!movement)
+        return;
+
+    // Check if we should return or remove player control after change
+    if (controller)
+    {
+        const bool remove = !controller->IsClientControl(this);
+        if (control && remove)
+            controller->SetClientControl(this, 0);
+        else if (!control && !remove)
+            controller->SetClientControl(this, 1);
+    }
+
+    // Update incapacitated movement if required:
+    if (HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_CONFUSED))
+        GetMotionMaster()->MoveConfused();
+    else if (HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_FLEEING))
+        GetMotionMaster()->MoveFleeing(IsInWorld() ?  GetMap()->GetUnit(casterGuid) : nullptr, time);
 }
 
 void Unit::SetFeignDeath(bool apply, ObjectGuid casterGuid /*= ObjectGuid()*/)
@@ -9981,11 +10031,13 @@ Unit* Unit::TakePossessOf(SpellEntry const* spellEntry, SummonPropertiesEntry co
     pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED);  // set flag for client that mean this unit is controlled by a player
     pCreature->addUnitState(UNIT_STAT_CONTROLLED);                      // also set internal unit state flag
     pCreature->SelectLevel(getLevel());                                 // set level to same level than summoner TODO:: not sure its always the case...
+    pCreature->SetLinkedToOwnerAura(TEMPSUMMON_LINKED_AURA_OWNER_CHECK | TEMPSUMMON_LINKED_AURA_REMOVE_OWNER); // set what to do if linked aura is removed or the creature is dead.
     pCreature->SetWalk(IsWalking(), true);                              // sync the walking state with the summoner
 
                                                                         // important before adding to the map!
     SetCharmGuid(pCreature->GetObjectGuid());                           // save guid of charmed creature
 
+    pCreature->SetSummonProperties(TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000); // set 5s corpse decay
     GetMap()->Add(static_cast<Creature*>(pCreature));                   // create the creature in the client
     pCreature->AIM_Initialize();                                        // even if this will be replaced it need to be initialized to take care of spawn spells
 
@@ -10060,7 +10112,7 @@ bool Unit::TakePossessOf(Unit* possessed)
     if (player)
     {
         player->GetCamera().SetView(possessed);
-        player->SetClientControl(possessed, 1);
+        player->SetClientControl(possessed, player->IsClientControl(possessed));
         player->SetMover(possessed);
         player->SendForcedObjectUpdate();
 
@@ -10104,7 +10156,7 @@ void Unit::ResetControlState(bool attackCharmer /*= true*/)
         if (player)
         {
             player->GetCamera().ResetView();
-            player->SetClientControl(player, 1);
+            player->SetClientControl(player, player->IsClientControl(player));
             player->SetMover(nullptr);
         }
         return;
@@ -10138,7 +10190,7 @@ void Unit::ResetControlState(bool attackCharmer /*= true*/)
     {
         Player* possessedPlayer = static_cast<Player *>(possessed);
         possessedPlayer->setFactionForRace(possessedPlayer->getRace());
-        possessedPlayer->SetClientControl(possessedPlayer, 1);
+        possessedPlayer->SetClientControl(possessedPlayer, possessedPlayer->IsClientControl(possessedPlayer));
     }
     else if (possessedCreature)
     {
