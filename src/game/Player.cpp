@@ -3201,13 +3201,13 @@ void Player::removeSpell(uint32 spell_id, bool disabled, bool learn_low_rank, bo
     // unlearn non talent higher ranks (recursive)
     SpellChainMapNext const& nextMap = sSpellMgr.GetSpellChainNext();
     for (SpellChainMapNext::const_iterator itr2 = nextMap.lower_bound(spell_id); itr2 != nextMap.upper_bound(spell_id); ++itr2)
-<<<<<<< HEAD
+        /*
     if (HasSpell(itr2->second) && !GetTalentSpellPos(itr2->second))
         removeSpell(itr2->second, disabled, false);
-=======
+*/
         if (HasSpell(itr2->second) && !GetTalentSpellPos(itr2->second))
             removeSpell(itr2->second, !IsPassiveSpell(itr2->second), false);
->>>>>>> upstream/master
+
 
     // re-search, it can be corrupted in prev loop
     itr = m_spells.find(spell_id);
