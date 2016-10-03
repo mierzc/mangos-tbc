@@ -3585,8 +3585,12 @@ void Spell::EffectSummonType(SpellEffectIndex eff_idx)
     if (petInvoker->GetTypeId() != TYPEID_PLAYER)
     {
         // pet players do not need this
-        // TODO :: Totem, Pet and Critter may not use this
-        level += std::max(m_spellInfo->EffectMultipleValue[eff_idx], 1.0f);
+        // TODO :: Totem, Pet and Critter may not use this. This is probably wrongly used and need more research.
+        uint32 resultLevel = level + std::max(m_spellInfo->EffectMultipleValue[eff_idx], 1.0f);
+
+        // result level should be a possible level for creatures
+        if (resultLevel > 0 && resultLevel <= DEFAULT_MAX_CREATURE_LEVEL)
+            level = resultLevel;
     }
     // level of creature summoned using engineering item based at engineering skill level
     else if (m_CastItem)
@@ -3617,10 +3621,14 @@ void Spell::EffectSummonType(SpellEffectIndex eff_idx)
         m_targets.getDestination(summonPositions[0].x, summonPositions[0].y, summonPositions[0].z);
     else
     {
-        realCaster->GetPosition(summonPositions[0].x, summonPositions[0].y, summonPositions[0].z);
-
-        // TODO - Is this really an error?
-        sLog.outDebug("Spell Effect EFFECT_SUMMON (%u) - summon without destination (spell id %u, effIndex %u)", m_spellInfo->Effect[eff_idx], m_spellInfo->Id, eff_idx);
+        if (m_spellInfo->EffectImplicitTargetA[eff_idx] == TARGET_EFFECT_SELECT || m_spellInfo->EffectImplicitTargetB[eff_idx] == TARGET_EFFECT_SELECT) // custom, done in SetTargetMap
+            m_targets.getDestination(summonPositions[0].x, summonPositions[0].y, summonPositions[0].z);
+        else
+        {
+            realCaster->GetPosition(summonPositions[0].x, summonPositions[0].y, summonPositions[0].z);
+            // TODO - Is this really an error?
+            sLog.outDebug("Spell Effect EFFECT_SUMMON (%u) - summon without destination (spell id %u, effIndex %u)", m_spellInfo->Effect[eff_idx], m_spellInfo->Id, eff_idx);
+        }
     }
 
     // Set summon positions
