@@ -2306,16 +2306,18 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
             {
                 if (m_CastItem)
                 {
-                    // found spelldamage coefficients of 0.381% per 0.1 speed and 15.244 per 4.0 speed
-                    // but own calculation say 0.385 gives at most one point difference to published values
-                    int32 totalDamage = (damage + 3.85f) * m_caster->SpellBaseDamageBonusDone(GetSpellSchoolMask(m_spellInfo))
-                    * 0.01 * m_CastItem->GetProto()->Delay / IN_MILLISECONDS;
+                    int32 bonusDamage = m_caster->SpellBaseDamageBonusDone(GetSpellSchoolMask(m_spellInfo))
+                        + unitTarget->SpellBaseDamageBonusTaken(GetSpellSchoolMask(m_spellInfo));
+                        // Does Amplify Magic/Dampen Magic influence flametongue? If not, the above addition must be removed.
+                    float weaponSpeed = float(m_CastItem->GetProto()->Delay) / IN_MILLISECONDS;     
+                    bonusDamage = m_caster->SpellBonusWithCoeffs(m_spellInfo, bonusDamage, 0, 0, SPELL_DIRECT_DAMAGE, false); // apply spell coeff
+                    int32 totalDamage = (damage * 0.01 * weaponSpeed) + bonusDamage;
 
                     m_caster->CastCustomSpell(unitTarget, 10444, &totalDamage, nullptr, nullptr, true, m_CastItem);
                 }
                 else
                     sLog.outError("Spell::EffectDummy: spell %i requires cast Item", m_spellInfo->Id);
-                
+
                 return;
             }
             if (m_spellInfo->Id == 39610)                   // Mana Tide Totem effect

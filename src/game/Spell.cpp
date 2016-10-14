@@ -318,6 +318,8 @@ Spell::Spell(Unit* caster, SpellEntry const* info, bool triggered, ObjectGuid or
 
     m_needAliveTargetMask = 0;
 
+    m_ignoreHitResult = false;
+
     // determine reflection
     m_canReflect = false;
 
@@ -761,7 +763,7 @@ void Spell::AddUnitTarget(Unit* pVictim, SpellEffectIndex effIndex)
     target.processed  = false;                              // Effects not applied on target
 
     // Calculate hit result
-    target.missCondition = m_caster->SpellHitResult(pVictim, m_spellInfo, m_canReflect);
+    target.missCondition = m_ignoreHitResult ? SPELL_MISS_NONE : m_caster->SpellHitResult(pVictim, m_spellInfo, m_canReflect);
 
     // spell fly from visual cast object
     WorldObject* affectiveObject = GetAffectiveCasterObject();
@@ -3380,6 +3382,25 @@ void Spell::finish(bool ok)
         }
     }
 
+    if (m_spellInfo->AttributesEx & SPELL_ATTR_EX_REFUND_POWER)
+    {
+        for (TargetList::const_iterator ihit = m_UniqueTargetInfo.begin(); ihit != m_UniqueTargetInfo.end(); ++ihit)
+        {
+            switch (ihit->missCondition)
+            {
+                case SPELL_MISS_MISS:
+                case SPELL_MISS_DODGE:
+                case SPELL_MISS_PARRY:
+                {
+                    if (m_caster->GetTypeId() == TYPEID_PLAYER ||
+                        m_caster->GetTypeId() == TYPEID_UNIT && m_caster->GetCharmerOrOwner() && m_caster->GetCharmerOrOwner()->GetTypeId() == TYPEID_PLAYER)
+                        m_caster->ModifyPower(Powers(m_spellInfo->powerType), int32(m_spellInfo->manaCost * 0.8));
+                    break;
+                }
+            }
+        }
+    }
+
     /*if (IsRangedAttackResetSpell())
         m_caster->resetAttackTimer(RANGED_ATTACK);*/
 
@@ -4302,9 +4323,8 @@ SpellCastResult Spell::CheckCast(bool strict)
         // totem immunity for channeled spells(needs to be before spell cast)
         // spell attribs for player channeled spells
         if (m_spellInfo->HasAttribute(SPELL_ATTR_EX_CHANNEL_TRACK_TARGET) // TODO: Investigate this condition
-                && m_spellInfo->HasAttribute(SPELL_ATTR_EX5_HASTE_AFFECT_DURATION)
-                && target->GetTypeId() == TYPEID_UNIT
-                && ((Creature*)target)->IsTotem())
+            && m_spellInfo->HasAttribute(SPELL_ATTR_EX5_HASTE_AFFECT_DURATION)
+            && target->GetTypeId() == TYPEID_UNIT && ((Creature*)target)->IsTotem())
             return SPELL_FAILED_IMMUNE;
 
         bool non_caster_target = target != m_caster && !IsSpellWithCasterSourceTargetsOnly(m_spellInfo);
@@ -4511,20 +4531,13 @@ SpellCastResult Spell::CheckCast(bool strict)
 
         for (Unit::SpellAuraHolderMap::const_iterator iter = spair.begin(); iter != spair.end(); ++iter)
         {
-            SpellAuraHolder* foundHolder = iter->second;
-
-            if (sSpellMgr.IsNoStackSpellDueToSpell(m_spellInfo, foundHolder->GetSpellProto()))
+            const SpellAuraHolder* existing = iter->second;
+            const SpellEntry* entry = existing->GetSpellProto();
+            if (m_caster != existing->GetCaster() && sSpellMgr.IsNoStackSpellDueToSpell(m_spellInfo, entry))
             {
-                // Explicit check for same spells of different rank when casters are different
-                if (sSpellMgr.IsRankSpellDueToSpell(m_spellInfo, foundHolder->GetSpellProto()->Id) && m_caster != foundHolder->GetCaster())
-                    continue;
-
-                // Skip seals, don't check if we can apply them.
-                if (IsSealSpell(m_spellInfo))
-                    continue;
-
                 // We cannot overwrite someone else's more powerful spell
-                if (foundHolder->GetCaster() != m_caster && IsSimilarExistingAuraStronger(m_caster, m_spellInfo->Id, foundHolder))
+                if (IsSimilarExistingAuraStronger(m_caster, m_spellInfo->Id, existing) ||
+                    (sSpellMgr.IsRankSpellDueToSpell(m_spellInfo, entry->Id) && sSpellMgr.IsHighRankOfSpell(entry->Id, m_spellInfo->Id)))
                     return SPELL_FAILED_AURA_BOUNCED;
             }
         }
@@ -4785,7 +4798,8 @@ SpellCastResult Spell::CheckCast(bool strict)
             {
                 if (m_spellInfo->SpellIconID == 1648)       // Execute
                 {
-                    if (!m_targets.getUnitTarget() || m_targets.getUnitTarget()->GetHealth() > m_targets.getUnitTarget()->GetMaxHealth() * 0.2)
+                    Unit* target = m_targets.getUnitTarget();
+                    if (!target || target->GetHealth() > target->GetMaxHealth() * 0.2)
                         return SPELL_FAILED_BAD_TARGETS;
                 }
                 else if (m_spellInfo->Id == 51582)          // Rocket Boots Engaged
@@ -4795,9 +4809,10 @@ SpellCastResult Spell::CheckCast(bool strict)
                 }
                 else if (m_spellInfo->SpellIconID == 156)   // Holy Shock
                 {
+                    Unit* target = m_targets.getUnitTarget();
                     // spell different for friends and enemies
                     // hart version required facing
-                    if (m_targets.getUnitTarget() && !m_caster->IsFriendlyTo(m_targets.getUnitTarget()) && !m_caster->HasInArc(M_PI_F, m_targets.getUnitTarget()))
+                    if (target && !(m_caster->IsFriendlyTo(target) || m_caster->HasInArc(M_PI_F, target)))
                         return SPELL_FAILED_UNIT_NOT_INFRONT;
                 }
                 break;
