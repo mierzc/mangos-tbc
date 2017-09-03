@@ -12371,21 +12371,12 @@ bool Player::CanSeeStartQuest(Quest const* pQuest) const
 bool Player::CanTakeQuest(Quest const* pQuest, bool msg) const
 {
     return SatisfyQuestStatus(pQuest, msg) && SatisfyQuestExclusiveGroup(pQuest, msg) &&
-<<<<<<< HEAD
-        SatisfyQuestClass(pQuest, msg) && SatisfyQuestRace(pQuest, msg) && SatisfyQuestLevel(pQuest, msg) &&
-        SatisfyQuestSkill(pQuest, msg) && SatisfyQuestReputation(pQuest, msg) &&
-        SatisfyQuestPreviousQuest(pQuest, msg) && SatisfyQuestTimed(pQuest, msg) &&
-        SatisfyQuestNextChain(pQuest, msg) && SatisfyQuestPrevChain(pQuest, msg) &&
-        SatisfyQuestDay(pQuest, msg) &&
-        pQuest->IsActive();
-=======
            SatisfyQuestClass(pQuest, msg) && SatisfyQuestRace(pQuest, msg) && SatisfyQuestLevel(pQuest, msg) &&
            SatisfyQuestSkill(pQuest, msg) && SatisfyQuestReputation(pQuest, msg) &&
            SatisfyQuestPreviousQuest(pQuest, msg) && SatisfyQuestTimed(pQuest, msg) &&
            SatisfyQuestNextChain(pQuest, msg) && SatisfyQuestPrevChain(pQuest, msg) &&
            SatisfyQuestDay(pQuest, msg) && SatisfyQuestWeek(pQuest) && SatisfyQuestMonth(pQuest) &&
            pQuest->IsActive();
->>>>>>> upstream/master
 }
 
 bool Player::CanAddQuest(Quest const* pQuest, bool msg) const
